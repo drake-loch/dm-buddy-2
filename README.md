@@ -2,11 +2,11 @@
 
 This project aims to improve the overall quality of the app for both user and developer.
 
-The biggest setback of the last iteration of dm-buddy is that it was tied to a cloud database. The thought was to be able to access your world building tools from anywhere. It involved account creation and database management, which began to greatly increase the scope and steer the project into a direction I wasn't happy with. The whole idea of DM-buddy is to be a lightweight tool, so I am going to live by that with this project.
+The biggest setback of the last iteration of dm-buddy was it used a cloud database. The thought was to be able to access your world building tools from anywhere. It involved account creation and database management, which began to greatly increase the scope and steer the project into a direction I wasn't happy with. The whole idea of DM-buddy is to be a lightweight tool, so I am going to achieve that with this project.
 
 # About this product
 
-This is a personal project of mine aimed to help me be a more effective and efficient dungeon master (or game master :p ). I'm completely overhauling my app (again) in hopes to create an effective and lightweight tool. Now that I am a more experienced developer and dungeon master, I feel like I can create useful tools.
+This is a personal project of mine aimed to help me be a more effective and efficient dungeon master (or game master). I'm completely overhauling my app (again) in hopes to create an effective and lightweight tool. Now that I am a more experienced developer and dungeon master, I feel like I can create useful tools to do just that.
 
 When creating new campaigns or oneshots for my players, I find myself diving into world building. From creating settlements, points of interest, and characters, to writing plots and meaningful interactions for my players to enjoy. I like to be very flexible when it comes to building campaigns for my players as I like to accommodate their play styles.
 
@@ -14,7 +14,7 @@ ChatGPT is a strong companion when creating new content for table top role playi
 
 # Tools
 
-# Character Builder:
+## Character Builder:
 
 A Character builder that uses 5th edition ruleset character sheets. Use the prompt generator to create random characters. If a sheet is completely empty, a completely random character will be generated. Any fields that are filled out prior to prompt generation are taken into account when generating. Alternatively, you may enter any additional info about the character into the notes and that works as well.
 For example:
