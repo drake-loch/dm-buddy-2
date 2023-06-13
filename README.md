@@ -17,5 +17,20 @@ ChatGPT is a strong companion when creating new content for table top role playi
 ## Character Builder:
 
 A Character builder that uses 5th edition ruleset character sheets. Use the prompt generator to create random characters. If a sheet is completely empty, a completely random character will be generated. Any fields that are filled out prior to prompt generation are taken into account when generating. Alternatively, you may enter any additional info about the character into the notes and that works as well.
-For example:
-We are wanting to create a criminal NPC for our campaign. In the character sheet, we fill out "criminal" in the background input. Once we type that in, we press the generate prompt button and copy the prompt. We paste the prompt into ChatGPT and it gives me the generated character in JSON format with a convenient copy button. Back in the character builder, we paste the code into the parse results input and press the apply prompt button. The JSON is parsed and applied to the character sheet.
+
+For example lets create a criminal NPC for a campaign. This is what that process would look like:
+
+1. In the character sheet, we fill out "criminal" in the background input.
+2. Press the generate prompt button and copy the prompt
+3. Paste the prompt into ChatGPT and it gives us the generated character in JSON format with a convenient copy button
+4. In the character builder, we paste the code into the parse results input 5. Press the apply prompt button
+
+The JSON is parsed and applied to the character sheet.
+
+# The furture of this app
+
+As of now, DM-Buddy v3 only has character generation.
+
+In the near future, you will be able to save characters onto your local storage or in a file. Further enhancements will be made to support monsters sheets.
+
+Later, there will be tools for world building, lore keeping, and campaign managment. These tools will be interconnected if they wish to be used that way.
