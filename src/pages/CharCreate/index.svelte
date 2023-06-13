@@ -43,6 +43,7 @@
 	<!-- toolbar -->
 	<div class="border border-white w-1/4 h-[50rem] p-4 box-border flex flex-col gap-4">
 		<h2 class="text-center text-2xl font-bold border-b border-white pb-2">TOOLBAR</h2>
+
 		<div class="mb-4 w-full flex justify-center flex-wrap gap-1">
 			<button
 				type="button"
@@ -58,7 +59,9 @@
 				}}>Toggle View ({editMode ? 'Editing' : 'View'})</button
 			>
 		</div>
+
 		<h3 class="font-bold text-lg">GPT Tools</h3>
+
 		<div class="flex gap-2">
 			<button
 				type="button"
@@ -74,20 +77,25 @@
 				on:click={() => {
 					toolbarType = 'parse';
 					promptInput = '';
-				}}>Parse JSON</button
+				}}>Parse Results</button
 			>
 		</div>
+
 		{#if toolbarType === 'parse'}
 			<span class="">
 				<Textarea
 					_class="w-full min-h-[20rem] rounded-md"
-					label="Parse JSON Completion"
+					label="Parse Results"
 					name="propt-input"
 					bind:value={promptInput}
 					editMode={true}
+					placeholder="Paste results here"
 				/>
 			</span>
-			<button
+
+			<!-- button is commented out because I can't use clipboard functions in firefox :'(  -->
+
+			<!-- <button
 				type="button"
 				class="border border-green-500 py-2"
 				on:click={() => {
@@ -95,7 +103,8 @@
 						promptInput = text;
 					});
 				}}>Paste</button
-			>
+			> -->
+
 			<button
 				type="button"
 				class="border border-green-500 py-2"
@@ -109,8 +118,11 @@
 					name="propt-input"
 					bind:value={promptInput}
 					editMode={true}
+					placeholder="Click Generate Prompt to begin"
+					disabled={promptInput === ''}
 				/>
 			</span>
+
 			<button
 				type="button"
 				class="border border-green-500 py-2"
@@ -127,6 +139,8 @@
 			>
 		{/if}
 	</div>
+
+	<!-- sheet -->
 	<div class="w-full h-[60rem] box-border">
 		<!-- name, race, background, etc.. -->
 		<div class="border-2 border-black p-2 w-full flex gap-2 mb-2">
@@ -135,62 +149,64 @@
 					{editMode}
 					label="Name"
 					name="characterName"
-					bind:value={char.name}
-					underlined
+					bind:value={char.fullName}
 					labelPosition="bottom"
 					_class="text-center"
+					viewClass="border-b border-black pb-2 rounded-md text-center"
 				/>
 			</span>
 			<div class="flex flex-col gap-2 border-l border-gray-900 pl-6">
 				<span class="w-[5rem]">
 					<Input
+						{editMode}
 						label="AC"
 						name="armorClass"
 						bind:value={char.armorClass}
-						_class="w-1/2 text-center mx-auto"
-						{editMode}
-						outlined
+						_class="text-center"
+						viewClass="border-b border-black pb-2 rounded-md text-center"
 					/>
 				</span>
 				<span class="w-[5rem]">
 					<Input
+						{editMode}
 						label="Initiative"
 						name="initiative"
 						bind:value={char.initiative}
-						_class="w-1/2 text-center mx-auto"
-						{editMode}
-						outlined
+						_class="text-center"
+						viewClass="border-b border-black pb-2 rounded-md text-center"
 					/>
 				</span>
 				<span class="w-[5rem]">
 					<Input
+						{editMode}
 						label="Speed"
 						name="speed"
 						bind:value={char.speed}
-						_class="w-1/2 text-center mx-auto"
-						{editMode}
-						outlined
+						_class="text-center"
+						viewClass="border-b border-black pb-2 rounded-md text-center"
 					/>
 				</span>
 			</div>
 			<div class="flex flex-col gap-2 ml-10">
 				<span class="w-[5rem] flex gap-1 items-center">
 					<Input
+						editMode={true}
 						label="HP"
 						name="HP"
 						bind:value={char.currentHitPoints}
-						_class="w-1/2 text-center mx-auto"
-						editMode={true}
+						_class="text-center"
+						viewClass="border-b border-black pb-2 rounded-md text-center"
 					/>
 					<p class="whitespace-nowrap">/ {char.hitPoints}</p>
 				</span>
 				<span class="w-[5rem]">
 					<Input
+						{editMode}
 						label="Hit Dice"
 						name="hitDice"
 						bind:value={char.hitDice}
-						_class="w-1/2 text-center mx-auto"
-						{editMode}
+						_class="text-center"
+						viewClass="border-b border-black pb-2 rounded-md text-center"
 					/>
 				</span>
 			</div>
@@ -202,9 +218,23 @@
 							label="Class"
 							name="class"
 							bind:value={char.class}
-							underlined
 							labelPosition="bottom"
 							_class="text-center"
+							viewClass="border-b border-black pb-2 rounded-md text-center"
+							options={[
+								'Barbarian',
+								'Bard',
+								'Cleric',
+								'Druid',
+								'Fighter',
+								'Monk',
+								'Paladin',
+								'Ranger',
+								'Rogue',
+								'Sorcerer',
+								'Warlock',
+								'Wizard'
+							]}
 						/>
 					</span>
 					<span class="w-[20rem]">
@@ -213,9 +243,24 @@
 							label="Background"
 							name="background"
 							bind:value={char.background}
-							underlined
 							labelPosition="bottom"
 							_class="text-center"
+							viewClass="border-b border-black pb-2 rounded-md text-center"
+							options={[
+								'Acolyte',
+								'Charlatan',
+								'Criminal',
+								'Entertainer',
+								'Folk Hero',
+								'Guild Artisan',
+								'Hermit',
+								'Noble',
+								'Outlander',
+								'Sage',
+								'Sailor',
+								'Soldier',
+								'Urchin'
+							]}
 						/>
 					</span>
 				</div>
@@ -226,9 +271,20 @@
 							label="Race"
 							name="race"
 							bind:value={char.race}
-							underlined
 							labelPosition="bottom"
 							_class="text-center"
+							viewClass="border-b border-black pb-2 rounded-md text-center"
+							options={[
+								'Dragonborn',
+								'Dwarf',
+								'Elf',
+								'Gnome',
+								'Half-Elf',
+								'Halfling',
+								'Half-Orc',
+								'Human',
+								'Tiefling'
+							]}
 						/>
 					</span>
 					<span class="w-[8rem]">
@@ -237,9 +293,10 @@
 							label="Gender"
 							name="gender"
 							bind:value={char.gender}
-							underlined
 							labelPosition="bottom"
+							viewClass="border-b border-black pb-2 rounded-md text-center"
 							_class="text-center"
+							options={['Male', 'Female']}
 						/>
 					</span>
 					<span class="w-[10rem]">
@@ -248,9 +305,20 @@
 							label="Alignment"
 							name="alignment"
 							bind:value={char.alignment}
-							underlined
 							labelPosition="bottom"
 							_class="text-center"
+							viewClass="border-b border-black pb-2 rounded-md text-center"
+							options={[
+								'Lawful Good',
+								'Neutral Good',
+								'Chaotic Good',
+								'Lawful Neutral',
+								'True Neutral',
+								'Chaotic Neutral',
+								'Lawful Evil',
+								'Neutral Evil',
+								'Chaotic Evil'
+							]}
 						/>
 					</span>
 				</div>
@@ -426,87 +494,96 @@
 				<!-- Attacks & Equipment -->
 				<div class="border-2 border-black w-[22rem] p-2">
 					<!-- Attacks -->
-					<div class=" border border-black w-full p-2 mb-4">
-						<div class="flex flex-col gap-0.5">
-							<div class="flex flex-row gap-1 border border-black px-1 font-bold text-center">
-								<span class="w-full"> Name </span>
-								<span class="w-1/4 border-x px-2 border-black"> Bonus </span>
-								<span class="w-full"> Damage/Type </span>
-							</div>
-							{#each getAttacksAndSpellsFormatted() as attack}
-								<div class="flex flex-row items-center gap-1 p-1 w-full">
-									<span class="w-full">
-										<Input {editMode} name="attackName" bind:value={attack.name} _class="" />
-									</span>
-									<span class="w-1/4">
-										<Input
-											{editMode}
-											name="attackBonus"
-											bind:value={attack.bonus}
-											_class="text-center"
-										/>
-									</span>
-									<span class="w-full">
-										<Input {editMode} name="attackDamage" bind:value={attack.damage} _class="" />
-									</span>
-								</div>
-							{/each}
-							<button
-								type="button"
-								class="border border-white text-center px-1"
-								on:click={() => {
-									char.attacks = [
-										...char.attacks,
-										{ name: '', bonus: 0, damage: '', damageType: '' }
-									];
-								}}>+</button
-							>
-							<h3 class="font-bold text-center text-sm">Weapons & Spells</h3>
+					<div class="flex flex-col">
+						<div class="flex flex-row gap-1 border border-black px-1 font-bold text-center">
+							<span class="w-full"> Name </span>
+							<span class="w-1/4 border-x px-2 border-black"> Bonus </span>
+							<span class="w-full"> Damage/Type </span>
 						</div>
-					</div>
-					<!-- Equipment -->
-					<div class=" border border-black w-full p-2">
-						<div class="flex flex-col gap-0.5">
-							<div class="flex flex-row gap-2 border border-black px-1 font-bold text-center">
-								<span class="w-1/4 border-r border-black"> # </span>
-								<span class="w-3/4"> Name </span>
-							</div>
-							{#each char.equipment as item}
-								<div class="flex flex-row gap-1 p-1 w-full">
-									<span class="w-1/4">
-										<Input {editMode} name="item" bind:value={item.amount} />
-									</span>
-									<span class="w-3/4">
-										<Input {editMode} name="item" bind:value={item.name} />
-									</span>
-								</div>
-							{/each}
-							<button
-								type="button"
-								class="border border-white text-center px-1"
-								on:click={() => {
-									char.equipment = [...char.equipment, { name: '', amount: 0 }];
-								}}>+</button
+						{#each getAttacksAndSpellsFormatted() as attack}
+							<div
+								class={`flex flex-row items-center gap-1 p-1 w-full ${
+									editMode ? '' : 'border-b border-x border-black pb-2 px-2'
+								}`}
 							>
-							<h3 class="font-bold text-center text-sm">Equipment</h3>
-						</div>
-					</div>
-				</div>
-				<!-- Features and Traits -->
-				<div class="border-2 border-black w-[18rem] p-2">
-					<div class="flex flex-col gap-2 border border-black p-2">
-						{#each char.features as feature, i}
-							<Feature {editMode} bind:feature {i} />
+								<span class="w-full">
+									<Input {editMode} name="attackName" bind:value={attack.name} _class="px-1" />
+								</span>
+								<span class="w-1/4">
+									<Input
+										{editMode}
+										name="attackBonus"
+										bind:value={attack.bonus}
+										_class="text-center"
+										viewClass="text-center"
+									/>
+								</span>
+								<span class="w-full">
+									<Input
+										{editMode}
+										name="attackDamage"
+										bind:value={attack.damage}
+										_class="px-1 text-right"
+										viewClass="text-right"
+									/>
+								</span>
+							</div>
 						{/each}
 						<button
 							type="button"
-							class="border border-white text-center px-1"
+							class={`border border-white text-center px-1 mt-2 ${editMode ? '' : 'hidden'}`}
 							on:click={() => {
-								char.features = [...char.features, { title: '', source: '', desc: '' }];
+								char.attacks = [
+									...char.attacks,
+									{ name: '', bonus: 0, damage: '', damageType: '' }
+								];
 							}}>+</button
 						>
-						<h3 class="font-bold text-center text-sm">Features & Traits</h3>
+						<h3 class="font-bold text-center text-sm">Weapons & Spells</h3>
 					</div>
+					<!-- Equipment -->
+					<div class="flex flex-col">
+						<div class="flex flex-row gap-2 border border-black px-1 font-bold text-center">
+							<span class="w-1/4 border-r border-black"> # </span>
+							<span class="w-3/4"> Name </span>
+						</div>
+						{#each char.equipment as item}
+							<div
+								class={`flex flex-row gap-1 p-1 w-full ${
+									editMode ? '' : 'border-x border-b border-black pb-2'
+								}`}
+							>
+								<span class="w-1/4 px-2">
+									<Input editMode name="item" bind:value={item.amount} _class="text-center" />
+								</span>
+								<span class="w-3/4">
+									<Input {editMode} name="item" bind:value={item.name} viewClass="text-left" />
+								</span>
+							</div>
+						{/each}
+						<button
+							type="button"
+							class={`border border-white text-center px-1 mt-2 ${editMode ? '' : 'hidden'}`}
+							on:click={() => {
+								char.equipment = [...char.equipment, { name: '', amount: 0 }];
+							}}>+</button
+						>
+						<h3 class="font-bold text-center text-sm">Equipment</h3>
+					</div>
+				</div>
+				<!-- Features and Traits -->
+				<div class="flex flex-col gap-2 border border-black p-2 w-[18rem]">
+					{#each char.features as feature, i}
+						<Feature {editMode} bind:feature {i} />
+					{/each}
+					<button
+						type="button"
+						class={`border border-white text-center px-1 mt-2 ${editMode ? '' : 'hidden'}`}
+						on:click={() => {
+							char.features = [...char.features, { title: '', source: '', desc: '' }];
+						}}>+</button
+					>
+					<h3 class="font-bold text-center text-sm">Features & Traits</h3>
 				</div>
 				<!-- personality & notes -->
 				<div class="border-2 border-black w-[26rem]">

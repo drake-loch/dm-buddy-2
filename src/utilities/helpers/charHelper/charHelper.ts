@@ -2,7 +2,7 @@ export type Skill = {
 	proficient: boolean;
 };
 export type Character = {
-	name: string;
+	fullName: string;
 	race: string;
 	gender: string;
 	class: string;
@@ -93,7 +93,7 @@ export type Character = {
 
 export const newEmptyCharacter = (): Character => {
 	return {
-		name: '',
+		fullName: '',
 		race: '',
 		gender: '',
 		class: '',
@@ -204,20 +204,14 @@ export const newEmptyCharacter = (): Character => {
 };
 
 export const handleCharacterPromptInput = (char: Character, promptInput: string): Character => {
-	// console.log(promptInput);
-	//input is a json string
-	//parse the json string
-	//get name
 	const parsed = JSON.parse(promptInput);
-	console.log('PARSED: ', parsed);
-	//fill as many fields as possible to character
-	// any leftover key-value pairs are converted to a string and added to notes
-	// if a key-value pair is not a string, it is converted to a string and added to notes
-	char.name = parsed?.name ?? char.name;
+	char.fullName = parsed?.fullName ?? parsed?.name ?? char.fullName;
 	char.class = parsed?.class ?? char.class;
+
 	if (parsed?.level) {
 		char.class = `${char.class} ${parsed.level}`;
 	}
+
 	char.background = parsed?.background ?? char.background;
 	char.age = parsed?.age ?? char.age;
 	char.alignment = parsed?.alignment ?? char.alignment;
@@ -255,14 +249,9 @@ export const handleCharacterPromptInput = (char: Character, promptInput: string)
 				amount: item?.amount ?? 1
 			};
 		}) ?? char.equipment;
-
-	// console.log('GEN: ', char);
 	return char;
 };
 
 export const getBonus = (stat: number, proficient: boolean, bonus = 2): number => {
 	return Math.floor((stat - 10) / 2) + (proficient ? bonus : 0);
 };
-
-//create a function that gets the skill bonus for a given skill by using it's name
-//so if we wanted to get acrobatics, we just pass in 'acrobatics' and it returns the bonus

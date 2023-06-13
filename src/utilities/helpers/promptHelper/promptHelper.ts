@@ -6,7 +6,7 @@ export const generateRandomCharPrompt = (char: Character) => {
 	return `Generate a random NPC for Dungeons and Dragons 5th edition and then format to JSON using the following type and object:
     \`
         type Character = {
-            name: string;
+            fullName: string;
             race: string;
             gender: string;
             class: string;
@@ -97,8 +97,9 @@ export const generateRandomCharPrompt = (char: Character) => {
         \`
         ${charString}
         \`
-        Fill out any empty strings with this npc's details. Put any additional info in notes such as character description, backstory, etc.
-        Don't forget to add any features or attacks they may have
+        Fill out any empty strings with this npc's details. Use any fields as context when generating a character. Try not to overwrite any
+        field that is filled. Notes may contain extra info for generating. Add any additional info into notes such as character description, backstory, etc.
+        Don't forget to add any features or attacks they may have, but don't overwrite any notes that are already there.
         `;
 };
 

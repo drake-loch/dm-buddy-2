@@ -8,7 +8,7 @@
 	export let i = 0;
 </script>
 
-<div class="flex flex-col gap-2 p-1 w-full">
+<div class="flex flex-col gap-1 p-2 w-full border border-black">
 	{#if editMode}
 		<span class="w-full">
 			<Input
