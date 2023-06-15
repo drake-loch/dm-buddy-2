@@ -6,4 +6,7 @@
 	<span class="">
 		<a href="/char-create"> Create Character </a>
 	</span>
+	<span class="">
+		<a href="/view"> View Page </a>
+	</span>
 </div>
