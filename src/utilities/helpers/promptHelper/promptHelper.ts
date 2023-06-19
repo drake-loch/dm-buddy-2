@@ -1,4 +1,5 @@
 import type { Character } from '../charHelper';
+import type { NPC } from '../npcHelper/npcHelper';
 
 export const generateRandomCharPrompt = (char: Character) => {
 	const charString = JSON.stringify(char);
@@ -93,13 +94,95 @@ export const generateRandomCharPrompt = (char: Character) => {
                 }[];
             };
             notes: string;
+            additionalInfo: { title: string; data: string }[];
         \`
         \`
         ${charString}
         \`
         Fill out any empty strings with this npc's details. Use any fields as context when generating a character. Try not to overwrite any
-        field that is filled. Notes may contain extra info for generating. Add any additional info into notes such as character description, backstory, etc.
+        field that is filled. Class may also be an occupation if it fits better. Additional Info is used as a wiki entry. Notes may contain other extra info for generating. Add any additional info into notes such as character description, backstory, etc.
         Don't forget to add any features or attacks they may have, but don't overwrite any notes that are already there.
+        `;
+};
+export const generateRandomNPCPrompt = (npc: NPC) => {
+	const npcString = JSON.stringify(npc);
+
+	return `Generate a random generic NPC for Dungeons and Dragons 5th edition and then format to JSON using the following type and object:
+    \`
+    type NPC = {
+        fullName: string;
+        type: string; // large humanoid, small humanoid, etc.
+        race: string;
+        gender: string;
+        size: string;
+        occupation: string;
+        age: number;
+        alignment: string;
+        characteristics: {
+            personalityTraits: string;
+            ideals: string;
+            bonds: string;
+            flaws: string;
+        };
+        stats: {
+            str: number;
+            dex: number;
+            con: number;
+            int: number;
+            wis: number;
+            cha: number;
+        };
+        savingThrows: {
+            str: boolean;
+            dex: boolean;
+            con: boolean;
+            int: boolean;
+            wis: boolean;
+            cha: boolean;
+        };
+        skills: {
+            acrobatics: Skill;
+            animalHandling: Skill;
+            arcana: Skill;
+            athletics: Skill;
+            deception: Skill;
+            history: Skill;
+            insight: Skill;
+            intimidation: Skill;
+            investigation: Skill;
+            medicine: Skill;
+            nature: Skill;
+            perception: Skill;
+            performance: Skill;
+            persuasion: Skill;
+            religion: Skill;
+            sleightOfHand: Skill;
+            stealth: Skill;
+            survival: Skill;
+        };
+        passivePerception: number;
+        otherProficiencies: { type: string; bonus: number }[];
+        armorClass: number;
+        initiative: number;
+        speed: number;
+        hitPoints: number;
+        currentHitPoints: number;
+        hitDice: string;
+        equipment: { name: string; amount: number }[];
+        features: { title: string; source: string; desc: string }[];
+        actions: { title: string; desc: string }[];
+        notes: string;
+        rpNotes: string;
+        additionalInfo: { title: string; data: string }[];
+        quests: { title: string; data: string; rewards: string[] }[];
+    }
+        \`
+        \`
+        ${npcString}
+        \`
+        Fill out any empty strings with this npc's details. Use any fields as context when generating a character. Try not to overwrite any
+        field that is filled. Additional Info is used as a wiki entry. Add any additional info such as character description, backstory, etc.
+        Notes may contain other extra info for generating. Don't overwrite any notes that are already there.
         `;
 };
 

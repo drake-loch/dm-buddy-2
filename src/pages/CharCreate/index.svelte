@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PromptTool from '../../components/common/PromptTool/PromptTool.svelte';
 	import Input from '../../components/form/input/Input.svelte';
 	import Textarea from '../../components/form/textarea/Textarea.svelte';
 	import Toolbar from '../../components/toolbar/Toolbar.svelte';
@@ -11,8 +12,6 @@
 	import Feature from './components/Feature.svelte';
 	import Skill from './components/Skill.svelte';
 	import Stat from './components/Stat.svelte';
-
-	let promptInput = '';
 
 	let char = newEmptyCharacter();
 
@@ -37,7 +36,7 @@
 		return attacksAndSpells;
 	};
 
-	let toolbarType: 'parse' | 'gen' = 'gen';
+	let promptInput = '';
 </script>
 
 <div class="flex justify-center w-full h-full gap-6">
@@ -59,84 +58,16 @@
 			>
 		</div>
 
-		<h3 class="font-bold text-lg">GPT Tools</h3>
-
-		<div class="flex gap-2">
-			<button
-				type="button"
-				class={`border border-green-500 py-2 px-4 ${toolbarType === 'gen' ? 'bg-gray-500' : ''}`}
-				on:click={() => {
-					toolbarType = 'gen';
-					promptInput = '';
-				}}>Prompt Generator</button
-			>
-			<button
-				type="button"
-				class={`border border-green-500 py-2 px-4 ${toolbarType === 'parse' ? 'bg-gray-500' : ''}`}
-				on:click={() => {
-					toolbarType = 'parse';
-					promptInput = '';
-				}}>Parse Results</button
-			>
-		</div>
-
-		{#if toolbarType === 'parse'}
-			<span class="">
-				<Textarea
-					_class="w-full min-h-[20rem] rounded-md"
-					label="Parse Results"
-					name="propt-input"
-					bind:value={promptInput}
-					editMode={true}
-					placeholder="Paste results here"
-				/>
-			</span>
-
-			<!-- button is commented out because I can't use clipboard functions in firefox :'(  -->
-
-			<!-- <button
-				type="button"
-				class="border border-green-500 py-2"
-				on:click={() => {
-					navigator.clipboard.readText().then((text) => {
-						promptInput = text;
-					});
-				}}>Paste</button
-			> -->
-
-			<button
-				type="button"
-				class="border border-green-500 py-2"
-				on:click={() => (char = handleCharacterPromptInput(char, promptInput))}>Apply Prompt</button
-			>
-		{:else if toolbarType === 'gen'}
-			<span class="">
-				<Textarea
-					_class="w-full min-h-[20rem] rounded-md"
-					label="Prompt Generator"
-					name="propt-input"
-					bind:value={promptInput}
-					editMode={true}
-					placeholder="Click Generate Prompt to begin"
-					disabled={promptInput === ''}
-				/>
-			</span>
-
-			<button
-				type="button"
-				class="border border-green-500 py-2"
-				on:click={() => {
-					promptInput = generateRandomCharPrompt(char);
-				}}>Generate Prompt</button
-			>
-			<button
-				type="button"
-				class="border border-green-500 py-2"
-				on:click={() => {
-					navigator.clipboard.writeText(promptInput);
-				}}>Copy</button
-			>
-		{/if}
+		<PromptTool
+			bind:editMode
+			bind:promptInput
+			handleApply={() => {
+				char = handleCharacterPromptInput(char, promptInput);
+			}}
+			handleGenerate={() => {
+				promptInput = generateRandomCharPrompt(char);
+			}}
+		/>
 	</Toolbar>
 
 	<!-- sheet -->
