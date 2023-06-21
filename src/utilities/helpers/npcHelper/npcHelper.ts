@@ -1,17 +1,18 @@
-import { getCharacters } from '../dataManager';
+import { getNPCs } from '../dataManager';
 
 export type Skill = {
 	proficient: boolean;
 };
-export type Character = {
+export type NPC = {
 	id: number;
 	fullName: string;
+	type: string;
 	race: string;
 	gender: string;
-	class: string;
+	size: string;
+	occupation: string;
 	age: number;
 	alignment: string;
-	background: string;
 	characteristics: {
 		personalityTraits: string;
 		ideals: string;
@@ -62,49 +63,27 @@ export type Character = {
 	hitPoints: number;
 	currentHitPoints: number;
 	hitDice: string;
-	deathSaves: {
-		successes: number;
-		failures: number;
-	};
-	attacks: {
-		name: string;
-		bonus: number;
-		damage: string;
-		damageType: string;
-	}[];
 	equipment: { name: string; amount: number }[];
 	features: { title: string; source: string; desc: string }[];
-	spellcasting: {
-		ability: string;
-		saveDC: number;
-		spellAttackBonus: number;
-		spells: {
-			name: string;
-			level: number;
-			school: string;
-			castingTime: string;
-			range: string;
-			components: string;
-			duration: string;
-			description: string;
-			damage: string;
-			damageType: string;
-		}[];
-	};
+	actions: { title: string; desc: string }[];
 	notes: string;
+	rpNotes: string;
 	additionalInfo: { title: string; data: string }[];
+	quests: { title: string; data: string; rewards: string[] }[];
+	imagePrompt: string;
 };
 
-export const newEmptyCharacter = (): Character => {
+export const newEmptyNPC = (): NPC => {
 	return {
 		id: 0,
 		fullName: '',
+		type: '',
 		race: '',
 		gender: '',
-		class: '',
+		size: '',
+		occupation: '',
 		age: 0,
 		alignment: '',
-		background: '',
 		characteristics: {
 			personalityTraits: '',
 			ideals: '',
@@ -191,72 +170,65 @@ export const newEmptyCharacter = (): Character => {
 		hitPoints: 0,
 		currentHitPoints: 0,
 		hitDice: '',
-		deathSaves: {
-			successes: 0,
-			failures: 0
-		},
-		attacks: [],
 		equipment: [],
+		actions: [],
 		features: [],
-		spellcasting: {
-			ability: '',
-			saveDC: 0,
-			spellAttackBonus: 0,
-			spells: []
-		},
 		notes: '',
-		additionalInfo: []
+		rpNotes: '',
+		additionalInfo: [],
+		quests: [],
+		imagePrompt: ''
 	};
 };
 
-export const handleCharacterPromptInput = (char: Character, promptInput: string): Character => {
+export const handleNPCPromptInput = (npc: NPC, promptInput: string): NPC => {
 	const parsed = JSON.parse(promptInput);
-	char.fullName = parsed?.fullName ?? parsed?.name ?? char.fullName;
-	char.class = parsed?.class ?? char.class;
+	npc.fullName = parsed?.fullName ?? parsed?.name ?? npc.fullName;
+	npc.occupation = parsed?.occupation ?? npc.occupation;
 
-	if (parsed?.level) {
-		char.class = `${char.class} ${parsed.level}`;
-	}
+	npc.age = parsed?.age ?? npc.age;
+	npc.alignment = parsed?.alignment ?? npc.alignment;
+	npc.race = parsed?.race ?? npc.race;
+	npc.gender = parsed?.gender ?? npc.gender;
 
-	char.background = parsed?.background ?? char.background;
-	char.age = parsed?.age ?? char.age;
-	char.alignment = parsed?.alignment ?? char.alignment;
-	char.race = parsed?.race ?? char.race;
-	char.gender = parsed?.gender ?? char.gender;
-
-	char.characteristics.personalityTraits =
+	npc.characteristics.personalityTraits =
 		parsed?.personalityTraits ??
 		parsed?.characteristics.personalityTraits ??
-		char.characteristics.personalityTraits;
-	char.characteristics.ideals =
-		parsed?.ideals ?? parsed?.characteristics.ideals ?? char.characteristics.ideals;
-	char.characteristics.bonds =
-		parsed?.bonds ?? parsed?.characteristics.bonds ?? char.characteristics.bonds;
-	char.characteristics.flaws =
-		parsed?.flaws ?? parsed?.characteristics.flaws ?? char.characteristics.flaws;
+		npc.characteristics.personalityTraits;
+	npc.characteristics.ideals =
+		parsed?.ideals ?? parsed?.characteristics.ideals ?? npc.characteristics.ideals;
+	npc.characteristics.bonds =
+		parsed?.bonds ?? parsed?.characteristics.bonds ?? npc.characteristics.bonds;
+	npc.characteristics.flaws =
+		parsed?.flaws ?? parsed?.characteristics.flaws ?? npc.characteristics.flaws;
 
-	char.stats.str = parsed?.str ?? parsed?.strength ?? parsed?.stats.str ?? char.stats.str;
-	char.stats.dex = parsed?.dex ?? parsed?.dexterity ?? parsed?.stats.dex ?? char.stats.dex;
-	char.stats.con = parsed?.con ?? parsed?.constitution ?? parsed?.stats.con ?? char.stats.con;
-	char.stats.int = parsed?.int ?? parsed?.intelligence ?? parsed?.stats.int ?? char.stats.int;
-	char.stats.wis = parsed?.wis ?? parsed?.wisdom ?? parsed?.stats.wis ?? char.stats.wis;
-	char.stats.cha = parsed?.cha ?? parsed?.charisma ?? parsed?.stats.cha ?? char.stats.cha;
-	char.notes = parsed?.notes ?? char.notes;
-	char.attacks = parsed?.attacks ?? char.attacks;
-	char.features = parsed?.features ?? char.features;
-	char.spellcasting = parsed?.spellcasting ?? char.spellcasting;
-	char.savingThrows = parsed?.savingThrows ?? char.savingThrows;
-	char.skills = parsed?.skills ?? char.skills;
-	char.additionalInfo = parsed?.additionalInfo ?? char.additionalInfo;
+	npc.stats.str = parsed?.str ?? parsed?.strength ?? parsed?.stats.str ?? npc.stats.str;
+	npc.stats.dex = parsed?.dex ?? parsed?.dexterity ?? parsed?.stats.dex ?? npc.stats.dex;
+	npc.stats.con = parsed?.con ?? parsed?.constitution ?? parsed?.stats.con ?? npc.stats.con;
+	npc.stats.int = parsed?.int ?? parsed?.intelligence ?? parsed?.stats.int ?? npc.stats.int;
+	npc.stats.wis = parsed?.wis ?? parsed?.wisdom ?? parsed?.stats.wis ?? npc.stats.wis;
+	npc.stats.cha = parsed?.cha ?? parsed?.charisma ?? parsed?.stats.cha ?? npc.stats.cha;
+	npc.notes = parsed?.notes ?? npc.notes;
+	npc.actions = parsed?.actions ?? npc.actions;
+	npc.savingThrows = parsed?.savingThrows ?? npc.savingThrows;
+	npc.skills = parsed?.skills ?? npc.skills;
 
-	char.equipment =
+	npc.quests = parsed?.quests ?? npc.quests;
+	npc.rpNotes = parsed?.rpNotes ?? npc.rpNotes;
+	npc.features = parsed?.features ?? npc.features;
+	npc.additionalInfo = parsed?.additionalInfo ?? npc.additionalInfo;
+	npc.type = parsed?.type ?? npc.type;
+	npc.size = parsed?.size ?? npc.size;
+	npc.imagePrompt = parsed?.imagePrompt ?? npc.imagePrompt;
+
+	npc.equipment =
 		parsed?.equipment.map((item: any) => {
 			return {
 				name: item.name ?? item,
 				amount: item?.amount ?? 1
 			};
-		}) ?? char.equipment;
-	return char;
+		}) ?? npc.equipment;
+	return npc;
 };
 
 export const getBonus = (stat: number, proficient: boolean, bonus = 2): number => {

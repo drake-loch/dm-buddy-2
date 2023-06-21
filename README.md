@@ -33,4 +33,4 @@ As of now, DM-Buddy v3 only has character generation.
 
 In the near future, you will be able to save characters onto your local storage or in a file. Further enhancements will be made to support monsters sheets.
 
-Later, there will be tools for world building, lore keeping, and campaign managment. These tools will be interconnected if they wish to be used that way.
+Later, there will be tools for world building, lore keeping, and campaign managment. These tools will be interconnected if they wish to be used that way. Not all tools from dm-buddy v2 will be implimented.
