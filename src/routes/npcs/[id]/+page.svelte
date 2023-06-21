@@ -1,19 +1,22 @@
 <script lang="ts">
-	import PageLayout from '../../components/common/PageLayout/PageLayout.svelte';
-	import PromptTool from '../../components/common/PromptTool/PromptTool.svelte';
-	import NpcWikiPage from '../../components/common/WikiPage/NpcWikiPage.svelte';
-	import Toolbar from '../../components/toolbar/Toolbar.svelte';
-	import { saveData, updateNPC } from '../../utilities/helpers/dataManager';
+	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
+	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
+	import NpcWikiPage from '../../../components/common/WikiPage/NpcWikiPage.svelte';
+	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
+	import { getNPC, updateNPC } from '../../../utilities/helpers/dataManager';
 	import {
-		handleNPCPromptInput,
+		type NPC,
 		newEmptyNPC,
-		type NPC
-	} from '../../utilities/helpers/npcHelper/npcHelper';
-	import { generateRandomNPCPrompt } from '../../utilities/helpers/promptHelper';
+		handleNPCPromptInput
+	} from '../../../utilities/helpers/npcHelper/npcHelper';
+	import { generateRandomNPCPrompt } from '../../../utilities/helpers/promptHelper';
+
+	// export let id = 0;
+	export let data;
+
+	let npc = getNPC(+data.id) ?? newEmptyNPC();
 
 	let editMode = false;
-	let npc: NPC = newEmptyNPC();
-
 	let promptInput = '';
 </script>
 
@@ -60,5 +63,7 @@
 			>
 		{/if}
 	</Toolbar>
-	<NpcWikiPage {editMode} bind:npc />
+	{#if npc !== undefined}
+		<NpcWikiPage bind:npc {editMode} />
+	{/if}
 </PageLayout>

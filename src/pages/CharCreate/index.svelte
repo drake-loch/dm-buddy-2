@@ -1,21 +1,14 @@
 <script lang="ts">
-	import PromptTool from '../../components/common/PromptTool/PromptTool.svelte';
 	import Input from '../../components/form/input/Input.svelte';
 	import Textarea from '../../components/form/textarea/Textarea.svelte';
-	import Toolbar from '../../components/toolbar/Toolbar.svelte';
-	import {
-		newEmptyCharacter,
-		handleCharacterPromptInput,
-		getBonus
-	} from '../../utilities/helpers/charHelper';
-	import { generateRandomCharPrompt } from '../../utilities/helpers/promptHelper';
+	import { newEmptyCharacter, getBonus } from '../../utilities/helpers/charHelper';
 	import Feature from './components/Feature.svelte';
 	import Skill from './components/Skill.svelte';
 	import Stat from './components/Stat.svelte';
 
-	let char = newEmptyCharacter();
+	export let char = newEmptyCharacter();
 
-	let editMode = true;
+	export let editMode = true;
 
 	$: getAttacksAndSpellsFormatted = (): { name: string; bonus: number; damage: string }[] => {
 		let attacksAndSpells: { name: string; bonus: number; damage: string }[] = [];
@@ -35,45 +28,13 @@
 		});
 		return attacksAndSpells;
 	};
-
-	let promptInput = '';
 </script>
 
-<div class="flex justify-center w-full h-full gap-6">
-	<!-- toolbar -->
-	<Toolbar>
-		<div class="mb-4 w-full flex justify-center flex-wrap gap-1">
-			<button
-				type="button"
-				class="border border-green-500 py-2 px-4"
-				on:click={() => (char = newEmptyCharacter())}>New Character</button
-			>
-			<button type="button" class="border border-green-500 py-2 px-4">Save Character</button>
-			<button
-				type="button"
-				class="border border-blue-500 py-2 px-4"
-				on:click={() => {
-					editMode = !editMode;
-				}}>Toggle View ({editMode ? 'Editing' : 'View'})</button
-			>
-		</div>
-
-		<PromptTool
-			bind:editMode
-			bind:promptInput
-			handleApply={() => {
-				char = handleCharacterPromptInput(char, promptInput);
-			}}
-			handleGenerate={() => {
-				promptInput = generateRandomCharPrompt(char);
-			}}
-		/>
-	</Toolbar>
-
+<div class="flex justify-center w-3/4 h-full gap-6">
 	<!-- sheet -->
 	<div class="w-full h-[55rem] box-border">
 		<!-- name, race, background, etc.. -->
-		<div class="border-2 border-black p-2 box-border w-full flex gap-2 mb-2">
+		<div class="border-2 border-black p-2 box-border w-full flex gap-2 mb-2 bg-gray-500">
 			<span class="w-[20rem]">
 				<Input
 					{editMode}
@@ -85,7 +46,7 @@
 					viewClass="border-b border-black pb-2 rounded-md text-center"
 				/>
 			</span>
-			<div class="flex flex-col gap-2 border-l border-gray-900 pl-6">
+			<div class="flex items-center gap-2 border-l border-gray-900 pl-6">
 				<span class="w-[5rem]">
 					<Input
 						{editMode}
@@ -93,7 +54,7 @@
 						name="armorClass"
 						bind:value={char.armorClass}
 						_class="text-center"
-						viewClass="border-b border-black pb-2 rounded-md text-center"
+						viewClass="border-b border-black rounded-md text-center"
 					/>
 				</span>
 				<span class="w-[5rem]">
@@ -103,7 +64,7 @@
 						name="initiative"
 						bind:value={char.initiative}
 						_class="text-center"
-						viewClass="border-b border-black pb-2 rounded-md text-center"
+						viewClass="border-b border-black rounded-md text-center"
 					/>
 				</span>
 				<span class="w-[5rem]">
@@ -113,21 +74,28 @@
 						name="speed"
 						bind:value={char.speed}
 						_class="text-center"
-						viewClass="border-b border-black pb-2 rounded-md text-center"
+						viewClass="border-b border-black rounded-md text-center"
 					/>
 				</span>
-			</div>
-			<div class="flex flex-col gap-2 ml-10">
-				<span class="w-[5rem] flex gap-1 items-center">
+				<span class="w-[5rem]">
 					<Input
 						editMode={true}
-						label="HP"
+						label="Current HP"
 						name="HP"
 						bind:value={char.currentHitPoints}
 						_class="text-center"
-						viewClass="border-b border-black pb-2 rounded-md text-center"
+						viewClass="border-b border-black rounded-md text-center"
 					/>
-					<p class="whitespace-nowrap">/ {char.hitPoints}</p>
+				</span>
+				<span class="w-[5rem]">
+					<Input
+						{editMode}
+						label="Max HP"
+						name="Max HP"
+						bind:value={char.hitPoints}
+						_class="text-center"
+						viewClass="border-b border-black rounded-md text-center"
+					/>
 				</span>
 				<span class="w-[5rem]">
 					<Input
@@ -136,7 +104,7 @@
 						name="hitDice"
 						bind:value={char.hitDice}
 						_class="text-center"
-						viewClass="border-b border-black pb-2 rounded-md text-center"
+						viewClass="border-b border-black rounded-md text-center"
 					/>
 				</span>
 			</div>
@@ -255,9 +223,11 @@
 			</div>
 		</div>
 		<!-- core details -->
-		<div class="w-full flex gap-2 justify-evenly mb-6">
+		<div class="w-full h-[45rem] overflow-auto flex gap-2 justify-evenly mb-6 border-3">
 			<!-- Stats -->
-			<div class="flex flex-col gap-2 p-2 box-border border-2 border-black">
+			<div
+				class="flex flex-col gap-2 p-2 box-border border-2 border-black h-full bg-gray-500 overflow-y-auto overflow-x-hidden"
+			>
 				<Stat {editMode} name="Strength" bind:value={char.stats.str} />
 				<Stat {editMode} name="Dexterity" bind:value={char.stats.dex} />
 				<Stat {editMode} name="Constitution" bind:value={char.stats.con} />
@@ -266,7 +236,7 @@
 				<Stat {editMode} name="Charisma" bind:value={char.stats.cha} />
 			</div>
 			<!-- saving throws & skills -->
-			<div class="border-2 border-black p-2 w-[16rem]">
+			<div class="border-2 border-black p-2 w-[16rem] h-full bg-gray-500 overflow-y-auto">
 				<!-- saving throws -->
 				<div class="px-2 py-1 flex flex-col gap-0.5 border border-black mb-2">
 					<Skill
@@ -421,7 +391,7 @@
 				</div>
 			</div>
 			<!-- Attacks & Equipment -->
-			<div class="border-2 border-black w-[22rem] p-2">
+			<div class="border-2 border-black w-[22rem] p-2 h-full bg-gray-500 overflow-y-auto">
 				<!-- Attacks -->
 				<div class="flex flex-col">
 					<div class="flex flex-row gap-1 border border-black px-1 font-bold text-center">
@@ -498,7 +468,9 @@
 				</div>
 			</div>
 			<!-- Features and Traits -->
-			<div class="flex flex-col gap-2 border-2 border-black p-2 w-[18rem]">
+			<div
+				class="flex flex-col gap-2 border-2 border-black p-2 w-[18rem] h-full bg-gray-500 overflow-y-auto"
+			>
 				{#each char.features as feature, i}
 					<Feature {editMode} bind:feature {i} />
 				{/each}
@@ -512,7 +484,7 @@
 				<h3 class="font-bold text-center text-sm">Features & Traits</h3>
 			</div>
 			<!-- personality & notes -->
-			<div class="border-2 border-black w-[26rem]">
+			<div class="border-2 border-black w-[22rem] h-full bg-gray-500 overflow-y-auto">
 				<div class="flex flex-col gap-2 p-2 text-center">
 					<div class="flex flex-col gap-2 p-1 w-full">
 						<span class="w-full">

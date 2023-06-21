@@ -112,7 +112,6 @@
 				{/each}
 			</div>
 		{/if}
-		<h1 class="text-2xl border-b mb-2">Notes</h1>
 		<span class="mb-2 w-full">
 			<WikiEntry
 				{editMode}

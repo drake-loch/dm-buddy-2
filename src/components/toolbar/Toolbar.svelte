@@ -25,15 +25,17 @@
 	{/if}
 	<!-- Toolbar -->
 	{#if !viewNav}
-		<span class="w-8 h-8">
-			<button
-				type="button"
-				class="border rounded-md w-full h-full hover:bg-gray-400"
-				on:click={() => {
-					viewNav = true;
-				}}>{'<'}</button
-			>
-		</span>
+		<div class="flex gap-2">
+			<span class="w-fit h-8">
+				<button
+					type="button"
+					class="border rounded-md w-full h-full hover:bg-gray-400 px-2"
+					on:click={() => {
+						viewNav = true;
+					}}>Menu</button
+				>
+			</span>
+		</div>
 		<h2 class="text-center text-2xl font-bold border-b border-white pb-2">TOOLBAR</h2>
 		<slot />
 	{/if}

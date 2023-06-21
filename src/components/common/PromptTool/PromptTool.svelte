@@ -3,7 +3,6 @@
 
 	export let handleApply: () => void;
 	export let handleGenerate: () => void;
-	export let editMode = false;
 
 	export let promptInput = '';
 	let toolbarType: 'parse' | 'gen' = 'gen';

@@ -1,7 +1,10 @@
+import { getCharacters } from '../dataManager';
+
 export type Skill = {
 	proficient: boolean;
 };
 export type Character = {
+	id: number;
 	fullName: string;
 	race: string;
 	gender: string;
@@ -94,6 +97,7 @@ export type Character = {
 
 export const newEmptyCharacter = (): Character => {
 	return {
+		id: 0,
 		fullName: '',
 		race: '',
 		gender: '',
@@ -243,6 +247,7 @@ export const handleCharacterPromptInput = (char: Character, promptInput: string)
 	char.spellcasting = parsed?.spellcasting ?? char.spellcasting;
 	char.savingThrows = parsed?.savingThrows ?? char.savingThrows;
 	char.skills = parsed?.skills ?? char.skills;
+	char.additionalInfo = parsed?.additionalInfo ?? char.additionalInfo;
 
 	char.equipment =
 		parsed?.equipment.map((item: any) => {

@@ -1,7 +1,10 @@
+import { getNPCs } from '../dataManager';
+
 export type Skill = {
 	proficient: boolean;
 };
 export type NPC = {
+	id: number;
 	fullName: string;
 	type: string;
 	race: string;
@@ -67,10 +70,12 @@ export type NPC = {
 	rpNotes: string;
 	additionalInfo: { title: string; data: string }[];
 	quests: { title: string; data: string; rewards: string[] }[];
+	imagePrompt: string;
 };
 
 export const newEmptyNPC = (): NPC => {
 	return {
+		id: 0,
 		fullName: '',
 		type: '',
 		race: '',
@@ -171,7 +176,8 @@ export const newEmptyNPC = (): NPC => {
 		notes: '',
 		rpNotes: '',
 		additionalInfo: [],
-		quests: []
+		quests: [],
+		imagePrompt: ''
 	};
 };
 
@@ -212,6 +218,8 @@ export const handleNPCPromptInput = (npc: NPC, promptInput: string): NPC => {
 	npc.features = parsed?.features ?? npc.features;
 	npc.additionalInfo = parsed?.additionalInfo ?? npc.additionalInfo;
 	npc.type = parsed?.type ?? npc.type;
+	npc.size = parsed?.size ?? npc.size;
+	npc.imagePrompt = parsed?.imagePrompt ?? npc.imagePrompt;
 
 	npc.equipment =
 		parsed?.equipment.map((item: any) => {

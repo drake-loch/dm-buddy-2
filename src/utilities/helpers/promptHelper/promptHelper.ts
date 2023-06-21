@@ -101,7 +101,7 @@ export const generateRandomCharPrompt = (char: Character) => {
         \`
         Fill out any empty strings with this npc's details. Use any fields as context when generating a character. Try not to overwrite any
         field that is filled. Class may also be an occupation if it fits better. Additional Info is used as a wiki entry. Notes may contain other extra info for generating. Add any additional info into notes such as character description, backstory, etc.
-        Don't forget to add any features or attacks they may have, but don't overwrite any notes that are already there.
+        Don't forget to add any features or attacks they may have, but don't overwrite any notes that are already there. Generate a description of the npc that will be used in a prompt to make a portrait.
         `;
 };
 export const generateRandomNPCPrompt = (npc: NPC) => {
