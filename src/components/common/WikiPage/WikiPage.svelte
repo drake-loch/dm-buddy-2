@@ -7,6 +7,7 @@
 	}[] = [];
 	export let title = '';
 	export let type = '';
+	export let typeOptions: string[] = [];
 	export let editMode = false;
 </script>
 
@@ -23,9 +24,23 @@
 					class="w-full h-full object-cover"
 				/>
 			</span>
-			<div class=" mb-4 p-2">
-				<span class="text-2xl font-bold">{title}</span>
-				<p class="italic text-center">{type}</p>
+			<div class="mb-4 p-2 gap-2 flex flex-col items-center">
+				{#if editMode}
+					<input type="text" class="w-full px-2" bind:value={title} placeholder="Title/Name" />
+					{#if typeOptions.length > 0}
+						<select name="type" class="w-3/4 px-2" bind:value={type}>
+							{#each typeOptions as typeOption}
+								<option value={typeOption}>{typeOption}</option>
+							{/each}
+						</select>
+					{:else}
+						<input type="text" class="w-3/4 px-2" bind:value={type} placeholder="Type" />
+					{/if}
+				{:else}
+					<span class="text-2xl font-bold">{title}</span>
+					<p class="italic text-center">{type}</p>
+				{/if}
+				<!-- <p class="italic text-center">{type}</p> -->
 			</div>
 			<slot name="wikiPanel" />
 		</div>

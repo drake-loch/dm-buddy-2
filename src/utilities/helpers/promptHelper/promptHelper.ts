@@ -1,5 +1,6 @@
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
+import type { Settlement } from '../settlementHelper';
 
 export const generateRandomCharPrompt = (char: Character) => {
 	const charString = JSON.stringify(char);
@@ -183,6 +184,38 @@ export const generateRandomNPCPrompt = (npc: NPC) => {
         Fill out any empty strings with this npc's details. Use any fields as context when generating a character. Try not to overwrite any
         field that is filled. Additional Info is used as a wiki entry. Add any additional info such as character description, backstory, etc.
         Notes may contain other extra info for generating. Don't overwrite any notes that are already there.
+        `;
+};
+export const generateRandomSettlementPrompt = (settlement: Settlement) => {
+	const settlementString = JSON.stringify(settlement);
+
+	return `Randomly Generate a settlement for Dungeons and Dragons 5th edition and then format to JSON using the following type and object:
+    \`
+    type Settlement = {
+        id: number;
+        name: string;
+        population: number;
+        size: string;
+        type: string;
+        alignment: string;
+        description: string;
+        government: string;
+        authorityFigures: { id: number; role: string }[];
+        languages: string;
+        religion: string;
+        currency: string;
+        economy: string;
+        organizations: number[];
+        imageURL: string;
+        quests: { name: string; description: string; id: number }[];
+        additionalInfo: { title: string; data: string }[];
+        notes: string;
+    };
+        \`
+        \`
+        ${settlementString}
+        \`
+        Use any fields as context when generating. Fill out any missing details if possible. Try not to overwrite any field that is filled. Additional Info is used as a wiki entry. Notes may contain other extra info for generating. Don't overwrite any notes that are already there. Don't fill out any ids
         `;
 };
 

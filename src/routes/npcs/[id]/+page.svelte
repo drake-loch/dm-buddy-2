@@ -5,13 +5,11 @@
 	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
 	import { getNPC, updateNPC } from '../../../utilities/helpers/dataManager';
 	import {
-		type NPC,
 		newEmptyNPC,
 		handleNPCPromptInput
 	} from '../../../utilities/helpers/npcHelper/npcHelper';
 	import { generateRandomNPCPrompt } from '../../../utilities/helpers/promptHelper';
 
-	// export let id = 0;
 	export let data;
 
 	let npc = getNPC(+data.id) ?? newEmptyNPC();

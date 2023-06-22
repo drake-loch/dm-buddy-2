@@ -2,23 +2,23 @@
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
 	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
-	import {
-		handleCharacterPromptInput,
-		newEmptyCharacter
-	} from '../../../utilities/helpers/charHelper';
-	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
-	import { generateRandomCharPrompt } from '../../../utilities/helpers/promptHelper';
-	import CharCreate from '../../../pages/CharCreate/index.svelte';
-	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
 	import { goto } from '$app/navigation';
+	import {
+		getSettlement,
+		handleSettlementPrompt,
+		newSettlement,
+		saveSettlement
+	} from '../../../utilities/helpers/settlementHelper';
+	import SettlementWiki from '../../../components/common/WikiPage/SettlementWiki.svelte';
+	import { generateRandomSettlementPrompt } from '../../../utilities/helpers/promptHelper';
 
 	export let data;
 
-	let char = getCharacter(+data.id) ?? newEmptyCharacter();
+	let settlement = getSettlement(+data.id) ?? newSettlement();
 
-	let editMode = false;
+	let editMode = Number.isNaN(data.id) ?? false;
 	let promptInput = '';
-	let wikiView = false;
+	let wikiView = true;
 </script>
 
 <PageLayout>
@@ -36,12 +36,13 @@
 					type="button"
 					class="border border-green-500 rounded-sm px-4"
 					on:click={() => {
-						const id = saveCharacter(char);
-						goto(`/characters/${id}`);
+						const id = saveSettlement(settlement);
+						goto(`/settlements/${id}`);
 						editMode = !editMode;
-					}}>Save Character</button
+					}}>Save Settlement</button
 				>
-				<button type="button" class="border border-red-500 rounded-sm px-4">Delete Character</button
+				<button type="button" class="border border-red-500 rounded-sm px-4"
+					>Delete Settlement</button
 				>
 				<button
 					type="button"
@@ -65,19 +66,18 @@
 			<PromptTool
 				bind:promptInput
 				handleApply={() => {
-					char = handleCharacterPromptInput(char, promptInput);
+					settlement = handleSettlementPrompt(settlement, promptInput);
 				}}
 				handleGenerate={() => {
-					promptInput = generateRandomCharPrompt(char);
+					promptInput = generateRandomSettlementPrompt(settlement);
 				}}
 			/>
 		{/if}
 	</Toolbar>
-	{#if char !== undefined}
+	{#if settlement !== undefined}
 		{#if wikiView}
-			<CharWikiPage bind:char {editMode} />
-		{:else}
-			<CharCreate {char} {editMode} />
+			<!--  -->
+			<SettlementWiki {editMode} {settlement} />
 		{/if}
 	{/if}
 </PageLayout>
