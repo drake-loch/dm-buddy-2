@@ -1,5 +1,3 @@
-import { getCharacters } from '../dataManager';
-
 export type Skill = {
 	proficient: boolean;
 };

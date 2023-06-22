@@ -15,4 +15,7 @@
 	<span class="">
 		<a href="/characters">Characters</a>
 	</span>
+	<span class="">
+		<a href="/settlements">Settlements</a>
+	</span>
 </div>

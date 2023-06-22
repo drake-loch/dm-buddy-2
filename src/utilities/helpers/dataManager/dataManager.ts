@@ -2,6 +2,7 @@
 
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
+import type { Settlement } from '../settlementHelper';
 
 //save
 export const saveData = (key: string, data: any): void => {
@@ -65,7 +66,6 @@ export const updateNPC = (npc: NPC): void => {
 	const index = npcs.findIndex((n) => n.id === npc.id);
 
 	if (index === -1) {
-		//new npc
 		npc.id = npcs.length + 1;
 		npcs.push(npc);
 	} else {
@@ -102,10 +102,14 @@ export const deleteNPC = (id: number): NPC[] => {
 	if (index !== -1) {
 		npcs.splice(index, 1);
 	}
+	for (let i = 0; i < npcs.length; i++) {
+		npcs[i].id = i + 1;
+	}
 	saveData('npcs', npcs);
 	return npcs;
 };
 
+// ====================================================================================================
 export const getCharacters = (): Character[] => {
 	const characters = loadData('characters') as Character[];
 
@@ -135,7 +139,6 @@ export const saveCharacter = (character: Character): number => {
 	const index = characters.findIndex((c) => c.id === character.id);
 
 	if (index === -1) {
-		//new character
 		character.id = characters.length + 1;
 		characters.push(character);
 	} else {
@@ -154,11 +157,15 @@ export const deleteCharacter = (id: number): Character[] => {
 	}
 
 	const index = characters.findIndex((c) => c.id === id);
-	console.log(index);
 
 	if (index !== -1) {
 		characters.splice(index, 1);
 	}
+	for (let i = 0; i < characters.length; i++) {
+		characters[i].id = i + 1;
+	}
 	saveData('characters', characters);
 	return characters;
 };
+
+// ====================================================================================================
