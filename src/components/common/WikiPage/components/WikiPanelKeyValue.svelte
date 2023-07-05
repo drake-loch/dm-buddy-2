@@ -3,9 +3,10 @@
 	export let label = '';
 	export let value: string | number = '';
 	export let textarea = false;
+	export let showIfEmpty = false;
 </script>
 
-{#if value !== '' || editMode}
+{#if value !== '' || editMode || showIfEmpty}
 	<span class="flex gap-2 text-sm">
 		{#if editMode}
 			<span class="flex flex-col w-full">

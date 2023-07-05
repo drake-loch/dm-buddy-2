@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { updateNPC } from '../../../utilities/helpers/dataManager';
 	import { newEmptyNPC, type NPC } from '../../../utilities/helpers/npcHelper/npcHelper';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
@@ -10,7 +11,7 @@
 
 	export let editMode = false;
 	export let npc: NPC = newEmptyNPC();
-	export let save: (npc: NPC) => number;
+	export let save: (npc: NPC) => number = () => updateNPC(npc);
 </script>
 
 <WikiPage title={npc.fullName} type={npc.type}>
@@ -64,21 +65,13 @@
 						on:click={() => {
 							npc.quests.push({ title: '', data: '', rewards: [] });
 							npc.quests = [...npc.quests];
-							console.log(npc.quests);
 						}}>+ Add</button
 					>
 				{/if}
 			</div>
 			{#each npc.additionalInfo as info}
 				<span class="mb-2 w-full">
-					<WikiEntry
-						{editMode}
-						deleteModule={() => {
-							console.log('delete');
-						}}
-						bind:title={info.title}
-						bind:data={info.data}
-					/>
+					<WikiEntry {editMode} bind:title={info.title} bind:data={info.data} />
 				</span>
 			{/each}
 		</div>
@@ -94,21 +87,13 @@
 							on:click={() => {
 								npc.quests.push({ title: '', data: '', rewards: [] });
 								npc.quests = [...npc.quests];
-								console.log(npc.quests);
 							}}>+ Add</button
 						>
 					{/if}
 				</div>
 				{#each npc.quests as quest}
 					<span class="mb-2 w-full">
-						<WikiEntry
-							{editMode}
-							deleteModule={() => {
-								console.log('delete');
-							}}
-							bind:title={quest.title}
-							bind:data={quest.data}
-						/>
+						<WikiEntry {editMode} bind:title={quest.title} bind:data={quest.data} />
 					</span>
 				{/each}
 			</div>

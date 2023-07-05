@@ -17,11 +17,12 @@
 		}
 	}
 
-	$: selected = options.filter((o) =>
-		Array.isArray(values)
-			? stringValues.includes(o.value as string) || numberValues.includes(o.value as number)
-			: false
-	);
+	$: selected =
+		options.filter((o) =>
+			Array.isArray(values)
+				? stringValues.includes(o.value as string) || numberValues.includes(o.value as number)
+				: false
+		) ?? [];
 
 	const selectOption = (option: Option['value']) => {
 		if (Array.isArray(values)) {
