@@ -1,7 +1,6 @@
 <script lang="ts">
 	import PageLayout from '../components/common/PageLayout/PageLayout.svelte';
 	import Toolbar from '../components/toolbar/Toolbar.svelte';
-	import CharCreate from '../pages/CharCreate/index.svelte';
 </script>
 
 <PageLayout>
