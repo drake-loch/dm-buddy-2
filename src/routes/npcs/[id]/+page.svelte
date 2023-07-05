@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
 	import NpcWikiPage from '../../../components/common/WikiPage/NpcWikiPage.svelte';
@@ -14,6 +15,8 @@
 
 	let npc = getNPC(+data.id) ?? newEmptyNPC();
 
+	const isNew = Number.isNaN(data.id) ?? false;
+
 	let editMode = false;
 	let promptInput = '';
 </script>
@@ -24,7 +27,10 @@
 			<button
 				on:click={() => {
 					editMode = !editMode;
-					updateNPC(npc);
+					const id = updateNPC(npc);
+					if (isNew) {
+						goto(`/npcs/${id}`);
+					}
 				}}
 				type="button"
 				class="
@@ -62,6 +68,6 @@
 		{/if}
 	</Toolbar>
 	{#if npc !== undefined}
-		<NpcWikiPage bind:npc {editMode} />
+		<NpcWikiPage bind:npc {editMode} save={updateNPC} />
 	{/if}
 </PageLayout>

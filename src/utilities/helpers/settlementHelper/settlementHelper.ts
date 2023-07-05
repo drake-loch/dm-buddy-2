@@ -98,7 +98,7 @@ export const saveSettlement = (settlement: Settlement): number => {
 	const index = settlements.findIndex((n) => n.id === settlement.id);
 
 	if (index === -1) {
-		settlement.id = settlements.length + 1;
+		settlement.id = settlements.length > 0 ? settlements[settlements.length - 1].id + 1 : 1;
 		settlements.push(settlement);
 	} else {
 		settlements[index] = settlement;
@@ -132,9 +132,6 @@ export const deleteSettlement = (id: number): Settlement[] => {
 		return [];
 	}
 	settlements = settlements.filter((n) => n.id !== id);
-	for (let i = 0; i < settlements.length; i++) {
-		settlements[i].id = i + 1;
-	}
 	saveData('settlements', settlements);
 	return settlements;
 };

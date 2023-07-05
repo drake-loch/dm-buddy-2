@@ -77,7 +77,7 @@
 	{#if settlement !== undefined}
 		{#if wikiView}
 			<!--  -->
-			<SettlementWiki {editMode} {settlement} />
+			<SettlementWiki {editMode} {settlement} save={saveSettlement} />
 		{/if}
 	{/if}
 </PageLayout>

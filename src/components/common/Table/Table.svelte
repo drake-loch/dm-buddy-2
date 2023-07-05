@@ -28,12 +28,12 @@
 		{#each _rows as row, i}
 			<tr class={`${i % 2 ? 'bg-gray-600' : ''}`}>
 				{#each Object.values(row) as cell}
-					{#if cell.link}
+					{#if cell?.link}
 						<td class={`text-center px-1 text-ellipsis`}>
-							<a class="text-blue-400 underline" href={cell.link}>{cell.value}</a>
+							<a class="text-blue-400 underline" href={cell.link}>{cell?.value}</a>
 						</td>
 					{:else}
-						<td class="text-center px-1 py-4">{cell.value}</td>
+						<td class="text-center px-1 py-4">{cell?.value}</td>
 					{/if}
 				{/each}
 				{#if $$slots.action}

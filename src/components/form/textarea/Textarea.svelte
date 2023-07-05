@@ -6,6 +6,7 @@
 	export let _class = '';
 	export let editMode = false;
 	export let disabled = false;
+	export let rows = 2;
 </script>
 
 <div class="flex flex-col">
@@ -19,6 +20,7 @@
 			class={`w-full rounded-md p-2 bg-gray-600 disabled:bg-slate-800 disabled:cursor-not-allowed ${_class}`}
 			bind:value
 			{disabled}
+			{rows}
 		/>
 	{:else if !editMode}
 		<p class={`w-full border border-black rounded-md p-2`}>{value}</p>

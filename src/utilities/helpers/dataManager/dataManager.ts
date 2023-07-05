@@ -56,7 +56,7 @@ export const downloadData = (data: any, filename: string): void => {
 
 // ====================================================================================================
 
-export const updateNPC = (npc: NPC): void => {
+export const updateNPC = (npc: NPC): number => {
 	let npcs = loadData('npcs') as NPC[];
 
 	if (npcs === undefined) {
@@ -66,13 +66,14 @@ export const updateNPC = (npc: NPC): void => {
 	const index = npcs.findIndex((n) => n.id === npc.id);
 
 	if (index === -1) {
-		npc.id = npcs.length + 1;
+		npc.id = npcs.length > 0 ? npcs[npcs.length - 1].id + 1 : 1; // [1, 2, 3] => [1, 2, 3, 4]
 		npcs.push(npc);
 	} else {
 		npcs[index] = npc;
 	}
 
 	saveData('npcs', npcs);
+	return npc.id;
 };
 
 export const getNPCs = (): NPC[] => {
@@ -101,9 +102,6 @@ export const deleteNPC = (id: number): NPC[] => {
 	const index = npcs.findIndex((n) => n.id === id);
 	if (index !== -1) {
 		npcs.splice(index, 1);
-	}
-	for (let i = 0; i < npcs.length; i++) {
-		npcs[i].id = i + 1;
 	}
 	saveData('npcs', npcs);
 	return npcs;
@@ -139,7 +137,7 @@ export const saveCharacter = (character: Character): number => {
 	const index = characters.findIndex((c) => c.id === character.id);
 
 	if (index === -1) {
-		character.id = characters.length + 1;
+		character.id = characters.length > 0 ? characters[characters.length - 1].id + 1 : 1; // [1, 2, 3] => [1, 2, 3, 4]
 		characters.push(character);
 	} else {
 		characters[index] = character;
@@ -160,9 +158,6 @@ export const deleteCharacter = (id: number): Character[] => {
 
 	if (index !== -1) {
 		characters.splice(index, 1);
-	}
-	for (let i = 0; i < characters.length; i++) {
-		characters[i].id = i + 1;
 	}
 	saveData('characters', characters);
 	return characters;

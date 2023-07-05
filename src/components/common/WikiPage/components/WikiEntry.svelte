@@ -10,7 +10,8 @@
 
 	export let placeholder = 'Enter data here';
 
-	export let deleteModule: () => void;
+	export let save: () => void = () => {};
+	export let deleteModule: () => void = () => {};
 
 	$: localTitle = title;
 	$: localData = data;
@@ -20,6 +21,7 @@
 	const saveModule = () => {
 		title = localTitle;
 		data = localData;
+		save();
 		editMode = false;
 	};
 
@@ -128,9 +130,10 @@
 		<Textarea
 			name={`${title}-textarea`}
 			{placeholder}
-			_class="border"
+			_class="border h"
 			editMode={true}
 			bind:value={localData}
+			rows={5}
 		/>
 	{:else}
 		{@html sanitizeInput(localData)}

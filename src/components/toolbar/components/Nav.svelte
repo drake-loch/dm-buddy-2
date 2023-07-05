@@ -18,4 +18,13 @@
 	<span class="">
 		<a href="/settlements">Settlements</a>
 	</span>
+	<span class="">
+		<a href="/campaigns">Campaigns</a>
+	</span>
+	<span class="">
+		<a href="/quests">Quests</a>
+	</span>
+	<span class="">
+		<a href="/sessions">Sessions</a>
+	</span>
 </div>

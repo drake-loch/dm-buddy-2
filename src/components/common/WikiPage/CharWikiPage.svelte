@@ -11,6 +11,7 @@
 
 	export let editMode = false;
 	export let char: Character = newEmptyCharacter();
+	export let save: (char: Character) => number;
 </script>
 
 <WikiPage title={char.fullName} type={`${char.gender} ${char.race}`}>
@@ -96,8 +97,8 @@
 				<span class="mb-2 w-full">
 					<WikiEntry
 						{editMode}
-						deleteModule={() => {
-							console.log('delete');
+						save={() => {
+							save(char);
 						}}
 						bind:title={info.title}
 						bind:data={info.data}
@@ -109,8 +110,8 @@
 			<WikiEntry
 				{editMode}
 				titleEditable={false}
-				deleteModule={() => {
-					console.log('delete');
+				save={() => {
+					save(char);
 				}}
 				title="Notes"
 				bind:data={char.notes}

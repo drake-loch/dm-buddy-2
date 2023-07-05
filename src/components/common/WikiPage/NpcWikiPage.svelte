@@ -10,6 +10,7 @@
 
 	export let editMode = false;
 	export let npc: NPC = newEmptyNPC();
+	export let save: (npc: NPC) => number;
 </script>
 
 <WikiPage title={npc.fullName} type={npc.type}>
@@ -116,9 +117,7 @@
 			<WikiEntry
 				{editMode}
 				titleEditable={false}
-				deleteModule={() => {
-					console.log('delete');
-				}}
+				save={() => save(npc)}
 				title="Notes"
 				bind:data={npc.notes}
 				placeholder="Notes"
