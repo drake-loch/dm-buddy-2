@@ -4,7 +4,8 @@
 	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
 	import {
 		handleCharacterPromptInput,
-		newEmptyCharacter
+		newEmptyCharacter,
+		type Character
 	} from '../../../utilities/helpers/charHelper';
 	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
 	import { generateRandomCharPrompt } from '../../../utilities/helpers/promptHelper';
@@ -15,6 +16,8 @@
 	export let data;
 
 	let char = getCharacter(+data.id) ?? newEmptyCharacter();
+
+	let isNew = Number.isNaN(data.id) ?? false;
 
 	let editMode = false;
 	let promptInput = '';
@@ -37,7 +40,9 @@
 					class="border border-green-500 rounded-sm px-4"
 					on:click={() => {
 						const id = saveCharacter(char);
-						goto(`/characters/${id}`);
+						if (isNew) {
+							goto(`/characters/${id}`);
+						}
 						editMode = !editMode;
 					}}>Save Character</button
 				>
@@ -75,7 +80,7 @@
 	</Toolbar>
 	{#if char !== undefined}
 		{#if wikiView}
-			<CharWikiPage bind:char {editMode} />
+			<CharWikiPage bind:char {editMode} save={saveCharacter} />
 		{:else}
 			<CharCreate {char} {editMode} />
 		{/if}

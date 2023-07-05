@@ -8,6 +8,7 @@
 
 	export let editMode = false;
 	export let settlement: Settlement = newSettlement();
+	export let save: (settlement: Settlement) => number;
 </script>
 
 <WikiPage
@@ -69,9 +70,7 @@
 			<WikiEntry
 				{editMode}
 				titleEditable={false}
-				deleteModule={() => {
-					console.log('delete');
-				}}
+				save={() => save(settlement)}
 				title="Notes"
 				bind:data={settlement.notes}
 				placeholder="Notes"
