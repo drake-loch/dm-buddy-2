@@ -20,7 +20,6 @@
 
 	let editMode = Number.isNaN(data.id) ?? false;
 	let isNew = Number.isNaN(data.id) ?? false;
-	console.log(isNew);
 
 	let promptInput = '';
 	let wikiView = true;

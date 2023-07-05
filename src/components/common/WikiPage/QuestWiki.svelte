@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { newQuest } from '../../../utilities/helpers/campaignHelper';
+	import { newQuest, saveQuest, type Quest } from '../../../utilities/helpers/campaignHelper';
 
 	import Table from '../Table/Table.svelte';
 	import WikiPage from './WikiPage.svelte';
@@ -10,6 +10,7 @@
 
 	export let editMode = false;
 	export let quest = newQuest();
+	export let save: (quest: Quest) => number = () => saveQuest(quest);
 </script>
 
 <WikiPage {editMode} bind:title={quest.name} type="Quest" staticType hideAdditionalInfo>
@@ -55,6 +56,7 @@
 								quest.steps.splice(i, 1);
 								quest.steps = quest.steps;
 							}}
+							save={() => save(quest)}
 						/>
 					</span>
 				{/each}

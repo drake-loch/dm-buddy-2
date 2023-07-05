@@ -4,7 +4,8 @@
 		type Campaign,
 		deleteQuest,
 		deleteSession,
-		getQuests
+		getQuests,
+		saveCampaign
 	} from '../../../utilities/helpers/campaignHelper';
 	import { getCharacter, getCharacters } from '../../../utilities/helpers/dataManager';
 	import Select from '../../form/select/Select.svelte';
@@ -19,6 +20,7 @@
 	export let campaign: Campaign = newCampaign();
 	export let campaignId: number | undefined = undefined;
 	export let toggleMod: (id: number) => void = () => {};
+	export let save: (campaign: Campaign) => number = () => saveCampaign(campaign);
 
 	const players = getCharacters().map((c) => {
 		return {
@@ -30,8 +32,6 @@
 			}
 		};
 	});
-
-	console.log(campaign);
 
 	$: questList = getQuests(campaignId ?? undefined).map((q) => {
 		return {
@@ -54,6 +54,7 @@
 	type="Campaign"
 	staticType
 	bind:additionalInfo={campaign.additionalInfo}
+	save={() => save(campaign)}
 >
 	<div slot="wikiPanel" class="w-full">
 		<hr />

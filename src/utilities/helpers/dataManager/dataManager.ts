@@ -9,7 +9,6 @@ export const saveData = (key: string, data: any): void => {
 	try {
 		const serializedData = JSON.stringify(data);
 		localStorage.setItem(key, serializedData);
-		console.log(`Data saved successfully with key: ${key}`);
 	} catch (error) {
 		console.error('Error saving data to local storage:', error);
 	}
@@ -19,11 +18,9 @@ export const loadData = (key: string): any | undefined => {
 	try {
 		const serializedData = localStorage.getItem(key);
 		if (serializedData === null) {
-			console.log(`No data found for key: ${key}`);
 			return undefined;
 		}
 		const data = JSON.parse(serializedData);
-		console.log(`Data loaded successfully with key: ${key}`);
 		return data;
 	} catch (error) {
 		console.error('Error loading data from local storage:', error);
@@ -46,8 +43,6 @@ export const downloadData = (data: any, filename: string): void => {
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
 		document.body.removeChild(downloadLink);
-
-		console.log('Data downloaded successfully');
 	} catch (error) {
 		console.error('Error downloading data:', error);
 	}

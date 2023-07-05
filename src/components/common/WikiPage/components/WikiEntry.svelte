@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getCharacters, getNPCs } from '../../../../utilities/helpers/dataManager';
+	import { getSettlements } from '../../../../utilities/helpers/settlementHelper';
 	import Input from '../../../form/input/Input.svelte';
 	import Textarea from '../../../form/textarea/Textarea.svelte';
 
@@ -70,6 +71,14 @@
 					label: c.fullName,
 					value: `${c.id}`,
 					link: `/npcs/${c.id}`
+				};
+			});
+		} else if (entityType === 'settlement') {
+			return getSettlements().map((c) => {
+				return {
+					label: c.name,
+					value: `${c.id}`,
+					link: `/settlements/${c.id}`
 				};
 			});
 		}

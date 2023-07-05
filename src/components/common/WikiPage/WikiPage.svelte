@@ -12,7 +12,7 @@
 	export let hidePanel = false;
 	export let hideAdditionalInfo = false;
 	export let staticType = false;
-	export let save: () => void = () => {};
+	export let save: () => any = () => {};
 </script>
 
 <div class="w-3/4 box-border">

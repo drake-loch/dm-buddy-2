@@ -24,13 +24,6 @@
 <PageLayout>
 	<Toolbar>
 		<div class="mb-4 w-full flex flex-col gap-2">
-			<button
-				type="button"
-				class="border border-orange-500 rounded-sm px-4 mb-2"
-				on:click={() => {
-					wikiView = !wikiView;
-				}}>{wikiView ? 'Sheet' : 'Wiki'}</button
-			>
 			{#if editMode}
 				<button
 					type="button"
@@ -75,9 +68,6 @@
 		{/if}
 	</Toolbar>
 	{#if settlement !== undefined}
-		{#if wikiView}
-			<!--  -->
-			<SettlementWiki {editMode} {settlement} save={saveSettlement} />
-		{/if}
+		<SettlementWiki {editMode} {settlement} save={saveSettlement} />
 	{/if}
 </PageLayout>

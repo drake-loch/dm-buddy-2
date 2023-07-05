@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { newSettlement, type Settlement } from '../../../utilities/helpers/settlementHelper';
+	import {
+		newSettlement,
+		saveSettlement,
+		type Settlement
+	} from '../../../utilities/helpers/settlementHelper';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
 	import WikiMultiSelect from './components/WikiMultiSelect.svelte';
@@ -8,7 +12,7 @@
 
 	export let editMode = false;
 	export let settlement: Settlement = newSettlement();
-	export let save: (settlement: Settlement) => number;
+	export let save: (settlement: Settlement) => number = () => saveSettlement(settlement);
 </script>
 
 <WikiPage
@@ -38,7 +42,6 @@
 			<WikiPanelKeyValue {editMode} label="Population:" bind:value={settlement.population} />
 			<WikiPanelKeyValue {editMode} label="Alignment:" bind:value={settlement.alignment} />
 			<WikiPanelKeyValue {editMode} label="Government:" bind:value={settlement.government} />
-			<!-- <WikiPanelKeyValue {editMode} label="Figures:" bind:value={settlement.authorityFigures} /> -->
 			<WikiMultiSelect
 				{editMode}
 				label="Authority Figures:"

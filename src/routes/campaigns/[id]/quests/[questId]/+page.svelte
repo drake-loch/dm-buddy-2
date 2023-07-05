@@ -12,16 +12,11 @@
 
 	export let data;
 
-	console.log(data);
-
 	let quest = getQuest(+data.questId) ?? newQuest();
 
 	let editMode = Number.isNaN(data.questId) ?? false;
 	let isNew = Number.isNaN(data.questId) ?? false;
 
-	console.log(isNew);
-
-	// let promptInput = '';
 	let wikiView = true;
 </script>
 
