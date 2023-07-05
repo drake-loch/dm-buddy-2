@@ -6,14 +6,32 @@
 		deleteSession,
 		getQuests
 	} from '../../../utilities/helpers/campaignHelper';
+	import { getCharacter, getCharacters } from '../../../utilities/helpers/dataManager';
+	import Select from '../../form/select/Select.svelte';
 	import Table from '../Table/Table.svelte';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
+	import WikiMultiSelect from './components/WikiMultiSelect.svelte';
+	import WikiPanelKeyValue from './components/WikiPanelKeyValue.svelte';
+	import WikiPanelSection from './components/WikiPanelSection.svelte';
 
 	export let editMode = false;
 	export let campaign: Campaign = newCampaign();
 	export let campaignId: number | undefined = undefined;
-	$: console.log(editMode);
+	export let toggleMod: (id: number) => void = () => {};
+
+	const players = getCharacters().map((c) => {
+		return {
+			value: c.id,
+			label: c.fullName,
+			action: () => {
+				//view character
+				toggleMod(c.id);
+			}
+		};
+	});
+
+	console.log(campaign);
 
 	$: questList = getQuests(campaignId ?? undefined).map((q) => {
 		return {
@@ -35,8 +53,24 @@
 	bind:title={campaign.name}
 	type="Campaign"
 	staticType
-	additionalInfo={campaign.additionalInfo}
+	bind:additionalInfo={campaign.additionalInfo}
 >
+	<div slot="wikiPanel" class="w-full">
+		<hr />
+
+		<WikiPanelSection>
+			<Select
+				{editMode}
+				label="Players:"
+				bind:values={campaign.characters}
+				options={players ?? []}
+			/>
+		</WikiPanelSection>
+
+		<WikiPanelSection removeBorder>
+			<WikiPanelKeyValue label="Notes:" bind:value={campaign.notes} textarea showIfEmpty />
+		</WikiPanelSection>
+	</div>
 	<div class="" slot="wiki-top">
 		<div class="flex w-full mb-24 justify-evenly">
 			<div class="w-1/3">
@@ -86,17 +120,5 @@
 				</Table>
 			</div>
 		</div>
-	</div>
-	<div slot="wiki" class="mb-2 w-full">
-		<WikiEntry
-			{editMode}
-			titleEditable={false}
-			deleteModule={() => {
-				console.log('delete');
-			}}
-			title="Notes"
-			bind:data={campaign.notes}
-			placeholder="Notes"
-		/>
 	</div>
 </WikiPage>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { newEmptyCharacter, type Character } from '../../../utilities/helpers/charHelper';
+	import { saveCharacter } from '../../../utilities/helpers/dataManager';
 	import { newEmptyNPC, type NPC } from '../../../utilities/helpers/npcHelper/npcHelper';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
@@ -11,7 +12,7 @@
 
 	export let editMode = false;
 	export let char: Character = newEmptyCharacter();
-	export let save: (char: Character) => number;
+	export let save: (char: Character) => void = () => saveCharacter(char);
 </script>
 
 <WikiPage title={char.fullName} type={`${char.gender} ${char.race}`}>
@@ -116,6 +117,7 @@
 				title="Notes"
 				bind:data={char.notes}
 				placeholder="Notes"
+				canEdit
 			/>
 		</span>
 	</div>

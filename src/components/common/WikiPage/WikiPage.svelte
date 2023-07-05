@@ -12,6 +12,7 @@
 	export let hidePanel = false;
 	export let hideAdditionalInfo = false;
 	export let staticType = false;
+	export let save: () => void = () => {};
 </script>
 
 <div class="w-3/4 box-border">
@@ -74,11 +75,13 @@
 			{#each additionalInfo as { title, data }, i}
 				<span class="mb-2 w-full">
 					<WikiEntry
-						{title}
-						{data}
+						{editMode}
+						bind:title
+						bind:data
 						deleteModule={() => {
 							additionalInfo = additionalInfo.filter((_, index) => index !== i);
 						}}
+						{save}
 					/>
 				</span>
 			{/each}
