@@ -15,9 +15,9 @@
 
 	let npc = getNPC(+data.id) ?? newEmptyNPC();
 
-	const isNew = Number.isNaN(data.id) ?? false;
+	let editMode = Number.isNaN(data.id) ?? false;
+	let isNew = Number.isNaN(data.id) ?? false;
 
-	let editMode = false;
 	let promptInput = '';
 </script>
 

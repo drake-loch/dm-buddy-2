@@ -70,7 +70,7 @@ export type NPC = {
 	rpNotes: string;
 	additionalInfo: { title: string; data: string }[];
 	quests: { title: string; data: string; rewards: string[] }[];
-	imagePrompt: string;
+	imageUrl?: string;
 };
 
 export const newEmptyNPC = (): NPC => {
@@ -176,8 +176,7 @@ export const newEmptyNPC = (): NPC => {
 		notes: '',
 		rpNotes: '',
 		additionalInfo: [],
-		quests: [],
-		imagePrompt: ''
+		quests: []
 	};
 };
 
@@ -219,7 +218,6 @@ export const handleNPCPromptInput = (npc: NPC, promptInput: string): NPC => {
 	npc.additionalInfo = parsed?.additionalInfo ?? npc.additionalInfo;
 	npc.type = parsed?.type ?? npc.type;
 	npc.size = parsed?.size ?? npc.size;
-	npc.imagePrompt = parsed?.imagePrompt ?? npc.imagePrompt;
 
 	npc.equipment =
 		parsed?.equipment.map((item: any) => {

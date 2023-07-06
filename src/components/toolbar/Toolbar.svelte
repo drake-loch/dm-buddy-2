@@ -2,10 +2,11 @@
 	import Nav from './components/Nav.svelte';
 
 	export let viewNav = false;
+	export let _class = '';
 </script>
 
 <div
-	class="border border-white w-[25rem] h-[52rem] overflow-auto p-4 box-border flex flex-col gap-4"
+	class={`border border-white w-[25rem] h-[52rem] overflow-auto p-4 box-border flex flex-col gap-4 ${_class}`}
 >
 	<!-- Nav -->
 	{#if viewNav}

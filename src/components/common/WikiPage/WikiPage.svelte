@@ -13,6 +13,7 @@
 	export let hideAdditionalInfo = false;
 	export let staticType = false;
 	export let save: () => any = () => {};
+	export let imageUrl: string | undefined = undefined;
 </script>
 
 <div class="w-3/4 box-border">
@@ -22,13 +23,17 @@
 			<div
 				class="border-b border-r-2 rounded-sm border-black w-1/3 h-[52rem] flex flex-col items-center p-2 bg-gray-500 overflow-auto"
 			>
-				<span class="">
-					<img
-						src="https://via.placeholder.com/150"
-						alt="placeholder"
-						class="w-full h-full object-cover"
-					/>
-				</span>
+				{#if imageUrl}
+					<span class="w-[150px] h-[150px] bg-gray-300">
+						<img src={imageUrl} alt="" class="w-full h-full object-cover" />
+					</span>
+				{/if}
+
+				{#if editMode}
+					<span class="w-3/4 mt-2 text-black">
+						<input type="text" class="w-full px-2" bind:value={imageUrl} placeholder="Image URL" />
+					</span>
+				{/if}
 				<div class="mb-4 p-2 gap-2 flex flex-col items-center">
 					{#if editMode}
 						<input type="text" class="w-full px-2" bind:value={title} placeholder="Title/Name" />

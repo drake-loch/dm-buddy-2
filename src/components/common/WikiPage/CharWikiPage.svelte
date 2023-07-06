@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { newEmptyCharacter, type Character } from '../../../utilities/helpers/charHelper';
 	import { saveCharacter } from '../../../utilities/helpers/dataManager';
-	import { newEmptyNPC, type NPC } from '../../../utilities/helpers/npcHelper/npcHelper';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
-	import WikiPanelBoolValue from './components/WikiPanelBoolValue.svelte';
 	import WikiPanelKeyValue from './components/WikiPanelKeyValue.svelte';
 	import WikiPanelSection from './components/WikiPanelSection.svelte';
 	import WikiPanelTitle from './components/WikiPanelTitle.svelte';
@@ -15,7 +13,12 @@
 	export let save: (char: Character) => void = () => saveCharacter(char);
 </script>
 
-<WikiPage title={char.fullName} type={`${char.gender} ${char.race}`}>
+<WikiPage
+	{editMode}
+	title={char.fullName}
+	type={`${char.gender} ${char.race}`}
+	bind:imageUrl={char.imageUrl}
+>
 	<div slot="wikiPanel" class="w-full">
 		<hr />
 		<!-- combat details -->
@@ -117,7 +120,6 @@
 				title="Notes"
 				bind:data={char.notes}
 				placeholder="Notes"
-				canEdit
 			/>
 		</span>
 	</div>

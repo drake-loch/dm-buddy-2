@@ -14,7 +14,13 @@
 	export let save: (npc: NPC) => number = () => updateNPC(npc);
 </script>
 
-<WikiPage title={npc.fullName} type={npc.type}>
+<WikiPage
+	{editMode}
+	title={npc.fullName}
+	type={npc.type}
+	bind:imageUrl={npc.imageUrl}
+	hideAdditionalInfo
+>
 	<div slot="wikiPanel" class="w-full">
 		<WikiPanelSection>
 			<WikiStats {editMode} bind:stats={npc.stats} />
