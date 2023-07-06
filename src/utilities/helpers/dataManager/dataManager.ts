@@ -47,7 +47,34 @@ export const downloadData = (data: any, filename: string): void => {
 		console.error('Error downloading data:', error);
 	}
 };
-//upload
+
+export const downloadAllData = (): void => {
+	const data = {
+		npcs: loadData('npcs'),
+		characters: loadData('characters'),
+		settlements: loadData('settlements'),
+		campaign: loadData('campaign'),
+		quests: loadData('quests'),
+		session: loadData('session')
+	};
+	downloadData(data, 'dm-tool-data.json');
+};
+export const uploadAllData = (file: File): void => {
+	console.log('uploading file', file);
+
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		const data = JSON.parse(e.target?.result as string);
+		console.log('data', data);
+		saveData('npcs', data.npcs);
+		saveData('characters', data.characters);
+		saveData('settlements', data.settlements);
+		saveData('campaign', data.campaign);
+		saveData('quests', data.quests);
+		saveData('session', data.session);
+	};
+	reader.readAsText(file);
+};
 
 // ====================================================================================================
 

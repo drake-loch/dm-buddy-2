@@ -5,7 +5,8 @@
 		deleteQuest,
 		deleteSession,
 		getQuests,
-		saveCampaign
+		saveCampaign,
+		getSessions
 	} from '../../../utilities/helpers/campaignHelper';
 	import { getCharacter, getCharacters } from '../../../utilities/helpers/dataManager';
 	import Select from '../../form/select/Select.svelte';
@@ -40,7 +41,7 @@
 		};
 	});
 
-	$: sessionList = campaign.sessions.map((s) => {
+	$: sessionList = getSessions().map((s) => {
 		return {
 			name: { value: s.name, link: `/campaigns/${campaignId}/sessions/${s.id}` },
 			order: { value: `${s.id}` }
@@ -55,6 +56,7 @@
 	staticType
 	bind:additionalInfo={campaign.additionalInfo}
 	save={() => save(campaign)}
+	bind:imageUrl={campaign.imageUrl}
 >
 	<div slot="wikiPanel" class="w-full">
 		<hr />

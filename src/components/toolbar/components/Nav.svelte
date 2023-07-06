@@ -27,4 +27,7 @@
 	<span class="">
 		<a href="/sessions">Sessions</a>
 	</span>
+	<span class="">
+		<a href="/settings">Settings</a>
+	</span>
 </div>

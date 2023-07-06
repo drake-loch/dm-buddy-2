@@ -15,7 +15,7 @@
 	export let save: () => void = () => {};
 	export let deleteModule: () => void = () => {};
 
-	export let canEdit = false;
+	// export let canEdit = false;
 
 	$: localTitle = title;
 	$: localData = data;
@@ -26,9 +26,7 @@
 		title = localTitle;
 		data = localData;
 		save();
-		if (canEdit) {
-			editMode = false;
-		}
+		editMode = false;
 	};
 
 	const sanitizeInput = (input: string) => {
@@ -132,16 +130,16 @@
 			>
 		{:else}
 			<h3 class="font-bold text-2xl">{title}</h3>
-			{#if canEdit}
-				<button
-					type="button"
-					class="text-center rounded-md p-0.5"
-					aria-label="edit module"
-					on:click={() => {
-						editMode = true;
-					}}>✏️</button
-				>
-			{/if}
+			<!-- {#if canEdit} -->
+			<button
+				type="button"
+				class="text-center rounded-md p-0.5"
+				aria-label="edit module"
+				on:click={() => {
+					editMode = true;
+				}}>✏️</button
+			>
+			<!-- {/if} -->
 		{/if}
 	</span>
 

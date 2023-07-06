@@ -91,6 +91,7 @@ export type Character = {
 	};
 	notes: string;
 	additionalInfo: { title: string; data: string }[];
+	imageUrl?: string;
 };
 
 export const newEmptyCharacter = (): Character => {

@@ -4,12 +4,12 @@ export type Campaign = {
 	id: number;
 	name: string;
 	description: string;
-	imageURL: string;
+	imageUrl: string;
 	characters: number[];
 	npcs: number[];
 	settlements: number[];
 	quests: number[];
-	sessions: Session[];
+	sessions: number[];
 	additionalInfo: { title: string; data: string }[];
 	notes: string;
 };
@@ -18,7 +18,7 @@ export type Quest = {
 	id: number;
 	name: string;
 	description: string;
-	imageURL: string;
+	imageUrl: string;
 	steps: { title: string; description: string }[];
 	notes: string;
 	rewards: string;
@@ -28,11 +28,14 @@ export type Quest = {
 export type Session = {
 	id: number;
 	name: string;
-	date: string;
+	createdDate: string;
+	updatedDate: string;
 	quests: number[];
-	additionalInfo: { title: string; description: string }[];
-	newNPCs: number[];
+	additionalInfo: { title: string; data: string }[];
+	characters: number[];
+	npcs: number[];
 	notes: string;
+	campaignId?: number;
 };
 
 export let newCampaign = (): Campaign => {
@@ -40,7 +43,7 @@ export let newCampaign = (): Campaign => {
 		id: 0,
 		name: '',
 		description: '',
-		imageURL: '',
+		imageUrl: '',
 		characters: [],
 		npcs: [],
 		settlements: [],
@@ -56,7 +59,7 @@ export let newQuest = (): Quest => {
 		id: 0,
 		name: '',
 		description: '',
-		imageURL: '',
+		imageUrl: '',
 		steps: [],
 		notes: '',
 		rewards: '',
@@ -67,11 +70,13 @@ export let newQuest = (): Quest => {
 export let newSession = (): Session => {
 	return {
 		id: 0,
-		name: '',
-		date: '',
+		name: `New Session ${new Date().toLocaleDateString()}`,
+		createdDate: new Date().toLocaleDateString(),
+		updatedDate: new Date().toLocaleDateString(),
 		quests: [],
 		additionalInfo: [],
-		newNPCs: [],
+		npcs: [],
+		characters: [],
 		notes: ''
 	};
 };
@@ -205,6 +210,7 @@ export let saveSession = (session: Session): number => {
 	if (sessions === undefined) {
 		sessions = [];
 	}
+	session.updatedDate = new Date().toLocaleDateString();
 
 	if (session.id === 0) {
 		session.id = sessions.length + 1;
@@ -220,8 +226,18 @@ export let saveSession = (session: Session): number => {
 
 export let getSession = (id: number): Session | undefined => {
 	let sessions = loadData('sessions') as Session[];
+	if (sessions === undefined) {
+		return undefined;
+	}
 
 	return sessions.find((s) => s.id === id);
+};
+export let getSessions = (): Session[] => {
+	let sessions = loadData('sessions') as Session[];
+	if (sessions === undefined) {
+		return [];
+	}
+	return sessions;
 };
 
 export let deleteSession = (id: number): Session[] => {
@@ -232,4 +248,11 @@ export let deleteSession = (id: number): Session[] => {
 	}
 	saveData('sessions', sessions);
 	return sessions;
+};
+
+export let addSessionToCampaign = (campaignId: number, sessionId: number): Campaign => {
+	let campaign = getCampaign(campaignId) as Campaign;
+	campaign.sessions.push(sessionId);
+	saveCampaign(campaign);
+	return campaign;
 };

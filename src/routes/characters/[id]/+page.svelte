@@ -17,9 +17,9 @@
 
 	let char = getCharacter(+data.id) ?? newEmptyCharacter();
 
+	let editMode = Number.isNaN(data.id) ?? false;
 	let isNew = Number.isNaN(data.id) ?? false;
 
-	let editMode = false;
 	let promptInput = '';
 	let wikiView = false;
 </script>

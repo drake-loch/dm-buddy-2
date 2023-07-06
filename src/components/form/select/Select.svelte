@@ -50,19 +50,19 @@
 </script>
 
 {#if values.length > 0 || editMode}
-	<span class="flex gap-2 text-sm">
+	<span class="flex gap-2 text-sm w-full">
 		{#if editMode}
 			<span class="flex flex-col w-full relative">
 				<span class="font-semibold text-black">{label}</span>
 				<div class="relative">
 					<button
 						type="button"
-						class="border border-black flex bg-gray-100 p-1 text-xs min-h-[2rem]"
+						class="border border-black flex bg-gray-100 p-1 text-xs min-h-[2rem] w-full"
 						on:click={() => {
 							collapsed = !collapsed;
 						}}
 					>
-						<span class=" flex flex-wrap space-x-0.5">
+						<span class="flex flex-wrap space-x-0.5 w-full">
 							{#each selected as s, i}
 								<p class="text-black">
 									{s.label}{i + 1 == selected.length ? '' : ','}
@@ -70,7 +70,7 @@
 							{/each}
 						</span>
 						<p
-							class={`text-black flex justify-center items-center text-lg transition px-2 ${
+							class={`text-black flex justify-center items-center text-lg transition px-2  ${
 								collapsed ? '' : 'rotate-90'
 							}`}
 						>

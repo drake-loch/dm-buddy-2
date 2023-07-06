@@ -121,6 +121,14 @@
 						class="
             border border-green-500 rounded-md w-full hover:bg-green-400">New Quest</button
 					>
+					<button
+						on:click={() => {
+							goto(`/campaigns/${data.id}/sessions/new`);
+						}}
+						type="button"
+						class="
+            border border-green-500 rounded-md w-full hover:bg-green-400">New Session</button
+					>
 				{/if}
 
 				<button
