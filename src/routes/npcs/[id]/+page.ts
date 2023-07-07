@@ -1,4 +1,4 @@
-export function load({ params }) {
+export function load({ params }: { params: { id: string } }) {
 	const id = +params.id;
 	return { id };
 }

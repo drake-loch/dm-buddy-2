@@ -18,6 +18,7 @@
 	title={char.fullName}
 	type={`${char.gender} ${char.race}`}
 	bind:imageUrl={char.imageUrl}
+	hideAdditionalInfo
 >
 	<div slot="wikiPanel" class="w-full">
 		<hr />

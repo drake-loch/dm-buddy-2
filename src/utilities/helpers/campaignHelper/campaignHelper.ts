@@ -99,32 +99,41 @@ export let saveCampaign = (campaign: Campaign): number => {
 	}
 
 	saveData('campaigns', campaigns);
+
 	return campaign.id;
 };
 
 export let getCampaign = (id: number): Campaign | undefined => {
 	const campaigns = loadData('campaigns') as Campaign[];
+
 	if (campaigns === undefined) {
 		return undefined;
 	}
+
 	return campaigns.find((c) => c.id === id);
 };
 
 export let getCampaigns = (): Campaign[] => {
 	const campaigns = loadData('campaigns') as Campaign[];
+
 	if (campaigns === undefined) {
 		return [];
 	}
+
 	return campaigns;
 };
 
 export let deleteCampaign = (id: number): Campaign[] => {
 	let campaigns = loadData('campaigns') as Campaign[];
+
 	campaigns = campaigns.filter((c) => c.id !== id);
+
 	for (let i = 0; i < campaigns.length; i++) {
 		campaigns[i].id = i + 1;
 	}
+
 	saveData('campaigns', campaigns);
+
 	return campaigns;
 };
 
@@ -171,13 +180,17 @@ export let getQuest = (questId: number, campaignId?: number): Quest | undefined 
 
 export let getQuests = (campaignId?: number): Quest[] => {
 	let campaign = getCampaign(campaignId ?? -99) as Campaign;
+
 	if (campaign === undefined) {
 		return [];
 	}
+
 	const quests = loadData('quests') as Quest[];
+
 	if (quests === undefined) {
 		return [];
 	}
+
 	if (campaignId === undefined) {
 		return quests;
 	} else {
@@ -185,19 +198,32 @@ export let getQuests = (campaignId?: number): Quest[] => {
 	}
 };
 
-export let deleteQuest = (id: number): Quest[] => {
+export let deleteQuest = (id: number, campaignId?: number): Quest[] => {
 	let quests = loadData('quests') as Quest[];
 	quests = quests.filter((q) => q.id !== id);
+
 	for (let i = 0; i < quests.length; i++) {
 		quests[i].id = i + 1;
 	}
+
 	saveData('quests', quests);
+
+	if (campaignId !== undefined) {
+		removeQuestFromCampaign(campaignId, id);
+	}
+
 	return quests;
 };
 
 export let addQuestToCampaign = (campaignId: number, questId: number): Campaign => {
 	let campaign = getCampaign(campaignId) as Campaign;
 	campaign.quests.push(questId);
+	saveCampaign(campaign);
+	return campaign;
+};
+export let removeQuestFromCampaign = (campaignId: number, questId: number): Campaign => {
+	let campaign = getCampaign(campaignId) as Campaign;
+	campaign.quests = campaign.quests.filter((q) => q !== questId);
 	saveCampaign(campaign);
 	return campaign;
 };
@@ -240,19 +266,33 @@ export let getSessions = (): Session[] => {
 	return sessions;
 };
 
-export let deleteSession = (id: number): Session[] => {
+export let deleteSession = (id: number, campaignId?: number): Session[] => {
 	let sessions = loadData('sessions') as Session[];
 	sessions = sessions.filter((s) => s.id !== id);
+
 	for (let i = 0; i < sessions.length; i++) {
 		sessions[i].id = i + 1;
 	}
+
 	saveData('sessions', sessions);
+
+	if (campaignId !== undefined) {
+		removeSessionFromCampaign(campaignId, id);
+	}
+
 	return sessions;
 };
 
 export let addSessionToCampaign = (campaignId: number, sessionId: number): Campaign => {
 	let campaign = getCampaign(campaignId) as Campaign;
 	campaign.sessions.push(sessionId);
+	saveCampaign(campaign);
+	return campaign;
+};
+
+export let removeSessionFromCampaign = (campaignId: number, sessionId: number): Campaign => {
+	let campaign = getCampaign(campaignId) as Campaign;
+	campaign.sessions = campaign.sessions.filter((s) => s !== sessionId);
 	saveCampaign(campaign);
 	return campaign;
 };

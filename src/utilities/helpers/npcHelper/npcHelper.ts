@@ -1,76 +1,15 @@
+import type { CharacterBase } from '../charHelper';
 import { getNPCs } from '../dataManager';
 
 export type Skill = {
 	proficient: boolean;
 };
-export type NPC = {
-	id: number;
-	fullName: string;
+export type NPC = CharacterBase & {
 	type: string;
-	race: string;
-	gender: string;
-	size: string;
 	occupation: string;
-	age: number;
-	alignment: string;
-	characteristics: {
-		personalityTraits: string;
-		ideals: string;
-		bonds: string;
-		flaws: string;
-	};
-	stats: {
-		str: number;
-		dex: number;
-		con: number;
-		int: number;
-		wis: number;
-		cha: number;
-	};
-	savingThrows: {
-		str: boolean;
-		dex: boolean;
-		con: boolean;
-		int: boolean;
-		wis: boolean;
-		cha: boolean;
-	};
-	skills: {
-		acrobatics: Skill;
-		animalHandling: Skill;
-		arcana: Skill;
-		athletics: Skill;
-		deception: Skill;
-		history: Skill;
-		insight: Skill;
-		intimidation: Skill;
-		investigation: Skill;
-		medicine: Skill;
-		nature: Skill;
-		perception: Skill;
-		performance: Skill;
-		persuasion: Skill;
-		religion: Skill;
-		sleightOfHand: Skill;
-		stealth: Skill;
-		survival: Skill;
-	};
-	passivePerception: number;
-	otherProficiencies: { type: string; bonus: number }[];
-	armorClass: number;
-	initiative: number;
-	speed: number;
-	hitPoints: number;
-	currentHitPoints: number;
-	hitDice: string;
-	equipment: { name: string; amount: number }[];
-	features: { title: string; source: string; desc: string }[];
 	actions: { title: string; desc: string }[];
-	notes: string;
 	rpNotes: string;
-	additionalInfo: { title: string; data: string }[];
 	quests: { title: string; data: string; rewards: string[] }[];
-	imageUrl?: string;
 };
 
 export const newEmptyNPC = (): NPC => {
@@ -219,13 +158,15 @@ export const handleNPCPromptInput = (npc: NPC, promptInput: string): NPC => {
 	npc.type = parsed?.type ?? npc.type;
 	npc.size = parsed?.size ?? npc.size;
 
-	npc.equipment =
-		parsed?.equipment.map((item: any) => {
-			return {
-				name: item.name ?? item,
-				amount: item?.amount ?? 1
-			};
-		}) ?? npc.equipment;
+	if (parsed?.equipment) {
+		npc.equipment =
+			parsed?.equipment.map((item: any) => {
+				return {
+					name: item.name ?? item,
+					amount: item?.amount ?? 1
+				};
+			}) ?? npc.equipment;
+	}
 	return npc;
 };
 

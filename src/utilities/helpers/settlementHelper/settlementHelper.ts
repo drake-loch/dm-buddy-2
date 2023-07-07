@@ -9,7 +9,7 @@ export type Settlement = {
 	alignment: string;
 	description: string;
 	government: string;
-	authorityFigures: { id: number; role: string }[];
+	authorityFigures: { id: number; role: string; type: 'npc' | 'character'; name: string }[];
 	languages: string;
 	religion: string;
 	currency: string;
