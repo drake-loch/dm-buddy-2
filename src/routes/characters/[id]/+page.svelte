@@ -8,7 +8,10 @@
 		type Character
 	} from '../../../utilities/helpers/charHelper';
 	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
-	import { generateRandomCharPrompt } from '../../../utilities/helpers/promptHelper';
+	import {
+		generateQuickCharPrompt,
+		generateRandomCharPrompt
+	} from '../../../utilities/helpers/promptHelper';
 	import CharCreate from '../../../pages/CharCreate/index.svelte';
 	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
 	import { goto } from '$app/navigation';
@@ -74,6 +77,9 @@
 				}}
 				handleGenerate={() => {
 					promptInput = generateRandomCharPrompt(char);
+				}}
+				handleQuickGenerate={() => {
+					promptInput = generateQuickCharPrompt(char);
 				}}
 			/>
 		{/if}

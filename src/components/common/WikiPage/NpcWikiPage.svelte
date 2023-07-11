@@ -6,6 +6,7 @@
 	import WikiPanelBoolValue from './components/WikiPanelBoolValue.svelte';
 	import WikiPanelKeyValue from './components/WikiPanelKeyValue.svelte';
 	import WikiPanelSection from './components/WikiPanelSection.svelte';
+	import WikiPanelSelect from './components/WikiPanelSelect.svelte';
 	import WikiPanelTitle from './components/WikiPanelTitle.svelte';
 	import WikiStats from './components/WikiStats.svelte';
 
@@ -16,10 +17,11 @@
 
 <WikiPage
 	{editMode}
-	title={npc.fullName}
-	type={npc.type}
+	bind:title={npc.fullName}
+	type={`${npc.size} ${npc.race}, ${npc.alignment}`}
 	bind:imageUrl={npc.imageUrl}
 	hideAdditionalInfo
+	staticType
 >
 	<div slot="wikiPanel" class="w-full">
 		<WikiPanelSection>
@@ -29,11 +31,78 @@
 		<!-- Bio -->
 		<WikiPanelSection>
 			<slot name="bio" />
-			<WikiPanelKeyValue {editMode} label="Name:" bind:value={npc.fullName} />
 			<WikiPanelKeyValue {editMode} label="Age:" bind:value={npc.age} />
 			<WikiPanelKeyValue {editMode} label="Race:" bind:value={npc.race} />
+			<WikiPanelKeyValue {editMode} label="Gender:" bind:value={npc.gender} />
 			<WikiPanelKeyValue {editMode} label="Occupation:" bind:value={npc.occupation} />
-			<WikiPanelBoolValue editMode={false} label="Quest:" checked={npc.quests.length > 0} />
+			<!-- alighnment -->
+			<WikiPanelSelect
+				{editMode}
+				label="Alignment:"
+				bind:value={npc.alignment}
+				options={[
+					{ label: 'Lawful Good', value: 'Lawful Good' },
+					{ label: 'Neutral Good', value: 'Neutral Good' },
+					{ label: 'Chaotic Good', value: 'Chaotic Good' },
+					{ label: 'Lawful Neutral', value: 'Lawful Neutral' },
+					{ label: 'Neutral', value: 'Neutral' },
+					{ label: 'Chaotic Neutral', value: 'Chaotic Neutral' },
+					{ label: 'Lawful Evil', value: 'Lawful Evil' },
+					{ label: 'Neutral Evil', value: 'Neutral Evil' },
+					{ label: 'Chaotic Evil', value: 'Chaotic Evil' }
+				]}
+			/>
+			<!-- size -->
+			<WikiPanelSelect
+				{editMode}
+				label="Size:"
+				bind:value={npc.size}
+				options={[
+					{ label: "Tiny (2' - 4')", value: 'Tiny' },
+					{ label: "Small (4' - 5')", value: 'Small' },
+					{ label: "Medium (5' - 6')", value: 'Medium' },
+					{ label: "Large (6' - 8')", value: 'Large' },
+					{ label: "Huge (8' - 16')", value: 'Huge' },
+					{ label: "Gargantuan (16' - 32')", value: 'Gargantuan' }
+				]}
+			/>
+			<span class="w-full mt-4">
+				<WikiPanelBoolValue editMode={false} label="Quest:" checked={npc.quests.length > 0} />
+			</span>
+		</WikiPanelSection>
+
+		<WikiPanelSection removeBorder _class="space-y-4">
+			<WikiPanelTitle title="Characteristics" />
+			<WikiPanelKeyValue
+				{editMode}
+				label="Personality Traits"
+				bind:value={npc.characteristics.personalityTraits}
+				textarea
+			/>
+			<WikiPanelKeyValue
+				{editMode}
+				label="Ideals"
+				bind:value={npc.characteristics.ideals}
+				textarea
+			/>
+			<WikiPanelKeyValue {editMode} label="Bonds" bind:value={npc.characteristics.bonds} textarea />
+			<WikiPanelKeyValue {editMode} label="Flaws" bind:value={npc.characteristics.flaws} textarea />
+		</WikiPanelSection>
+
+		<WikiPanelSection _class="space-y-1">
+			<WikiPanelTitle title="Equipment" />
+			{#each npc.equipment as item}
+				{#if editMode}
+					<WikiPanelKeyValue {editMode} label="Name" bind:value={item.name} />
+					<WikiPanelKeyValue {editMode} label="Amount" bind:value={item.amount} />
+				{:else}
+					<WikiPanelKeyValue
+						label={item.name}
+						value={item.amount > 1 ? `x${item.amount}` : ''}
+						showIfEmpty
+					/>
+				{/if}
+			{/each}
 		</WikiPanelSection>
 
 		<!-- Features -->
@@ -48,8 +117,22 @@
 		<WikiPanelSection removeBorder={npc.actions.length <= 0}>
 			<slot name="actions" />
 			<WikiPanelTitle title="Actions" />
+			<button
+				type="button"
+				class="bg-green-600 px-1"
+				on:click={() => {
+					npc.actions.push({ title: '', desc: '' });
+					npc.actions = [...npc.actions];
+				}}>+ Add Action</button
+			>
 			{#each npc.actions as action}
-				<WikiPanelKeyValue {editMode} label={action.title} bind:value={action.desc} textarea />
+				<WikiPanelKeyValue {editMode} label="Action name" bind:value={action.title} />
+				<WikiPanelKeyValue
+					{editMode}
+					label="Action Description"
+					bind:value={action.desc}
+					textarea
+				/>
 			{/each}
 		</WikiPanelSection>
 

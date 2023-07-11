@@ -19,6 +19,11 @@
 	let editMode = Number.isNaN(data.id) ?? false;
 	let promptInput = '';
 	let wikiView = true;
+
+	const submit = (form: any) => {
+		form.preventDefault();
+		console.log(form);
+	};
 </script>
 
 <PageLayout>

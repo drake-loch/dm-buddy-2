@@ -5,6 +5,7 @@
 	import WikiEntry from './components/WikiEntry.svelte';
 	import WikiPanelKeyValue from './components/WikiPanelKeyValue.svelte';
 	import WikiPanelSection from './components/WikiPanelSection.svelte';
+	import WikiPanelSelect from './components/WikiPanelSelect.svelte';
 	import WikiPanelTitle from './components/WikiPanelTitle.svelte';
 	import WikiStats from './components/WikiStats.svelte';
 
@@ -15,9 +16,11 @@
 
 <WikiPage
 	{editMode}
-	title={char.fullName}
+	bind:title={char.fullName}
 	type={`${char.gender} ${char.race}`}
 	bind:imageUrl={char.imageUrl}
+	hideAdditionalInfo
+	staticType
 >
 	<div slot="wikiPanel" class="w-full">
 		<hr />
@@ -34,11 +37,35 @@
 
 		<!-- Bio -->
 		<WikiPanelSection>
-			<WikiPanelKeyValue {editMode} label="Name:" bind:value={char.fullName} />
 			<WikiPanelKeyValue {editMode} label="Age:" bind:value={char.age} />
 			<WikiPanelKeyValue {editMode} label="Race:" bind:value={char.race} />
 			<WikiPanelKeyValue {editMode} label="Class:" bind:value={char.class} />
 			<WikiPanelKeyValue {editMode} label="Background:" bind:value={char.background} />
+			<!-- gender -->
+			<WikiPanelKeyValue {editMode} label="Gender:" bind:value={char.gender} />
+			<WikiPanelSelect
+				{editMode}
+				label="Alignment:"
+				bind:value={char.alignment}
+				options={[
+					{ label: 'Lawful Good', value: 'Lawful Good' },
+					{ label: 'Neutral Good', value: 'Neutral Good' },
+					{ label: 'Chaotic Good', value: 'Chaotic Good' },
+					{ label: 'Lawful Neutral', value: 'Lawful Neutral' },
+					{ label: 'Neutral', value: 'Neutral' },
+					{ label: 'Chaotic Neutral', value: 'Chaotic Neutral' },
+					{ label: 'Lawful Evil', value: 'Lawful Evil' },
+					{ label: 'Neutral Evil', value: 'Neutral Evil' },
+					{ label: 'Chaotic Evil', value: 'Chaotic Evil' }
+				]}
+			/>
+		</WikiPanelSection>
+		<WikiPanelSection _class="space-y-4">
+			<WikiPanelTitle title="Equipment" />
+			{#each char.equipment as item}
+				<WikiPanelKeyValue {editMode} label="Name" bind:value={item.name} />
+				<WikiPanelKeyValue {editMode} label="Amount" bind:value={item.amount} />
+			{/each}
 		</WikiPanelSection>
 
 		<!-- Features -->

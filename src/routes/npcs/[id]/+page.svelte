@@ -9,7 +9,10 @@
 		newEmptyNPC,
 		handleNPCPromptInput
 	} from '../../../utilities/helpers/npcHelper/npcHelper';
-	import { generateRandomNPCPrompt } from '../../../utilities/helpers/promptHelper';
+	import {
+		generateQuickNPCPrompt,
+		generateRandomNPCPrompt
+	} from '../../../utilities/helpers/promptHelper';
 
 	export let data;
 
@@ -53,6 +56,9 @@
 				}}
 				handleGenerate={() => {
 					promptInput = generateRandomNPCPrompt(npc);
+				}}
+				handleQuickGenerate={() => {
+					promptInput = generateQuickNPCPrompt(npc);
 				}}
 			/>
 		{:else}

@@ -4,6 +4,8 @@
 	export let value: string | number = '';
 	export let textarea = false;
 	export let showIfEmpty = false;
+	export let valueClass = '';
+	export let name = '';
 </script>
 
 {#if value !== '' || editMode || showIfEmpty}
@@ -12,17 +14,19 @@
 			<span class="flex flex-col w-full">
 				<span class="font-semibold text-black">{label} </span>
 				{#if !textarea}
-					<input type="text" class="border px-1 text-black" bind:value />
+					<input {name} type="text" class="border px-1 text-black" bind:value />
 				{:else}
-					<textarea class="border px-1 text-black w-full" rows="4" bind:value />
+					<textarea {name} class="border px-1 text-black w-full" rows="4" bind:value />
 				{/if}
 			</span>
 		{:else}
 			<span>
 				{#if label !== ''}
-					<span class="font-semibold text-black">{label} </span>
+					<label for={name} class="font-semibold text-black">{label}</label>
 				{/if}
-				{value}
+				<span class={valueClass}>
+					{value}
+				</span>
 			</span>
 		{/if}
 	</span>

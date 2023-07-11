@@ -129,6 +129,20 @@ export const deleteNPC = (id: number): NPC[] => {
 	return npcs;
 };
 
+export const getNPCsAndChars = (): {
+	id: number;
+	fullName: string;
+	type: 'npc' | 'character';
+}[] => {
+	const npcs = getNPCs().map((n) => ({ id: n.id, fullName: n.fullName, type: 'npc' as 'npc' }));
+	const characters = getCharacters().map((c) => ({
+		id: c.id,
+		fullName: c.fullName,
+		type: 'character' as 'character'
+	}));
+	return [...npcs, ...characters];
+};
+
 // ====================================================================================================
 export const getCharacters = (): Character[] => {
 	const characters = loadData('characters') as Character[];

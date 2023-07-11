@@ -1,10 +1,14 @@
 <script lang="ts">
+	type T = $$Generic;
+
 	export let editMode = false;
 	export let label = '';
-	export let values: string[] | number[] = [];
+	export let values: string[] | number[] | T[] = [];
 	export let options: Option[] = [];
+	export let change: (values: string[] | number[] | T[]) => void = () => {};
+	export let labelAccessor: (value: T) => string = (value) => value as unknown as string;
 
-	type Option = { label: string; value: string | number; action?: () => void };
+	type Option = { label: string; value: string | number | T; action?: () => void };
 
 	let stringValues: string[] = [];
 	let numberValues: number[] = [];
@@ -20,29 +24,37 @@
 	$: selected =
 		options.filter((o) =>
 			Array.isArray(values)
-				? stringValues.includes(o.value as string) || numberValues.includes(o.value as number)
+				? stringValues.includes(o.value as string) ||
+				  numberValues.includes(o.value as number) ||
+				  values.includes((val) => val === o.value)
 				: false
 		) ?? [];
 
 	const selectOption = (option: Option['value']) => {
 		if (Array.isArray(values)) {
 			if (typeof option === 'string') {
-				if (stringValues.includes(option as string)) {
+				if (stringValues.includes(option)) {
 					stringValues = stringValues.filter((v) => v !== option);
 				} else {
-					stringValues.push(option as string);
+					stringValues.push(option);
 				}
 				values = [...stringValues];
 			} else if (typeof option === 'number') {
-				if (numberValues.includes(option as number)) {
+				if (numberValues.includes(option)) {
 					numberValues = numberValues.filter((v) => v !== option);
 				} else {
-					numberValues.push(option as number);
+					numberValues.push(option);
 				}
 				values = [...numberValues];
-			} else {
+			} else if (typeof option === 'object' && option !== null) {
+				if (values.includes(option)) {
+					values = values.filter((v) => v !== option);
+				} else {
+					values = [...values, option];
+				}
 			}
 		}
+		change(values);
 		values = values;
 	};
 
