@@ -2,13 +2,13 @@
 
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
+import type { Settlement } from '../settlementHelper';
 
 //save
 export const saveData = (key: string, data: any): void => {
 	try {
 		const serializedData = JSON.stringify(data);
 		localStorage.setItem(key, serializedData);
-		console.log(`Data saved successfully with key: ${key}`);
 	} catch (error) {
 		console.error('Error saving data to local storage:', error);
 	}
@@ -18,11 +18,9 @@ export const loadData = (key: string): any | undefined => {
 	try {
 		const serializedData = localStorage.getItem(key);
 		if (serializedData === null) {
-			console.log(`No data found for key: ${key}`);
 			return undefined;
 		}
 		const data = JSON.parse(serializedData);
-		console.log(`Data loaded successfully with key: ${key}`);
 		return data;
 	} catch (error) {
 		console.error('Error loading data from local storage:', error);
@@ -45,17 +43,42 @@ export const downloadData = (data: any, filename: string): void => {
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
 		document.body.removeChild(downloadLink);
-
-		console.log('Data downloaded successfully');
 	} catch (error) {
 		console.error('Error downloading data:', error);
 	}
 };
-//upload
+
+export const downloadAllData = (): void => {
+	const data = {
+		npcs: loadData('npcs'),
+		characters: loadData('characters'),
+		settlements: loadData('settlements'),
+		campaign: loadData('campaign'),
+		quests: loadData('quests'),
+		session: loadData('session')
+	};
+	downloadData(data, 'dm-tool-data.json');
+};
+export const uploadAllData = (file: File): void => {
+	console.log('uploading file', file);
+
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		const data = JSON.parse(e.target?.result as string);
+		console.log('data', data);
+		saveData('npcs', data.npcs);
+		saveData('characters', data.characters);
+		saveData('settlements', data.settlements);
+		saveData('campaign', data.campaign);
+		saveData('quests', data.quests);
+		saveData('session', data.session);
+	};
+	reader.readAsText(file);
+};
 
 // ====================================================================================================
 
-export const updateNPC = (npc: NPC): void => {
+export const updateNPC = (npc: NPC): number => {
 	let npcs = loadData('npcs') as NPC[];
 
 	if (npcs === undefined) {
@@ -65,14 +88,14 @@ export const updateNPC = (npc: NPC): void => {
 	const index = npcs.findIndex((n) => n.id === npc.id);
 
 	if (index === -1) {
-		//new npc
-		npc.id = npcs.length + 1;
+		npc.id = npcs.length > 0 ? npcs[npcs.length - 1].id + 1 : 1; // [1, 2, 3] => [1, 2, 3, 4]
 		npcs.push(npc);
 	} else {
 		npcs[index] = npc;
 	}
 
 	saveData('npcs', npcs);
+	return npc.id;
 };
 
 export const getNPCs = (): NPC[] => {
@@ -106,6 +129,21 @@ export const deleteNPC = (id: number): NPC[] => {
 	return npcs;
 };
 
+export const getNPCsAndChars = (): {
+	id: number;
+	fullName: string;
+	type: 'npc' | 'character';
+}[] => {
+	const npcs = getNPCs().map((n) => ({ id: n.id, fullName: n.fullName, type: 'npc' as 'npc' }));
+	const characters = getCharacters().map((c) => ({
+		id: c.id,
+		fullName: c.fullName,
+		type: 'character' as 'character'
+	}));
+	return [...npcs, ...characters];
+};
+
+// ====================================================================================================
 export const getCharacters = (): Character[] => {
 	const characters = loadData('characters') as Character[];
 
@@ -135,8 +173,7 @@ export const saveCharacter = (character: Character): number => {
 	const index = characters.findIndex((c) => c.id === character.id);
 
 	if (index === -1) {
-		//new character
-		character.id = characters.length + 1;
+		character.id = characters.length > 0 ? characters[characters.length - 1].id + 1 : 1; // [1, 2, 3] => [1, 2, 3, 4]
 		characters.push(character);
 	} else {
 		characters[index] = character;
@@ -154,7 +191,6 @@ export const deleteCharacter = (id: number): Character[] => {
 	}
 
 	const index = characters.findIndex((c) => c.id === id);
-	console.log(index);
 
 	if (index !== -1) {
 		characters.splice(index, 1);
@@ -162,3 +198,5 @@ export const deleteCharacter = (id: number): Character[] => {
 	saveData('characters', characters);
 	return characters;
 };
+
+// ====================================================================================================

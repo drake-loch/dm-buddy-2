@@ -42,7 +42,6 @@
 				bind:promptInput
 				handleApply={() => {
 					npc = handleNPCPromptInput(npc, promptInput);
-					console.log(npc);
 					npc = npc;
 				}}
 				handleGenerate={() => {

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { getCharacters, getNPCs } from '../../../../utilities/helpers/dataManager';
+	import { getSettlements } from '../../../../utilities/helpers/settlementHelper';
 	import Input from '../../../form/input/Input.svelte';
 	import Textarea from '../../../form/textarea/Textarea.svelte';
 
@@ -10,7 +12,10 @@
 
 	export let placeholder = 'Enter data here';
 
-	export let deleteModule: () => void;
+	export let save: () => void = () => {};
+	export let deleteModule: () => void = () => {};
+
+	// export let canEdit = false;
 
 	$: localTitle = title;
 	$: localData = data;
@@ -20,6 +25,7 @@
 	const saveModule = () => {
 		title = localTitle;
 		data = localData;
+		save();
 		editMode = false;
 	};
 
@@ -30,7 +36,7 @@
 		const tempElement = document.createElement('div');
 		tempElement.innerHTML = input;
 
-		const allowedTags = ['B', 'BR', 'I'];
+		const allowedTags = ['B', 'BR', 'I', 'A'];
 		const tags = tempElement.getElementsByTagName('*');
 
 		for (let i = tags.length - 1; i >= 0; i--) {
@@ -41,6 +47,40 @@
 		}
 
 		return tempElement.innerHTML.replaceAll('\n', '<br />');
+	};
+
+	let showAddOptions = false;
+
+	let entityType: 'character' | 'npc' | 'settlement' | undefined = undefined;
+	let selectedEntity: { label: string; value: string; link: string } | undefined = undefined;
+
+	const getEntities = (): { label: string; value: string }[] => {
+		if (entityType === 'character') {
+			return getCharacters().map((c) => {
+				return {
+					label: c.fullName,
+					value: `${c.id}`,
+					link: `/characters/${c.id}`
+				};
+			});
+		} else if (entityType === 'npc') {
+			return getNPCs().map((c) => {
+				return {
+					label: c.fullName,
+					value: `${c.id}`,
+					link: `/npcs/${c.id}`
+				};
+			});
+		} else if (entityType === 'settlement') {
+			return getSettlements().map((c) => {
+				return {
+					label: c.name,
+					value: `${c.id}`,
+					link: `/settlements/${c.id}`
+				};
+			});
+		}
+		return [];
 	};
 </script>
 
@@ -69,6 +109,7 @@
 					saveModule();
 				}}>💾</button
 			>
+
 			<button
 				type="button"
 				class="text-center bg-red-500 rounded-md p-0.5"
@@ -89,6 +130,7 @@
 			>
 		{:else}
 			<h3 class="font-bold text-2xl">{title}</h3>
+			<!-- {#if canEdit} -->
 			<button
 				type="button"
 				class="text-center rounded-md p-0.5"
@@ -97,8 +139,10 @@
 					editMode = true;
 				}}>✏️</button
 			>
+			<!-- {/if} -->
 		{/if}
 	</span>
+
 	{#if warningBanner}
 		<div class="bg-red-500 text-white rounded-md p-2 mb-2">
 			<p class="text-sm mb-2">
@@ -124,15 +168,89 @@
 			>
 		</div>
 	{/if}
+
+	<span class="flex gap-2 items-center mb-2">
+		{#if editMode}
+			<button
+				type="button"
+				class="text-center bg-green-500 rounded-md py-0.5 px-2"
+				aria-label="save module"
+				on:click={() => {
+					showAddOptions = true;
+				}}>Add Link</button
+			>
+			{#if showAddOptions}
+				<div class="flex gap-2 items-center">
+					<select
+						name={`${title}-link-type`}
+						class="border rounded-md bg-gray-600 px-2"
+						on:change={(e) => {
+							//
+						}}
+						bind:value={entityType}
+					>
+						<option value={undefined} disabled>Select Type</option>
+						<option value="character">Character</option>
+						<option value="npc">NPC</option>
+						<option value="settlement">Settlement</option>
+					</select>
+
+					{#if entityType !== undefined}
+						<select
+							name={`${title}-link-entity`}
+							class="border rounded-md bg-gray-600 px-2"
+							bind:value={selectedEntity}
+						>
+							<option value={undefined} disabled>Select Entity</option>
+							{#each getEntities() as entity}
+								<option value={entity}>{entity.label}</option>
+							{/each}
+						</select>
+					{/if}
+					{#if selectedEntity !== undefined}
+						<button
+							type="button"
+							class="text-center bg-green-500 rounded-md py-0.5 px-2"
+							aria-label="save module"
+							on:click={() => {
+								const link = `<a class="link" href="${selectedEntity?.link}">${selectedEntity?.label}</a>`;
+								localData = localData + link;
+								selectedEntity = undefined;
+								showAddOptions = false;
+							}}>Add</button
+						>
+					{/if}
+					<button
+						type="button"
+						class="text-center bg-red-500 rounded-md py-0.5 px-2"
+						aria-label="save module"
+						on:click={() => {
+							showAddOptions = false;
+						}}>Cancel</button
+					>
+				</div>
+			{/if}
+		{/if}
+	</span>
+
 	{#if editMode}
 		<Textarea
 			name={`${title}-textarea`}
 			{placeholder}
-			_class="border"
+			_class="border h"
 			editMode={true}
 			bind:value={localData}
+			rows={5}
 		/>
 	{:else}
-		{@html sanitizeInput(localData)}
+		<div class="output">
+			{@html sanitizeInput(localData)}
+		</div>
 	{/if}
 </div>
+
+<style>
+	div :global(.output) :global(a) {
+		@apply text-blue-500 underline;
+	}
+</style>

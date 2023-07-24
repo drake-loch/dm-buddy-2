@@ -4,25 +4,34 @@
 	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
 	import {
 		handleCharacterPromptInput,
-		newEmptyCharacter
+		newEmptyCharacter,
+		type Character
 	} from '../../../utilities/helpers/charHelper';
-	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
-
-	import { generateRandomCharPrompt } from '../../../utilities/helpers/promptHelper';
-
+	import {
+		deleteCharacter,
+		getCharacter,
+		saveCharacter
+	} from '../../../utilities/helpers/dataManager';
+	import {
+		generateQuickCharPrompt,
+		generateRandomCharPrompt
+	} from '../../../utilities/helpers/promptHelper';
 	import CharCreate from '../../../pages/CharCreate/index.svelte';
-	import NpcWikiPage from '../../../components/common/WikiPage/NpcWikiPage.svelte';
 	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
 	import { goto } from '$app/navigation';
+	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
 
-	// export let id = 0;
 	export let data;
 
 	let char = getCharacter(+data.id) ?? newEmptyCharacter();
 
-	let editMode = false;
+	let editMode = Number.isNaN(data.id) ?? false;
+	let isNew = Number.isNaN(data.id) ?? false;
+
 	let promptInput = '';
 	let wikiView = false;
+
+	let deleteWarning = false;
 </script>
 
 <PageLayout>
@@ -41,7 +50,9 @@
 					class="border border-green-500 rounded-sm px-4"
 					on:click={() => {
 						const id = saveCharacter(char);
-						goto(`/characters/${id}`);
+						if (isNew) {
+							goto(`/characters/${id}`);
+						}
 						editMode = !editMode;
 					}}>Save Character</button
 				>
@@ -74,12 +85,84 @@
 				handleGenerate={() => {
 					promptInput = generateRandomCharPrompt(char);
 				}}
+				handleQuickGenerate={() => {
+					promptInput = generateQuickCharPrompt(char);
+				}}
 			/>
 		{/if}
+
+		<div class="w-full h-full px-2" slot="mobile-tools">
+			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
+				{#if editMode}
+					<button
+						type="button"
+						class="border border-green-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							const id = saveCharacter(char);
+							if (isNew) {
+								goto(`/characters/${id}`);
+							}
+							editMode = !editMode;
+						}}>Save</button
+					>
+					<button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							deleteWarning = true;
+						}}>Delete</button
+					>
+					<button
+						type="button"
+						class="border border-gray-200 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Cancel</button
+					>
+				{:else}
+					<button
+						type="button"
+						class="border border-blue-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Edit</button
+					>
+					<button
+						type="button"
+						class="border border-orange-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							wikiView = !wikiView;
+						}}>{wikiView ? 'Sheet' : 'Wiki'}</button
+					>
+				{/if}
+			</div>
+			<DeleteBanner
+				bind:deleteWarning
+				deleteModule={() => {
+					deleteCharacter(char.id);
+					deleteWarning = false;
+					goto(`/characters`);
+				}}
+			/>
+			{#if editMode}
+				<PromptTool
+					bind:promptInput
+					handleApply={() => {
+						char = handleCharacterPromptInput(char, promptInput);
+					}}
+					handleGenerate={() => {
+						promptInput = generateRandomCharPrompt(char);
+					}}
+					handleQuickGenerate={() => {
+						promptInput = generateQuickCharPrompt(char);
+					}}
+				/>
+			{/if}
+		</div>
 	</Toolbar>
 	{#if char !== undefined}
 		{#if wikiView}
-			<CharWikiPage bind:char {editMode} />
+			<CharWikiPage bind:char {editMode} save={saveCharacter} />
 		{:else}
 			<CharCreate {char} {editMode} />
 		{/if}

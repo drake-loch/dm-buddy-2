@@ -2,6 +2,6 @@
 	export let title = '';
 </script>
 
-<h3 class="w-full border-b text-black font-semibold mb-2 text-md letter tracking-wider">
+<h3 class="w-full text-black font-semibold text-md letter tracking-wider">
 	{title}
 </h3>

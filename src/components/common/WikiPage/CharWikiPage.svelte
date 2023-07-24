@@ -1,19 +1,27 @@
 <script lang="ts">
 	import { newEmptyCharacter, type Character } from '../../../utilities/helpers/charHelper';
-	import { newEmptyNPC, type NPC } from '../../../utilities/helpers/npcHelper/npcHelper';
+	import { saveCharacter } from '../../../utilities/helpers/dataManager';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
-	import WikiPanelBoolValue from './components/WikiPanelBoolValue.svelte';
 	import WikiPanelKeyValue from './components/WikiPanelKeyValue.svelte';
 	import WikiPanelSection from './components/WikiPanelSection.svelte';
+	import WikiPanelSelect from './components/WikiPanelSelect.svelte';
 	import WikiPanelTitle from './components/WikiPanelTitle.svelte';
 	import WikiStats from './components/WikiStats.svelte';
 
 	export let editMode = false;
 	export let char: Character = newEmptyCharacter();
+	export let save: (char: Character) => void = () => saveCharacter(char);
 </script>
 
-<WikiPage title={char.fullName} type={`${char.gender} ${char.race}`}>
+<WikiPage
+	{editMode}
+	bind:title={char.fullName}
+	type={`${char.gender} ${char.race}`}
+	bind:imageUrl={char.imageUrl}
+	hideAdditionalInfo
+	staticType
+>
 	<div slot="wikiPanel" class="w-full">
 		<hr />
 		<!-- combat details -->
@@ -29,11 +37,35 @@
 
 		<!-- Bio -->
 		<WikiPanelSection>
-			<WikiPanelKeyValue {editMode} label="Name:" bind:value={char.fullName} />
 			<WikiPanelKeyValue {editMode} label="Age:" bind:value={char.age} />
 			<WikiPanelKeyValue {editMode} label="Race:" bind:value={char.race} />
 			<WikiPanelKeyValue {editMode} label="Class:" bind:value={char.class} />
 			<WikiPanelKeyValue {editMode} label="Background:" bind:value={char.background} />
+			<!-- gender -->
+			<WikiPanelKeyValue {editMode} label="Gender:" bind:value={char.gender} />
+			<WikiPanelSelect
+				{editMode}
+				label="Alignment:"
+				bind:value={char.alignment}
+				options={[
+					{ label: 'Lawful Good', value: 'Lawful Good' },
+					{ label: 'Neutral Good', value: 'Neutral Good' },
+					{ label: 'Chaotic Good', value: 'Chaotic Good' },
+					{ label: 'Lawful Neutral', value: 'Lawful Neutral' },
+					{ label: 'Neutral', value: 'Neutral' },
+					{ label: 'Chaotic Neutral', value: 'Chaotic Neutral' },
+					{ label: 'Lawful Evil', value: 'Lawful Evil' },
+					{ label: 'Neutral Evil', value: 'Neutral Evil' },
+					{ label: 'Chaotic Evil', value: 'Chaotic Evil' }
+				]}
+			/>
+		</WikiPanelSection>
+		<WikiPanelSection _class="space-y-4">
+			<WikiPanelTitle title="Equipment" />
+			{#each char.equipment as item}
+				<WikiPanelKeyValue {editMode} label="Name" bind:value={item.name} />
+				<WikiPanelKeyValue {editMode} label="Amount" bind:value={item.amount} />
+			{/each}
 		</WikiPanelSection>
 
 		<!-- Features -->
@@ -96,8 +128,8 @@
 				<span class="mb-2 w-full">
 					<WikiEntry
 						{editMode}
-						deleteModule={() => {
-							console.log('delete');
+						save={() => {
+							save(char);
 						}}
 						bind:title={info.title}
 						bind:data={info.data}
@@ -109,8 +141,8 @@
 			<WikiEntry
 				{editMode}
 				titleEditable={false}
-				deleteModule={() => {
-					console.log('delete');
+				save={() => {
+					save(char);
 				}}
 				title="Notes"
 				bind:data={char.notes}

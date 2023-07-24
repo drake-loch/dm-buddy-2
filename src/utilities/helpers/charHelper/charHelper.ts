@@ -1,17 +1,14 @@
-import { getCharacters } from '../dataManager';
-
 export type Skill = {
 	proficient: boolean;
 };
-export type Character = {
+export type CharacterBase = {
 	id: number;
 	fullName: string;
 	race: string;
 	gender: string;
-	class: string;
 	age: number;
 	alignment: string;
-	background: string;
+	size: string;
 	characteristics: {
 		personalityTraits: string;
 		ideals: string;
@@ -62,6 +59,15 @@ export type Character = {
 	hitPoints: number;
 	currentHitPoints: number;
 	hitDice: string;
+	equipment: { name: string; amount: number }[];
+	features: { title: string; source: string; desc: string }[];
+	notes: string;
+	additionalInfo: { title: string; data: string }[];
+	imageUrl?: string;
+};
+export type Character = CharacterBase & {
+	class: string;
+	background: string;
 	deathSaves: {
 		successes: number;
 		failures: number;
@@ -72,8 +78,6 @@ export type Character = {
 		damage: string;
 		damageType: string;
 	}[];
-	equipment: { name: string; amount: number }[];
-	features: { title: string; source: string; desc: string }[];
 	spellcasting: {
 		ability: string;
 		saveDC: number;
@@ -91,8 +95,6 @@ export type Character = {
 			damageType: string;
 		}[];
 	};
-	notes: string;
-	additionalInfo: { title: string; data: string }[];
 };
 
 export const newEmptyCharacter = (): Character => {
@@ -103,6 +105,7 @@ export const newEmptyCharacter = (): Character => {
 		gender: '',
 		class: '',
 		age: 0,
+		size: '',
 		alignment: '',
 		background: '',
 		characteristics: {
@@ -249,13 +252,15 @@ export const handleCharacterPromptInput = (char: Character, promptInput: string)
 	char.skills = parsed?.skills ?? char.skills;
 	char.additionalInfo = parsed?.additionalInfo ?? char.additionalInfo;
 
-	char.equipment =
-		parsed?.equipment.map((item: any) => {
-			return {
-				name: item.name ?? item,
-				amount: item?.amount ?? 1
-			};
-		}) ?? char.equipment;
+	if (parsed?.equipment) {
+		char.equipment =
+			parsed?.equipment.map((item: any) => {
+				return {
+					name: item.name ?? item,
+					amount: item?.amount ?? 1
+				};
+			}) ?? char.equipment;
+	}
 	return char;
 };
 
