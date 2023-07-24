@@ -16,12 +16,12 @@
 	export let imageUrl: string | undefined = undefined;
 </script>
 
-<div class="w-3/4 box-border">
-	<div class="flex gap-4">
+<div class="w-full md:w-3/4 box-border px-2 pb-8">
+	<div class="flex flex-col md:flex-row gap-4">
 		<!-- Details Panel -->
 		{#if !hidePanel}
 			<div
-				class="border-b border-r-2 rounded-sm border-black w-1/3 h-[52rem] flex flex-col items-center p-2 bg-gray-500 overflow-auto"
+				class="md:border-b md:border-r-2 rounded-sm border-gray-800 w-full min-h-[20rem] md:min-h-0 md:w-1/3 md:h-[52rem] p-2 bg-gray-500 overflow-auto"
 			>
 				{#if imageUrl}
 					<span class="w-[150px] h-[150px] bg-gray-300">

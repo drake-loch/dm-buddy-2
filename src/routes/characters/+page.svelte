@@ -24,12 +24,23 @@
 			class="
         border border-green-500 rounded-md w-full hover:bg-green-400">Add</button
 		>
+		<div class="w-full h-full px-2" slot="mobile-tools">
+			<div class={`w-full h-full flex items-center gap-2`}>
+				<button
+					type="button"
+					class="border border-green-500 rounded-sm px-4 text-sm"
+					on:click={() => {
+						goto('characters/new');
+					}}>New Character</button
+				>
+			</div>
+		</div>
 	</Toolbar>
-	<div class="w-3/4 overflow-hidden">
-		<h1 class="text-3xl">Characters</h1>
+	<div class="w-full md:w-3/4 overflow-hidden px-2">
+		<h1 class="text-3xl mb-2">Characters</h1>
 		<!-- table -->
 		<div class="w-full flex justify-center">
-			<Table headers={['id', 'Name', 'Race']} rows={chars} _class="w-1/2">
+			<Table headers={['id', 'Name', 'Race']} rows={chars} _class="w-full md:w-1/2">
 				<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>
 					<button
 						type="button"
@@ -52,14 +63,3 @@
 		</div>
 	</div>
 </PageLayout>
-
-<!-- 
-	<div class="flex w-full justify-center items-center h-full">
-			<div class="flex flex-col w-1/2 border-2 p-2 h-[30rem] gap-1">
-				{#each chars as char}
-					<a class="bg-gray-300 text-center hover:bg-gray-400" href={`characters/${char.id}`}
-						>{char.fullName}</a
-					>
-				{/each}
-			</div>
- -->

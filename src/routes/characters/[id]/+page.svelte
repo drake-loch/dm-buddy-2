@@ -7,7 +7,11 @@
 		newEmptyCharacter,
 		type Character
 	} from '../../../utilities/helpers/charHelper';
-	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
+	import {
+		deleteCharacter,
+		getCharacter,
+		saveCharacter
+	} from '../../../utilities/helpers/dataManager';
 	import {
 		generateQuickCharPrompt,
 		generateRandomCharPrompt
@@ -15,6 +19,7 @@
 	import CharCreate from '../../../pages/CharCreate/index.svelte';
 	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
 	import { goto } from '$app/navigation';
+	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
 
 	export let data;
 
@@ -25,6 +30,8 @@
 
 	let promptInput = '';
 	let wikiView = false;
+
+	let deleteWarning = false;
 </script>
 
 <PageLayout>
@@ -83,6 +90,75 @@
 				}}
 			/>
 		{/if}
+
+		<div class="w-full h-full px-2" slot="mobile-tools">
+			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
+				{#if editMode}
+					<button
+						type="button"
+						class="border border-green-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							const id = saveCharacter(char);
+							if (isNew) {
+								goto(`/characters/${id}`);
+							}
+							editMode = !editMode;
+						}}>Save</button
+					>
+					<button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							deleteWarning = true;
+						}}>Delete</button
+					>
+					<button
+						type="button"
+						class="border border-gray-200 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Cancel</button
+					>
+				{:else}
+					<button
+						type="button"
+						class="border border-blue-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Edit</button
+					>
+					<button
+						type="button"
+						class="border border-orange-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							wikiView = !wikiView;
+						}}>{wikiView ? 'Sheet' : 'Wiki'}</button
+					>
+				{/if}
+			</div>
+			<DeleteBanner
+				bind:deleteWarning
+				deleteModule={() => {
+					deleteCharacter(char.id);
+					deleteWarning = false;
+					goto(`/characters`);
+				}}
+			/>
+			{#if editMode}
+				<PromptTool
+					bind:promptInput
+					handleApply={() => {
+						char = handleCharacterPromptInput(char, promptInput);
+					}}
+					handleGenerate={() => {
+						promptInput = generateRandomCharPrompt(char);
+					}}
+					handleQuickGenerate={() => {
+						promptInput = generateQuickCharPrompt(char);
+					}}
+				/>
+			{/if}
+		</div>
 	</Toolbar>
 	{#if char !== undefined}
 		{#if wikiView}

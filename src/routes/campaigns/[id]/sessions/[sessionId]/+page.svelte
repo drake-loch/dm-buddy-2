@@ -8,6 +8,7 @@
 	import {
 		addQuestToCampaign,
 		addSessionToCampaign,
+		deleteSession,
 		getQuest,
 		getSession,
 		newQuest,
@@ -19,6 +20,7 @@
 	import { getCharacter, getNPC } from '../../../../../utilities/helpers/dataManager';
 	import NpcWikiPage from '../../../../../components/common/WikiPage/NpcWikiPage.svelte';
 	import { newEmptyNPC } from '../../../../../utilities/helpers/npcHelper/npcHelper';
+	import DeleteBanner from '../../../../../components/common/deleteBanner/DeleteBanner.svelte';
 
 	export let data;
 
@@ -46,6 +48,8 @@
 		}
 		toggleMod = true;
 	};
+
+	let deleteWarning = false;
 </script>
 
 <PageLayout>
@@ -210,6 +214,62 @@
 					toggleMod = true;
 				}}>Quick NPC</button
 			>
+		</div>
+		<!-- mobile -->
+		<div class="w-full h-full px-2" slot="mobile-tools">
+			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
+				{#if editMode}
+					<button
+						type="button"
+						class="border border-green-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							const id = saveSession(session);
+							addQuestToCampaign(+data.campaignId, id);
+							if (isNew) {
+								goto(`/campaigns/${data.campaignId}`);
+							}
+							editMode = !editMode;
+						}}>Save</button
+					>
+					<button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							deleteWarning = true;
+						}}>Delete</button
+					>
+					<button
+						type="button"
+						class="border border-gray-200 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Cancel</button
+					>
+				{:else}
+					<button
+						type="button"
+						class="border border-blue-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Edit</button
+					>
+					<button
+						type="button"
+						class="border border-orange-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							goto(`/campaigns/${data.campaignId}`);
+						}}>Return To Campaign</button
+					>
+				{/if}
+			</div>
+			<DeleteBanner
+				bind:deleteWarning
+				deleteModule={() => {
+					deleteSession(session.id);
+					deleteWarning = false;
+					goto(`/campaigns/`);
+				}}
+			/>
 		</div>
 	</Toolbar>
 	{#if session !== undefined}
