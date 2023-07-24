@@ -148,6 +148,71 @@
 				>
 			{/if}
 		</div>
+
+		<!-- mobile -->
+		<div class="w-full h-full px-2" slot="mobile-tools">
+			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
+				{#if editMode}
+					<button
+						type="button"
+						class="border border-green-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							const id = saveCampaign(campaign);
+							goto(`/campaigns/${id}`);
+							editMode = !editMode;
+						}}>Save</button
+					>
+					<button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							deleteWarning = true;
+						}}>Delete</button
+					>
+					<button
+						type="button"
+						class="border border-gray-200 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Cancel</button
+					>
+				{:else}
+					<button
+						type="button"
+						class="border border-blue-500 rounded-sm px-4 text-sm"
+						on:click={() => {
+							editMode = !editMode;
+						}}>Edit</button
+					>
+				{/if}
+			</div>
+			<div class="flex gap-2 justify-evenly mb-1">
+				{#if !isNew && editMode}
+					<button
+						on:click={() => {
+							goto(`/campaigns/${data.id}/quests/new`);
+						}}
+						type="button"
+						class="border border-green-500 rounded-sm px-4 text-sm">New Quest</button
+					>
+					<button
+						on:click={() => {
+							goto(`/campaigns/${data.id}/sessions/new`);
+						}}
+						type="button"
+						class="border border-green-500 rounded-sm px-4 text-sm">New Session</button
+					>
+				{/if}
+			</div>
+			<DeleteBanner
+				bind:deleteWarning
+				deleteModule={() => {
+					deleteCampaign(campaign.id);
+					deleteWarning = false;
+					goto(`/campaigns/`);
+				}}
+			/>
+		</div>
 	</Toolbar>
 	{#if campaign !== undefined}
 		{#if wikiView}

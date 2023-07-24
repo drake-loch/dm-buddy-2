@@ -28,11 +28,26 @@
 			class="
         border border-green-500 rounded-md w-full hover:bg-green-400">Add</button
 		>
+		<div class="w-full h-full px-2" slot="mobile-tools">
+			<div class={`w-full h-full flex items-center gap-2`}>
+				<button
+					type="button"
+					class="border border-green-500 rounded-sm px-4 text-sm"
+					on:click={() => {
+						goto('campaigns/new');
+					}}>New Campaign</button
+				>
+			</div>
+		</div>
 	</Toolbar>
-	<div class="w-3/4 overflow-hidden">
-		<h1 class="text-3xl mb-12">Campaigns</h1>
+	<div class="w-full p-2 md:p-0 md:w-3/4 overflow-hidden">
+		<h1 class="text-3xl mb-2 md:mb-12">Campaigns</h1>
 		<div class="w-full flex justify-center">
-			<Table headers={['id', 'Name', 'Quests', 'Sessions']} rows={campaignList} _class="w-1/2">
+			<Table
+				headers={['id', 'Name', 'Quests', 'Sessions']}
+				rows={campaignList}
+				_class="w-full md:w-1/2"
+			>
 				<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>
 					<button
 						type="button"

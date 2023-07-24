@@ -75,8 +75,8 @@
 		</WikiPanelSection>
 	</div>
 	<div class="" slot="wiki-top">
-		<div class="flex w-full mb-24 justify-evenly">
-			<div class="w-1/3">
+		<div class="flex flex-col items-center md:flex-row w-full mb-24 justify-evenly">
+			<div class="w-full md:w-1/3">
 				<h3 class="text-2xl mb-2">Quests</h3>
 				<Table headers={['Order', 'Name']} rows={questList} _class="w-full">
 					<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>
@@ -100,7 +100,7 @@
 					</div>
 				</Table>
 			</div>
-			<div class="w-1/3">
+			<div class="w-full md:w-1/3">
 				<h3 class="text-2xl mb-2">Sessions</h3>
 				<Table headers={['Order', 'Name']} rows={sessionList} _class="w-full">
 					<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>

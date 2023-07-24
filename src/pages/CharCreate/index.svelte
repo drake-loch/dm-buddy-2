@@ -30,12 +30,14 @@
 	};
 </script>
 
-<div class="flex justify-center w-3/4 h-full gap-6">
+<div class="flex justify-center w-full md:w-3/4 h-full gap-6 px-2">
 	<!-- sheet -->
 	<div class="w-full h-[55rem] box-border">
 		<!-- name, race, background, etc.. -->
-		<div class="border-2 border-black p-2 box-border w-full flex gap-2 mb-2 bg-gray-500">
-			<span class="w-[20rem]">
+		<div
+			class="border-2 border-black p-2 box-border w-full flex flex-col md:flex-row gap-2 mb-2 bg-gray-500"
+		>
+			<span class="w-full md:w-[20rem]">
 				<Input
 					{editMode}
 					label="Name"
@@ -46,7 +48,9 @@
 					viewClass="border-b border-black pb-2 rounded-md text-center"
 				/>
 			</span>
-			<div class="flex items-center gap-2 border-l border-gray-900 pl-6">
+			<div
+				class="flex flex-wrap justify-center items-center gap-2 md:border-l border-gray-900 pl-6"
+			>
 				<span class="w-[5rem]">
 					<Input
 						{editMode}
@@ -109,8 +113,8 @@
 				</span>
 			</div>
 			<div class="w-full px-4 flex flex-col items-end gap-4">
-				<div class="flex gap-2">
-					<span class="w-[15rem]">
+				<div class="flex flex-col md:flex-row gap-2 w-full md:w-fit">
+					<span class="w-full md:w-[15rem]">
 						<Input
 							{editMode}
 							label="Class"
@@ -135,7 +139,7 @@
 							]}
 						/>
 					</span>
-					<span class="w-[20rem]">
+					<span class="w-full md:w-[20rem]">
 						<Input
 							{editMode}
 							label="Background"
@@ -162,8 +166,8 @@
 						/>
 					</span>
 				</div>
-				<div class="flex gap-2">
-					<span class="w-[15rem]">
+				<div class="flex flex-wrap justify-center md:flex-row gap-2">
+					<span class="w-full md:w-[15rem]">
 						<Input
 							{editMode}
 							label="Race"
@@ -223,10 +227,15 @@
 			</div>
 		</div>
 		<!-- core details -->
-		<div class="w-full h-[45rem] overflow-auto flex gap-2 justify-evenly mb-6 border-3">
+		<div
+			class="w-full md:h-[45rem] overflow-auto flex flex-col md:flex-row gap-2 justify-evenly mb-6 border-3"
+		>
 			<!-- Stats -->
+			<!-- <div
+				class="flex flex-wrap md:flex-nowrap md:flex-col w-full md:w-fit gap-2 p-2 box-border border-2 border-black bg-gray-500 h-[15rem] md:h-full md:overflow-y-auto overflow-x-hidden"
+			> -->
 			<div
-				class="flex flex-col gap-2 p-2 box-border border-2 border-black h-full bg-gray-500 overflow-y-auto overflow-x-hidden"
+				class="flex flex-wrap md:flex-col justify-center border-2 border-black p-2 md:py-0 gap-2 bg-gray-500"
 			>
 				<Stat {editMode} name="Strength" bind:value={char.stats.str} />
 				<Stat {editMode} name="Dexterity" bind:value={char.stats.dex} />
@@ -236,7 +245,7 @@
 				<Stat {editMode} name="Charisma" bind:value={char.stats.cha} />
 			</div>
 			<!-- saving throws & skills -->
-			<div class="border-2 border-black p-2 w-[16rem] h-full bg-gray-500 overflow-y-auto">
+			<div class="border-2 border-black p-2 w-full md:w-[16rem] h-full bg-gray-500">
 				<!-- saving throws -->
 				<div class="px-2 py-1 flex flex-col gap-0.5 border border-black mb-2">
 					<Skill
@@ -469,7 +478,7 @@
 			</div>
 			<!-- Features and Traits -->
 			<div
-				class="flex flex-col gap-2 border-2 border-black p-2 w-[18rem] h-full bg-gray-500 overflow-y-auto"
+				class="flex flex-col gap-2 border-2 border-black p-2 w-full md:w-[18rem] h-full bg-gray-500 overflow-y-auto"
 			>
 				{#each char.features as feature, i}
 					<Feature {editMode} bind:feature {i} />
