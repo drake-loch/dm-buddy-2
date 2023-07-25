@@ -24,13 +24,15 @@
 				class="md:border-b md:border-r-2 rounded-sm border-gray-800 w-full min-h-[20rem] md:min-h-0 md:w-1/3 md:h-[52rem] p-2 bg-gray-500 overflow-auto"
 			>
 				{#if imageUrl}
-					<span class="w-[150px] h-[150px] bg-gray-300">
-						<img src={imageUrl} alt="" class="w-full h-full object-cover" />
-					</span>
+					<div class="mb-4 p-2 gap-2 flex flex-col items-center">
+						<span class="w-[150px] h-[150px] bg-gray-300">
+							<img src={imageUrl} alt="" class="w-full h-full object-cover" />
+						</span>
+					</div>
 				{/if}
 
 				{#if editMode}
-					<span class="w-3/4 mt-2 text-black">
+					<span class="w-full md:w-3/4 mt-2 text-black">
 						<input type="text" class="w-full px-2" bind:value={imageUrl} placeholder="Image URL" />
 					</span>
 				{/if}

@@ -57,7 +57,6 @@
 		<span class="w-full my-2 md:mb-0">
 			<Textarea
 				_class="w-full min-h-[20rem] rounded-md bg-gray-700"
-				label="Results"
 				name="propt-input"
 				bind:value={promptInput}
 				editMode={true}
@@ -108,13 +107,13 @@
 						if (handleQuickGenerate !== undefined) {
 							handleQuickGenerate();
 						}
-					}}>Generate Quick Prompt</button
+					}}>Quick Prompt</button
 				>
 			{/if}
 		</div>
 		<button
 			type="button"
-			class="border border-green-500 py-2 w-full"
+			class="border border-green-500 py-2 w-full mt-4"
 			on:click={() => {
 				navigator.clipboard.writeText(promptInput);
 			}}>Copy</button

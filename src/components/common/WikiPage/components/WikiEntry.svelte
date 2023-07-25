@@ -130,7 +130,6 @@
 			>
 		{:else}
 			<h3 class="font-bold text-2xl">{title}</h3>
-			<!-- {#if canEdit} -->
 			<button
 				type="button"
 				class="text-center rounded-md p-0.5"
@@ -139,7 +138,6 @@
 					editMode = true;
 				}}>✏️</button
 			>
-			<!-- {/if} -->
 		{/if}
 	</span>
 
@@ -184,9 +182,6 @@
 					<select
 						name={`${title}-link-type`}
 						class="border rounded-md bg-gray-600 px-2"
-						on:change={(e) => {
-							//
-						}}
 						bind:value={entityType}
 					>
 						<option value={undefined} disabled>Select Type</option>
@@ -237,7 +232,7 @@
 		<Textarea
 			name={`${title}-textarea`}
 			{placeholder}
-			_class="border h"
+			_class="border"
 			editMode={true}
 			bind:value={localData}
 			rows={5}
