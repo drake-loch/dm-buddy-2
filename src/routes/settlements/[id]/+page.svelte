@@ -120,7 +120,11 @@
 					<button
 						type="button"
 						class="border border-green-500 rounded-sm px-4 text-sm"
-						form="formTest">Save</button
+						on:click={() => {
+							const id = saveSettlement(settlement);
+							goto(`/settlements/${id}`);
+							editMode = !editMode;
+						}}>Save</button
 					>
 					<button type="button" class="border border-red-500 rounded-sm px-4 text-sm">Delete</button
 					>

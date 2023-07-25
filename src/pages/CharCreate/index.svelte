@@ -400,7 +400,7 @@
 				</div>
 			</div>
 			<!-- Attacks & Equipment -->
-			<div class="border-2 border-black w-[22rem] p-2 h-full bg-gray-500 overflow-y-auto">
+			<div class="border-2 border-black w-full md:w-[22rem] p-2 h-full bg-gray-500 overflow-y-auto">
 				<!-- Attacks -->
 				<div class="flex flex-col">
 					<div class="flex flex-row gap-1 border border-black px-1 font-bold text-center">
@@ -493,7 +493,7 @@
 				<h3 class="font-bold text-center text-sm">Features & Traits</h3>
 			</div>
 			<!-- personality & notes -->
-			<div class="border-2 border-black w-[22rem] h-full bg-gray-500 overflow-y-auto">
+			<div class="border-2 border-black w-full md:w-[22rem] h-full bg-gray-500 overflow-y-auto">
 				<div class="flex flex-col gap-2 p-2 text-center">
 					<div class="flex flex-col gap-2 p-1 w-full">
 						<span class="w-full">
