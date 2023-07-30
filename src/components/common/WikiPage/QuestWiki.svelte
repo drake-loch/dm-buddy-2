@@ -34,7 +34,6 @@
 
 	<div class="" slot="wiki-top">
 		<div class="space-y-2 bg-gray-700 p-4 rounded-sm">
-			<h2 class="text-2xl">Steps:</h2>
 			{#if editMode}
 				<button
 					type="button"
