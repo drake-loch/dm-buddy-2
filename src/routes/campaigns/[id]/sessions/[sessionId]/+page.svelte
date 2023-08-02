@@ -164,11 +164,9 @@
 						class="border border-green-500 rounded-sm px-4 w-full"
 						on:click={() => {
 							const id = saveSession(session);
-							console.log(id);
-
-							addSessionToCampaign(+data.campaignId, id);
 							if (isNew) {
 								if (data.campaignId !== undefined) {
+									addSessionToCampaign(+data.campaignId, id);
 									goto(`/campaigns/${data.campaignId}/sessions/${id}`);
 								} else {
 									goto(`/sessions/${id}`);
@@ -177,10 +175,22 @@
 							editMode = !editMode;
 						}}>Save Session</button
 					>
-					<button type="button" class="border border-red-500 rounded-sm px-4 w-full"
-						>Delete Session</button
+					<button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 w-full"
+						on:click={() => {
+							deleteWarning = true;
+						}}>Delete Session</button
 					>
 				</div>
+				<DeleteBanner
+					bind:deleteWarning
+					deleteModule={() => {
+						deleteSession(session.id, data.campaignId);
+						deleteWarning = false;
+						goto(`/campaigns/`);
+					}}
+				/>
 
 				<button
 					type="button"
@@ -215,6 +225,7 @@
 				}}>Quick NPC</button
 			>
 		</div>
+
 		<!-- mobile -->
 		<div class="w-full h-full px-2" slot="mobile-tools">
 			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
@@ -224,8 +235,8 @@
 						class="border border-green-500 rounded-sm px-4 text-sm"
 						on:click={() => {
 							const id = saveSession(session);
-							addQuestToCampaign(+data.campaignId, id);
 							if (isNew) {
+								addSessionToCampaign(+data.campaignId, id);
 								goto(`/campaigns/${data.campaignId}`);
 							}
 							editMode = !editMode;
@@ -265,7 +276,7 @@
 			<DeleteBanner
 				bind:deleteWarning
 				deleteModule={() => {
-					deleteSession(session.id);
+					deleteSession(session.id, data.campaignId);
 					deleteWarning = false;
 					goto(`/campaigns/`);
 				}}

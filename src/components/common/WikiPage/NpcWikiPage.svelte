@@ -20,8 +20,7 @@
 	bind:title={npc.fullName}
 	type={`${npc.size} ${npc.race}, ${npc.alignment}`}
 	bind:imageUrl={npc.imageUrl}
-	hideAdditionalInfo
-	staticType
+	bind:additionalInfo={npc.additionalInfo}
 >
 	<div slot="wikiPanel" class="w-full">
 		<WikiPanelSection>
@@ -71,39 +70,52 @@
 			</span>
 		</WikiPanelSection>
 
-		<WikiPanelSection removeBorder _class="space-y-4">
-			<WikiPanelTitle title="Characteristics" />
-			<WikiPanelKeyValue
-				{editMode}
-				label="Personality Traits"
-				bind:value={npc.characteristics.personalityTraits}
-				textarea
-			/>
-			<WikiPanelKeyValue
-				{editMode}
-				label="Ideals"
-				bind:value={npc.characteristics.ideals}
-				textarea
-			/>
-			<WikiPanelKeyValue {editMode} label="Bonds" bind:value={npc.characteristics.bonds} textarea />
-			<WikiPanelKeyValue {editMode} label="Flaws" bind:value={npc.characteristics.flaws} textarea />
-		</WikiPanelSection>
-
-		<WikiPanelSection _class="space-y-1">
-			<WikiPanelTitle title="Equipment" />
-			{#each npc.equipment as item}
-				{#if editMode}
-					<WikiPanelKeyValue {editMode} label="Name" bind:value={item.name} />
-					<WikiPanelKeyValue {editMode} label="Amount" bind:value={item.amount} />
-				{:else}
-					<WikiPanelKeyValue
-						label={item.name}
-						value={item.amount > 1 ? `x${item.amount}` : ''}
-						showIfEmpty
-					/>
-				{/if}
-			{/each}
-		</WikiPanelSection>
+		{#if npc.characteristics.personalityTraits.length > 0 || npc.characteristics.ideals.length > 0 || npc.characteristics.bonds.length > 0 || npc.characteristics.flaws.length > 0 || editMode}
+			<WikiPanelSection removeBorder _class="space-y-4">
+				<WikiPanelTitle title="Characteristics" />
+				<WikiPanelKeyValue
+					{editMode}
+					label="Personality Traits"
+					bind:value={npc.characteristics.personalityTraits}
+					textarea
+				/>
+				<WikiPanelKeyValue
+					{editMode}
+					label="Ideals"
+					bind:value={npc.characteristics.ideals}
+					textarea
+				/>
+				<WikiPanelKeyValue
+					{editMode}
+					label="Bonds"
+					bind:value={npc.characteristics.bonds}
+					textarea
+				/>
+				<WikiPanelKeyValue
+					{editMode}
+					label="Flaws"
+					bind:value={npc.characteristics.flaws}
+					textarea
+				/>
+			</WikiPanelSection>
+		{/if}
+		{#if npc.equipment.length > 0}
+			<WikiPanelSection _class="space-y-1">
+				<WikiPanelTitle title="Equipment" />
+				{#each npc.equipment as item}
+					{#if editMode}
+						<WikiPanelKeyValue {editMode} label="Name" bind:value={item.name} />
+						<WikiPanelKeyValue {editMode} label="Amount" bind:value={item.amount} />
+					{:else}
+						<WikiPanelKeyValue
+							label={item.name}
+							value={item.amount > 1 ? `x${item.amount}` : ''}
+							showIfEmpty
+						/>
+					{/if}
+				{/each}
+			</WikiPanelSection>
+		{/if}
 
 		<!-- Features -->
 		<WikiPanelSection removeBorder _class="space-y-4">
@@ -144,26 +156,6 @@
 		</WikiPanelSection>
 	</div>
 	<div class="" slot="wiki">
-		<!-- Additional Info -->
-		<div class="w-full">
-			<div class="mb-4">
-				{#if editMode}
-					<button
-						type="button"
-						class="bg-blue-500 px-2 py-0.5 rounded-md border"
-						on:click={() => {
-							npc.quests.push({ title: '', data: '', rewards: [] });
-							npc.quests = [...npc.quests];
-						}}>+ Add</button
-					>
-				{/if}
-			</div>
-			{#each npc.additionalInfo as info}
-				<span class="mb-2 w-full">
-					<WikiEntry {editMode} bind:title={info.title} bind:data={info.data} />
-				</span>
-			{/each}
-		</div>
 		<!-- Quests -->
 		{#if npc.quests.length > 0 || editMode}
 			<div class="w-full">
@@ -180,9 +172,19 @@
 						>
 					{/if}
 				</div>
-				{#each npc.quests as quest}
+				{#each npc.quests as quest, i}
 					<span class="mb-2 w-full">
-						<WikiEntry {editMode} bind:title={quest.title} bind:data={quest.data} />
+						<WikiEntry
+							{editMode}
+							bind:title={quest.title}
+							bind:data={quest.data}
+							save={() => save(npc)}
+							deleteModule={() => {
+								npc.quests.splice(i, 1);
+								npc.quests = [...npc.quests];
+								save(npc);
+							}}
+						/>
 					</span>
 				{/each}
 			</div>

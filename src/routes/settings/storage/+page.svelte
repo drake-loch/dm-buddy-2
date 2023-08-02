@@ -84,7 +84,7 @@
 			<span>NPCs: {storageValues.npcs} KB</span>
 			<span>Quests: {storageValues.quests} KB</span>
 			<span>Sessions: {storageValues.sessions} KB</span>
-			<span>Settlements: {storageValues.settlements} KB</span>
+			<span>Places: {storageValues.settlements} KB</span>
 			<div class="mt-4 tooltip text-white">
 				Total: {storageValues.total} KB / {browserMaxLocalStorage} KB
 				<span class="tooltiptext w-[20rem]"
