@@ -66,24 +66,17 @@
 	<Toolbar>
 		<div class="mb-4 w-full flex flex-col gap-2">
 			{#if editMode}
-				<!-- <button
+				<button
 					type="submit"
 					class="border border-green-500 rounded-sm px-4"
 					form="formTest"
 					on:click={() => {
 						const id = saveSettlement(settlement);
-						goto(`/settlements/${id}`);
+						goto(`/places/${id}`);
 						editMode = !editMode;
-					}}>Save Settlement</button
-				> -->
-				<button
-					type="submit"
-					class="border border-green-500 rounded-sm px-4 text-sm"
-					form="formTest">Save</button
+					}}>Save</button
 				>
-				<button type="button" class="border border-red-500 rounded-sm px-4"
-					>Delete Settlement</button
-				>
+				<button type="button" class="border border-red-500 rounded-sm px-4">Delete</button>
 				<button
 					type="button"
 					class="border border-gray-200 rounded-sm px-4"
@@ -122,7 +115,7 @@
 						class="border border-green-500 rounded-sm px-4 text-sm"
 						on:click={() => {
 							const id = saveSettlement(settlement);
-							goto(`/settlements/${id}`);
+							goto(`/places/${id}`);
 							editMode = !editMode;
 						}}>Save</button
 					>

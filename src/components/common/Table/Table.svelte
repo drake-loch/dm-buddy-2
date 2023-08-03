@@ -2,10 +2,13 @@
 	export let headers: string[] = [];
 	export let rows: { [key: string]: { value: string; link?: string } }[] = [];
 	export let _class = '';
+	export let hiddenHeaders: string[] = [];
+
+	$: _headers = headers.filter((h) => !hiddenHeaders.includes(h));
 
 	$: _rows = rows.map((row) => {
 		const newRow: { [key: string]: { value: string; link?: string } } = {};
-		headers.forEach((header) => {
+		_headers.forEach((header) => {
 			const h = header.toLowerCase();
 			newRow[h] = row[h];
 		});
@@ -16,7 +19,7 @@
 <table class={`border ${_class}`}>
 	<thead>
 		<tr>
-			{#each headers as header}
+			{#each _headers as header}
 				<th class="border">{header}</th>
 			{/each}
 			{#if $$slots.action}

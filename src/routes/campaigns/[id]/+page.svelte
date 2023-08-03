@@ -7,6 +7,8 @@
 		deleteCampaign,
 		getCampaign,
 		newCampaign,
+		removeAllQuestsFromCampaign,
+		removeAllSessionsFromCampaign,
 		saveCampaign
 	} from '../../../utilities/helpers/campaignHelper';
 	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
@@ -118,16 +120,35 @@
 							goto(`/campaigns/${data.id}/quests/new`);
 						}}
 						type="button"
-						class="
-            border border-green-500 rounded-md w-full hover:bg-green-400">New Quest</button
+						class="border border-green-500 rounded-md w-full hover:bg-green-400"
 					>
+						New Quest
+					</button>
+					<!-- <button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 w-full"
+						on:click={() => {
+							campaign = removeAllQuestsFromCampaign(campaign.id);
+						}}
+					>
+						Delete Quests
+					</button> -->
+					<!-- <button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 w-full"
+						on:click={() => {
+							campaign = removeAllSessionsFromCampaign(campaign.id);
+						}}
+					>
+						Delete Sessions
+					</button> -->
 					<button
 						on:click={() => {
 							goto(`/campaigns/${data.id}/sessions/new`);
 						}}
 						type="button"
 						class="
-            border border-green-500 rounded-md w-full hover:bg-green-400">New Session</button
+    border border-green-500 rounded-md w-full hover:bg-green-400">New Session</button
 					>
 				{/if}
 

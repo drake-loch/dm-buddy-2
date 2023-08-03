@@ -9,7 +9,7 @@
 
 	let settlementList = settlements.map((s) => {
 		return {
-			name: { value: s.name, link: `/settlements/${s.id}` },
+			name: { value: s.name, link: `/places/${s.id}` },
 			id: { value: `${s.id}` },
 			type: { value: s.type }
 		};
@@ -20,7 +20,7 @@
 	<Toolbar>
 		<button
 			on:click={() => {
-				goto('settlements/new');
+				goto('places/new');
 			}}
 			type="button"
 			class="
@@ -32,7 +32,7 @@
 					type="button"
 					class="border border-green-500 rounded-sm px-4 text-sm"
 					on:click={() => {
-						goto('settlements/new');
+						goto('places/new');
 					}}>New Settlement</button
 				>
 			</div>
@@ -48,7 +48,7 @@
 						on:click={() => {
 							settlementList = deleteSettlement(+row.id.value).map((s) => {
 								return {
-									name: { value: s.name, link: `/settlements/${s.id}` },
+									name: { value: s.name, link: `/places/${s.id}` },
 									id: { value: `${s.id}` },
 									type: { value: s.type }
 								};

@@ -13,7 +13,7 @@
 		<a href="/characters">Characters</a>
 	</span>
 	<span class="nav-link">
-		<a href="/settlements">Settlements</a>
+		<a href="/places">Places</a>
 	</span>
 	<span class="nav-link">
 		<a href="/campaigns">Campaigns</a>
