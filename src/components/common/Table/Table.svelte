@@ -4,11 +4,9 @@
 	export let _class = '';
 	export let hiddenHeaders: string[] = [];
 
-	$: _headers = headers.filter((h) => !hiddenHeaders.includes(h));
-
 	$: _rows = rows.map((row) => {
 		const newRow: { [key: string]: { value: string; link?: string } } = {};
-		_headers.forEach((header) => {
+		headers.forEach((header) => {
 			const h = header.toLowerCase();
 			newRow[h] = row[h];
 		});
@@ -19,7 +17,7 @@
 <table class={`border ${_class}`}>
 	<thead>
 		<tr>
-			{#each _headers as header}
+			{#each headers as header}
 				<th class="border">{header}</th>
 			{/each}
 			{#if $$slots.action}
@@ -32,7 +30,7 @@
 			<tr class={`${i % 2 ? 'bg-gray-600' : ''}`}>
 				{#each Object.values(row) as cell}
 					{#if cell?.link}
-						<td class={`text-center px-1 text-ellipsis`}>
+						<td class={`text-center px-1 py-4 text-ellipsis`}>
 							<a class="text-blue-400 underline" href={cell.link}>{cell?.value}</a>
 						</td>
 					{:else}

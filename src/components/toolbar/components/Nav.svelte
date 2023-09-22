@@ -19,6 +19,12 @@
 		<a href="/campaigns">Campaigns</a>
 	</span>
 	<span class="nav-link">
+		<a href="/organizations">Organizations</a>
+	</span>
+	<span class="nav-link">
+		<a href="/battle">Battles</a>
+	</span>
+	<span class="nav-link">
 		<a href="/settings">Settings</a>
 	</span>
 	{#if $page.data.session?.user && Object.keys($page.data.session.user || {}).length}

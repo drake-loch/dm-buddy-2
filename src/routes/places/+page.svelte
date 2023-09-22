@@ -3,9 +3,17 @@
 	import PageLayout from '../../components/common/PageLayout/PageLayout.svelte';
 	import Table from '../../components/common/Table/Table.svelte';
 	import Toolbar from '../../components/toolbar/Toolbar.svelte';
-	import { deleteSettlement, getSettlements } from '../../utilities/helpers/settlementHelper';
+	import {
+		deleteSettlement,
+		getSettlement,
+		getSettlements
+	} from '../../utilities/helpers/settlementHelper';
 
 	const settlements = getSettlements();
+
+	export let data;
+
+	const placeId = data?.ppid ?? undefined;
 
 	let settlementList = settlements.map((s) => {
 		return {
@@ -14,18 +22,39 @@
 			type: { value: s.type }
 		};
 	});
+	if (placeId !== undefined) {
+		const settlement = getSettlement(+placeId);
+		if (settlement) {
+			const placeIdsInSettlement = settlement.places.concat(+placeId);
+			settlementList = settlementList.filter((s) => {
+				return placeIdsInSettlement.includes(+s.id.value);
+			});
+		}
+		console.log('settlement: ', settlement);
+	}
 </script>
 
 <PageLayout>
 	<Toolbar>
-		<button
-			on:click={() => {
-				goto('places/new');
-			}}
-			type="button"
-			class="
+		{#if !placeId}
+			<button
+				on:click={() => {
+					goto('places/new');
+				}}
+				type="button"
+				class="
         border border-green-500 rounded-md w-full hover:bg-green-400">Add</button
-		>
+			>
+		{:else}
+			<button
+				on:click={() => {
+					goto(`places/new?ppid=${placeId}`);
+				}}
+				type="button"
+				class="
+        border border-green-500 rounded-md w-full hover:bg-green-400">Add to Place</button
+			>
+		{/if}
 		<div class="w-full h-full px-2" slot="mobile-tools">
 			<div class={`w-full h-full flex items-center gap-2`}>
 				<button
@@ -33,7 +62,7 @@
 					class="border border-green-500 rounded-sm px-4 text-sm"
 					on:click={() => {
 						goto('places/new');
-					}}>New Settlement</button
+					}}>New Place</button
 				>
 			</div>
 		</div>

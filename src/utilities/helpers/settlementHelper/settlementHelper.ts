@@ -7,6 +7,7 @@ export type Settlement = {
 	size: string;
 	type: string;
 	alignment: string;
+	places: number[];
 	description: string;
 	government: string;
 	authorityFigures: {
@@ -27,26 +28,6 @@ export type Settlement = {
 	notes: string;
 };
 
-export type Organizations = {
-	id: number;
-	name: string;
-	description: string;
-	beleifs: string;
-	goals: string;
-	allies: string;
-	enemies: string;
-	leader: string;
-	type: string;
-	size: string;
-	headquarters: string;
-	notableMembers: { id: number; role: string }[];
-	knownFor: string;
-	quests: { name: string; description: string }[];
-	imageURL: string;
-	additionalInfo: { title: string; description: string }[];
-	notes: string;
-};
-
 export const newSettlement = (): Settlement => {
 	return {
 		id: 0,
@@ -55,6 +36,7 @@ export const newSettlement = (): Settlement => {
 		size: '',
 		type: '',
 		alignment: '',
+		places: [],
 		description: '',
 		government: '',
 		authorityFigures: [],

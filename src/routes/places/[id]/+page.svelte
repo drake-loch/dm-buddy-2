@@ -15,51 +15,18 @@
 
 	export let data;
 
+	const parentPlaceId = data?.ppid ?? undefined;
+
+	console.log('placeId: ', parentPlaceId);
+
 	let settlement = getSettlement(+data.id) ?? newSettlement();
 
-	let editMode = Number.isNaN(data.id) ?? false;
-	// let editMode = true;
+	const isNew = Number.isNaN(data.id);
+
+	let editMode = isNew ?? false;
+
 	let promptInput = '';
 	let wikiView = true;
-
-	const getControlGroup = (values: { [k: string]: FormDataEntryValue }, formGroupName: string) => {
-		// const group = Object.entries(values).filter(([key, value]) => {
-		// 	return key.includes(formGroupName);
-		// });
-		// group.forEach((g) => {
-		// 	g.forEach((v) => {
-		// 		groupKey
-		// 	});
-		// })
-		// console.log('Group: ', group);
-	};
-
-	const submit = (form: any) => {
-		form.preventDefault();
-		console.log('auth figures', settlement.authorityFigures);
-
-		const values = Object.fromEntries(new FormData(form.target));
-		// console.log(new FormData(form.target));
-		console.log(values);
-		getControlGroup(values, 'authorityFigures');
-		//authority Figures have a key that begins with a double quote like this: "authorityFigures[0]", so extract those values
-		// const authorityFigures = Object.entries(values).filter(([key, value]) => {
-		// 	const authFig = key.includes('authorityFigures');
-		// 	console.log('_auth ', authFig);
-		// 	return authFig;
-		// });
-		// console.log('Figures: ', authorityFigures);
-		// authorityFigures.forEach(([key, value]) => {
-		// 	const index = key.match(/\d+/g)?.[0];
-		// 	const group = authorityFigures.filter(([k, v]) => k.includes(`authorityFigures[${index}]`));
-		// 	console.log('group: ', group);
-
-		// 	if (group.length > 1 && index !== undefined) {
-		// 		const figure = settlement.authorityFigures.find((f) => f.id === +index + 1);
-		// 		console.log('figure: ', figure);
-		// 	}
-		// });
-	};
 </script>
 
 <PageLayout>
@@ -67,16 +34,30 @@
 		<div class="mb-4 w-full flex flex-col gap-2">
 			{#if editMode}
 				<button
-					type="submit"
+					type="button"
 					class="border border-green-500 rounded-sm px-4"
-					form="formTest"
 					on:click={() => {
-						const id = saveSettlement(settlement);
-						goto(`/places/${id}`);
+						if (isNew) {
+							const id = saveSettlement(settlement);
+							if (parentPlaceId) {
+								const parentPlace = getSettlement(+parentPlaceId);
+								if (parentPlace) {
+									parentPlace.places.push(id);
+									saveSettlement(parentPlace);
+								}
+							}
+							goto(`/places/${id}`);
+						} else {
+							saveSettlement(settlement);
+						}
 						editMode = !editMode;
 					}}>Save</button
 				>
 				<button type="button" class="border border-red-500 rounded-sm px-4">Delete</button>
+				<button type="button" class="border border-purple-500 rounded-sm px-4"
+					>Add Parent Place</button
+				>
+				<button type="button" class="border border-purple-600 rounded-sm px-4">Add Place</button>
 				<button
 					type="button"
 					class="border border-gray-200 rounded-sm px-4"
@@ -91,6 +72,11 @@
 					on:click={() => {
 						editMode = !editMode;
 					}}>Edit</button
+				>
+			{/if}
+			{#if settlement !== undefined && !editMode}
+				<a href={`/places?ppid=${+data.id}`} class="border border-purple-500 rounded-sm px-4"
+					>View Places</a
 				>
 			{/if}
 		</div>
@@ -156,3 +142,11 @@
 		<!-- <WikiSettlement {settlement} {editMode} {submit} name="formTest" /> -->
 	{/if}
 </PageLayout>
+
+<style>
+	a {
+		text-decoration: unset;
+		color: white;
+		text-align: center;
+	}
+</style>

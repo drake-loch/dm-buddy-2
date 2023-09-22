@@ -21,6 +21,7 @@
 	type={`${npc.size} ${npc.race}, ${npc.alignment}`}
 	bind:imageUrl={npc.imageUrl}
 	bind:additionalInfo={npc.additionalInfo}
+	staticType
 >
 	<div slot="wikiPanel" class="w-full">
 		<WikiPanelSection>

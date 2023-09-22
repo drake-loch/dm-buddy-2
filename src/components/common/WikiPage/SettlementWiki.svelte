@@ -40,6 +40,7 @@
 	bind:title={settlement.name}
 	bind:type={settlement.type}
 	bind:additionalInfo={settlement.additionalInfo}
+	typeOptionInput
 	typeOptions={[
 		'City',
 		'Town',

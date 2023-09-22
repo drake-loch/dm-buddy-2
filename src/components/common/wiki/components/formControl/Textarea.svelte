@@ -7,16 +7,16 @@
 	export let inputClass: string = '';
 </script>
 
-<span class="flex w-full justify-between gap-2">
+<span class="flex w-full items-center justify-center gap-2">
 	{#if label}
 		<label for={name} class={`w-1/3 ${labelClass}`}>{label}</label>
 	{/if}
-	<input type="text" {name} bind:value {placeholder} class={`px-1 w-2/3 text-sm ${inputClass}`} />
+	<textarea {name} bind:value {placeholder} class={`px-1 text-sm ${inputClass}`} rows="4" />
 </span>
 
 <style>
 	label,
-	input {
+	textarea {
 		@apply text-black;
 	}
 </style>

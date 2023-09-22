@@ -2,6 +2,7 @@
 
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
+import type { Being } from '../orgHelper';
 import type { Settlement } from '../settlementHelper';
 
 //save
@@ -133,12 +134,20 @@ export const getNPCsAndChars = (): {
 	id: number;
 	fullName: string;
 	type: 'npc' | 'character';
+	imageUrl?: string;
 }[] => {
-	const npcs = getNPCs().map((n) => ({ id: n.id, fullName: n.fullName, type: 'npc' as 'npc' }));
+	const npcs = getNPCs().map((n) => ({
+		id: n.id,
+		fullName: n.fullName,
+		type: 'npc' as 'npc',
+		imageURL: n.imageUrl
+	}));
+
 	const characters = getCharacters().map((c) => ({
 		id: c.id,
 		fullName: c.fullName,
-		type: 'character' as 'character'
+		type: 'character' as 'character',
+		imageURL: c.imageUrl
 	}));
 	return [...npcs, ...characters];
 };
@@ -200,3 +209,17 @@ export const deleteCharacter = (id: number): Character[] => {
 };
 
 // ====================================================================================================
+
+export const getAllBeings = (): Being[] => {
+	const npcs = getNPCs().map((n) => ({
+		id: n.id,
+		name: n.fullName,
+		type: 'npc' as 'npc'
+	}));
+	const characters = getCharacters().map((c) => ({
+		id: c.id,
+		name: c.fullName,
+		type: 'character' as 'character'
+	}));
+	return [...npcs, ...characters];
+};
