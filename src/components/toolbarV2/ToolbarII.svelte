@@ -44,7 +44,7 @@
 			<button
 				type="button"
 				class={`border rounded-b-md w-full h-full px-2 md:px-4 transition bg-blue-500 border-blue-300 text-xl ${
-					menuIsOpen ? 'rounded-b-none hover:bg-blue-400' : 'border-0 cursor-default'
+					menuIsOpen ? ' hover:bg-blue-400' : 'border-0 cursor-default'
 				}`}
 				on:click={() => {
 					menuIsOpen = false;

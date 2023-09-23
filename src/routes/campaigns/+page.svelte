@@ -4,7 +4,6 @@
 	import Table from '../../components/common/Table/Table.svelte';
 	import Toolbar from '../../components/toolbar/Toolbar.svelte';
 	import { deleteCampaign, getCampaigns } from '../../utilities/helpers/campaignHelper';
-	import { deleteSettlement, getSettlements } from '../../utilities/helpers/settlementHelper';
 
 	const campaigns = getCampaigns();
 

@@ -1,6 +1,6 @@
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
-import type { Settlement } from '../settlementHelper';
+import type { Place } from '../placeHelper';
 
 export const generateRandomCharPrompt = (char: Character) => {
 	const charString = JSON.stringify(char);
@@ -272,7 +272,7 @@ export const generateQuickNPCPrompt = (npc: NPC) => {
         `;
 };
 
-export const generateRandomSettlementPrompt = (settlement: Settlement) => {
+export const generateRandomSettlementPrompt = (settlement: Place) => {
 	const settlementString = JSON.stringify(settlement);
 
 	return `Randomly Generate a settlement for Dungeons and Dragons 5th edition and then format to JSON using the following type and object:

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { getCharacters, getNPCs } from '../../../../utilities/helpers/dataManager';
-	import { getPlaces } from '../../../../utilities/helpers/placeHelper';
-	import Input from '../../../form/input/Input.svelte';
-	import Textarea from '../../../form/textarea/Textarea.svelte';
+	import { getCharacters, getNPCs } from '../../../../../utilities/helpers/dataManager';
+	import { getPlaces } from '../../../../../utilities/helpers/placeHelper';
+	import Input from '../formControl/Input.svelte';
+	import Textarea from '../formControl/Textarea.svelte';
 
-	export let editMode = false;
+	export let editing = false;
 
 	export let title = '';
 	export let titleEditable = true;
@@ -26,7 +26,7 @@
 		title = localTitle;
 		data = localData;
 		save();
-		editMode = false;
+		editing = false;
 	};
 
 	const sanitizeInput = (input: string) => {
@@ -36,7 +36,7 @@
 		const tempElement = document.createElement('div');
 		tempElement.innerHTML = input;
 
-		const allowedTags = ['B', 'BR', 'I', 'A'];
+		const allowedTags = ['B', 'BR', 'I', 'A', 'IMG'];
 		const tags = tempElement.getElementsByTagName('*');
 
 		for (let i = tags.length - 1; i >= 0; i--) {
@@ -49,10 +49,17 @@
 		return tempElement.innerHTML.replaceAll('\n', '<br />');
 	};
 
-	let showAddOptions = false;
+	let showAddLinkOptions = false;
+	let showAddPictureOptions = false;
 
 	let entityType: 'character' | 'npc' | 'place' | undefined = undefined;
 	let selectedEntity: { label: string; value: string; link: string } | undefined = undefined;
+
+	const imageData: { url: string; width: string; height: string } = {
+		url: '',
+		width: '500',
+		height: '500'
+	};
 
 	const getEntities = (): { label: string; value: string }[] => {
 		if (entityType === 'character') {
@@ -86,18 +93,17 @@
 	$: entities = getEntities();
 </script>
 
-<div class="w-full p-4 bg-gray-600 min-h-[5rem] rounded-sm">
-	<span class="flex gap-2 items-center mb-2">
-		{#if editMode}
+<div class="w-full p-6 bg-gray-600 min-h-[5rem] rounded-sm">
+	<span class="flex gap-2 items-center mb-2 border-b pb-2">
+		{#if editing}
 			{#if titleEditable}
 				<span class="w-full">
-					<Input
-						name={`${title}-title`}
+					<input
 						type="text"
-						{placeholder}
-						_class="text-2xl font-bold border"
-						editMode={true}
+						name={`${title}-title`}
 						bind:value={localTitle}
+						{placeholder}
+						class={`px-1 w-full text-2xl font-bold border rounded-sm`}
 					/>
 				</span>
 			{:else}
@@ -127,7 +133,7 @@
 				on:click={() => {
 					localTitle = title;
 					localData = data;
-					editMode = false;
+					editing = false;
 				}}>🔙</button
 			>
 		{:else}
@@ -137,7 +143,7 @@
 				class="text-center rounded-md p-0.5"
 				aria-label="edit module"
 				on:click={() => {
-					editMode = true;
+					editing = true;
 				}}>✏️</button
 			>
 		{/if}
@@ -170,18 +176,28 @@
 	{/if}
 
 	<span class="flex gap-2 items-center mb-2">
-		{#if editMode}
-			{#if !showAddOptions}
+		{#if editing}
+			{#if !showAddLinkOptions && !showAddPictureOptions}
 				<button
 					type="button"
 					class="text-center bg-green-500 rounded-md py-0.5 px-2"
 					aria-label="save module"
 					on:click={() => {
-						showAddOptions = true;
+						showAddLinkOptions = true;
+						showAddPictureOptions = false;
 					}}>Add Link</button
 				>
+				<button
+					type="button"
+					class="text-center bg-green-500 rounded-md py-0.5 px-2"
+					aria-label="save module"
+					on:click={() => {
+						showAddPictureOptions = true;
+						showAddLinkOptions = false;
+					}}>Add Picture</button
+				>
 			{/if}
-			{#if showAddOptions}
+			{#if showAddLinkOptions}
 				<div class="flex gap-2 items-center">
 					<select
 						name={`${title}-link-type`}
@@ -220,7 +236,7 @@
 								localData = localData + link;
 								selectedEntity = undefined;
 								entityType = undefined;
-								showAddOptions = false;
+								showAddLinkOptions = false;
 							}}>Add</button
 						>
 					{/if}
@@ -231,7 +247,66 @@
 						on:click={() => {
 							selectedEntity = undefined;
 							entityType = undefined;
-							showAddOptions = false;
+							showAddLinkOptions = false;
+						}}>Cancel</button
+					>
+				</div>
+			{/if}
+
+			{#if showAddPictureOptions}
+				<div class="flex gap-2 items-center">
+					<span class="w-1/2">
+						<label for={`${title}-picture`}>URL:</label>
+						<Input
+							name={`${title}-picture`}
+							placeholder="Picture URL"
+							inputClass="border w-full rounded-sm"
+							bind:value={imageData.url}
+						/>
+					</span>
+					<span class="w-1/4">
+						<label for={`${title}-picture-width`}>Width:</label>
+						<Input
+							name={`${title}-picture-width`}
+							placeholder="Width"
+							inputClass="border w-full rounded-sm"
+							bind:value={imageData.width}
+						/>
+					</span>
+					<span class="w-1/4">
+						<label for={`${title}-picture-height`}>Height:</label>
+						<Input
+							name={`${title}-picture-height`}
+							placeholder="Height"
+							inputClass="border w-full rounded-sm"
+							bind:value={imageData.height}
+						/>
+					</span>
+
+					{#if imageData.url !== undefined && imageData.url !== ''}
+						<button
+							type="button"
+							class="text-center bg-green-500 rounded-md py-0.5 px-2"
+							aria-label="save module"
+							on:click={() => {
+								const image = `<img src="${imageData.url}" width='${imageData.width}' height='${imageData.height}' />`;
+								localData = localData + image;
+								imageData.url = '';
+								imageData.width = '500';
+								imageData.height = '500';
+								showAddPictureOptions = false;
+							}}>Add</button
+						>
+					{/if}
+					<button
+						type="button"
+						class="text-center bg-red-500 rounded-md py-0.5 px-2"
+						aria-label="save module"
+						on:click={() => {
+							imageData.url = '';
+							imageData.width = '500';
+							imageData.height = '500';
+							showAddPictureOptions = false;
 						}}>Cancel</button
 					>
 				</div>
@@ -239,14 +314,14 @@
 		{/if}
 	</span>
 
-	{#if editMode}
+	{#if editing}
 		<Textarea
 			name={`${title}-textarea`}
 			{placeholder}
-			_class="border"
-			editMode={true}
+			inputClass="border w-full rounded-sm"
 			bind:value={localData}
 			rows={5}
+			textSize="text-md"
 		/>
 	{:else}
 		<div class="output">
@@ -258,5 +333,10 @@
 <style>
 	div :global(.output) :global(a) {
 		@apply text-blue-500 underline;
+	}
+
+	input,
+	textarea {
+		@apply text-black;
 	}
 </style>

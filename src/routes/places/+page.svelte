@@ -3,19 +3,15 @@
 	import PageLayout from '../../components/common/PageLayout/PageLayout.svelte';
 	import Table from '../../components/common/Table/Table.svelte';
 	import Toolbar from '../../components/toolbar/Toolbar.svelte';
-	import {
-		deleteSettlement,
-		getSettlement,
-		getSettlements
-	} from '../../utilities/helpers/settlementHelper';
+	import { deletePlace, getPlace, getPlaces } from '../../utilities/helpers/placeHelper';
 
-	const settlements = getSettlements();
+	const places = getPlaces();
 
 	export let data;
 
 	const placeId = data?.ppid ?? undefined;
 
-	let settlementList = settlements.map((s) => {
+	let placesList = places.map((s) => {
 		return {
 			name: { value: s.name, link: `/places/${s.id}` },
 			id: { value: `${s.id}` },
@@ -23,10 +19,10 @@
 		};
 	});
 	if (placeId !== undefined) {
-		const settlement = getSettlement(+placeId);
+		const settlement = getPlace(+placeId);
 		if (settlement) {
 			const placeIdsInSettlement = settlement.places.concat(+placeId);
-			settlementList = settlementList.filter((s) => {
+			placesList = placesList.filter((s) => {
 				return placeIdsInSettlement.includes(+s.id.value);
 			});
 		}
@@ -70,19 +66,19 @@
 	<div class="w-full p-2 md:p-0 md:w-3/4 overflow-hidden">
 		<h1 class="text-3xl mb-12">Settlements, Esablishments and Points of Intrest</h1>
 		<div class="w-full flex justify-center">
-			<Table headers={['id', 'Name', 'Type']} rows={settlementList} _class="w-full md:w-1/2">
+			<Table headers={['id', 'Name', 'Type']} rows={placesList} _class="w-full md:w-1/2">
 				<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>
 					<button
 						type="button"
 						on:click={() => {
-							settlementList = deleteSettlement(+row.id.value).map((s) => {
+							placesList = deletePlace(+row.id.value).map((s) => {
 								return {
 									name: { value: s.name, link: `/places/${s.id}` },
 									id: { value: `${s.id}` },
 									type: { value: s.type }
 								};
 							});
-							settlementList = settlementList;
+							placesList = placesList;
 						}}
 						class="bg-red-600 px-2 rounded-md hover:bg-red-400"
 					>

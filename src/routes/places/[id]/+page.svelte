@@ -3,15 +3,11 @@
 	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
 	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
 	import { goto } from '$app/navigation';
-	import {
-		getSettlement,
-		handleSettlementPrompt,
-		newSettlement,
-		saveSettlement
-	} from '../../../utilities/helpers/settlementHelper';
 	import SettlementWiki from '../../../components/common/WikiPage/SettlementWiki.svelte';
 	import { generateRandomSettlementPrompt } from '../../../utilities/helpers/promptHelper';
 	import WikiSettlement from '../../../components/common/wiki/WikiSettlement.svelte';
+	import PlacePage from '../../../components/common/wiki/pages/PlacePage.svelte';
+	import { getPlace, newPlace, savePlace } from '../../../utilities/helpers/placeHelper';
 
 	export let data;
 
@@ -19,18 +15,28 @@
 
 	console.log('placeId: ', parentPlaceId);
 
-	let settlement = getSettlement(+data.id) ?? newSettlement();
+	let place = getPlace(+data.id) ?? newPlace();
 
 	const isNew = Number.isNaN(data.id);
 
-	let editMode = isNew ?? false;
+	let editing = isNew ?? false;
 
 	let promptInput = '';
 	let wikiView = true;
+
+	const submit = (form: any) => {
+		form.preventDefault();
+		const values = Object.fromEntries(new FormData(form.target));
+
+		const id = savePlace(place);
+		if (+data.id !== id) {
+			goto(`/organizations/${id}`);
+		}
+	};
 </script>
 
 <PageLayout>
-	<Toolbar>
+	<!-- <Toolbar>
 		<div class="mb-4 w-full flex flex-col gap-2">
 			{#if editMode}
 				<button
@@ -136,10 +142,11 @@
 				/>
 			{/if}
 		</div>
-	</Toolbar>
-	{#if settlement !== undefined}
-		<SettlementWiki {settlement} {editMode} />
+	</Toolbar> -->
+	{#if place !== undefined}
+		<!-- <SettlementWiki {settlement} {editMode} /> -->
 		<!-- <WikiSettlement {settlement} {editMode} {submit} name="formTest" /> -->
+		<PlacePage {place} {editing} {submit} name="formTest" />
 	{/if}
 </PageLayout>
 

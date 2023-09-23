@@ -5,6 +5,9 @@ export type Being = {
 	name: string;
 	type: 'character' | 'npc' | 'none' | 'custom';
 };
+export type OrgMember = Being & {
+	role: string;
+};
 
 export type Org = {
 	id: number;
@@ -12,9 +15,9 @@ export type Org = {
 	name: string;
 	description: string;
 	imageUrl: string;
-	leaders: Being[];
-	members: Being[];
-	places: number[];
+	leaders: OrgMember[];
+	members: OrgMember[];
+	places: { id: number; role: string }[];
 	goals: string;
 	motto: string;
 	quests: number[];
@@ -25,8 +28,8 @@ export type Org = {
 export let newOrg = (): Org => {
 	return {
 		id: 0,
-		name: '',
-		type: '',
+		name: 'Name',
+		type: 'Type',
 		description: '',
 		imageUrl: '',
 		leaders: [],
@@ -44,6 +47,9 @@ export let newOrg = (): Org => {
 
 export let saveOrg = (org: Org): number => {
 	let orgs = loadData('orgs') as Org[];
+	if (orgs === undefined) {
+		orgs = [];
+	}
 
 	if (org.id === 0) {
 		org.id = orgs.length + 1;

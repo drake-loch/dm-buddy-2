@@ -3,7 +3,6 @@
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
 import type { Being } from '../orgHelper';
-import type { Settlement } from '../settlementHelper';
 
 //save
 export const saveData = (key: string, data: any): void => {
