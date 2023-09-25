@@ -10,7 +10,10 @@
 
 	const FORM_NAME = 'org-form';
 
-	let editing = Number.isNaN(data.id) ?? false;
+	const isNew = Number.isNaN(data.id);
+
+	let editing = isNew ?? false;
+
 	let org = getOrg(+data.id) ?? newOrg();
 
 	const submit = (form: any) => {
@@ -34,6 +37,10 @@
 		console.log('Org', org);
 	};
 </script>
+
+<svelte:head>
+	<title>Organization - {isNew ? 'New Organization' : org.name}</title>
+</svelte:head>
 
 <PageLayout>
 	<div

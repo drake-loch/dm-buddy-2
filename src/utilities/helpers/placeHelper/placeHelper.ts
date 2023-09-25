@@ -1,4 +1,5 @@
 import { loadData, saveData } from '../dataManager';
+import type { Being } from '../orgHelper';
 
 export type Place = {
 	id: number;
@@ -10,22 +11,20 @@ export type Place = {
 	places: number[];
 	description: string;
 	government: string;
-	authorityFigures: {
-		id: number;
-		role: string;
-		type: 'npc' | 'character';
-		isLinked: boolean;
-		name?: string;
-	}[];
+	authorityFigures: PlaceBeingRole[];
 	languages: string;
 	religion: string;
 	currency: string;
 	economy: string;
 	organizations: number[];
-	imageURL: string;
-	quests: { name: string; description: string; id: number }[];
+	imageUrl: string;
+	quests: number[];
 	additionalInfo: { title: string; data: string }[];
 	notes: string;
+};
+
+export type PlaceBeingRole = Being & {
+	role: string;
 };
 
 export const newPlace = (): Place => {
@@ -45,7 +44,7 @@ export const newPlace = (): Place => {
 		currency: '',
 		economy: '',
 		organizations: [],
-		imageURL: '',
+		imageUrl: '',
 		quests: [],
 		additionalInfo: [],
 		notes: ''
@@ -67,7 +66,6 @@ export const handlePlacePrompt = (place: Place, promptInput: string): Place => {
 	place.currency = parsed?.currency ?? place.currency;
 	place.economy = parsed?.economy ?? place.economy;
 	place.organizations = parsed?.organizations ?? place.organizations;
-	// place.imageURL = parsed?.imageURL ?? place.imageURL;
 	place.quests = parsed?.quests ?? place.quests;
 	place.additionalInfo = parsed?.additionalInfo ?? place.additionalInfo;
 	place.notes = parsed?.notes ?? place.notes;

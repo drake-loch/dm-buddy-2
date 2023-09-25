@@ -188,7 +188,7 @@
 							<Select
 								name={`place-id-${i}`}
 								bind:value={place.id}
-								label="Role:"
+								label="Place:"
 								labelClass="text-sm font-semibold"
 							>
 								{#each getPlaces() as s}

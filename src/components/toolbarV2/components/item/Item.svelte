@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let text: string;
-	export let colour: 'green' | 'red' | 'blue' | 'yellow' | 'gray' = 'gray';
+	export let colour: 'green' | 'red' | 'blue' | 'yellow' | 'gray' | 'purple' = 'gray';
 	export let click = (): void => {};
 	export let type: 'button' | 'submit' | 'reset' = 'button';
 	export let form: string | undefined = undefined;
@@ -47,5 +47,12 @@
 	}
 	.gray:hover {
 		@apply bg-gray-500;
+	}
+
+	.purple {
+		@apply bg-purple-500 border border-purple-400;
+	}
+	.purple:hover {
+		@apply bg-purple-600;
 	}
 </style>

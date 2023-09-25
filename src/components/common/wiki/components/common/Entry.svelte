@@ -93,8 +93,8 @@
 	$: entities = getEntities();
 </script>
 
-<div class="w-full p-6 bg-gray-600 min-h-[5rem] rounded-sm">
-	<span class="flex gap-2 items-center mb-2 border-b pb-2">
+<div class="w-full px-2 py-4 md:p-6 bg-gray-600 min-h-[5rem] rounded-sm">
+	<span class="flex flex-wrap md:flex-nowrap gap-2 items-center mb-2 border-b pb-2">
 		{#if editing}
 			{#if titleEditable}
 				<span class="w-full">
@@ -198,7 +198,7 @@
 				>
 			{/if}
 			{#if showAddLinkOptions}
-				<div class="flex gap-2 items-center">
+				<div class="flex flex-wrap md:flex-nowrap gap-2 items-center">
 					<select
 						name={`${title}-link-type`}
 						class="border rounded-md bg-gray-600 px-2"

@@ -1,10 +1,17 @@
 <script lang="ts">
+	import PromptTool from '../common/PromptTool/PromptTool.svelte';
 	import Item from './components/item/Item.svelte';
 
 	export let formName: string | undefined = undefined;
 	export let editing = false;
 
+	export let promptInput: string | undefined = undefined;
+	export let handleApply: () => void = () => {};
+	export let handleGenerate: () => void = () => {};
+	export let handleQuickGenerate: undefined | (() => void) = undefined;
+
 	let menuIsOpen = editing;
+	let promptInputOpen = false;
 </script>
 
 <div class="relative">
@@ -32,6 +39,9 @@
 					{#if editing}
 						<Item text="Save" colour="green" form={formName} type="submit" />
 						<Item text="Cancel" colour="gray" click={() => (editing = false)} />
+						{#if promptInput !== undefined}
+							<Item text="Prompts" colour="purple" click={() => (promptInputOpen = true)} />
+						{/if}
 					{:else}
 						<Item text="Edit" colour="green" click={() => (editing = true)} />
 					{/if}
@@ -53,6 +63,20 @@
 		</span>
 	</div>
 </div>
+{#if promptInputOpen}
+	<div class="absolute w-full h-screen bg-black bg-opacity-10 left-0 top-0">
+		<div class="">
+			<button
+				type="button"
+				class="w-20 h-6 bg-red-500 rounded-t-md border-2 border-b-0 z-10"
+				on:click={() => (promptInputOpen = false)}>X</button
+			>
+			<div class="w-[30rem] py-4 px-2 bg-gray-600 border-2 shadow-lg">
+				<PromptTool bind:promptInput {handleApply} {handleGenerate} {handleQuickGenerate} />
+			</div>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.nav-border {
