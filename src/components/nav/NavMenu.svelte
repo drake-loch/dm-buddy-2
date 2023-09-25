@@ -49,6 +49,8 @@
 				<NavItem text="Monsters" link="/monsters" />
 				<NavItem text="Places" link="/places" />
 				<NavItem text="Groups" link="/organizations" />
+				<NavItem text="Quests" link="/quests" />
+				<NavItem text="Sessions" link="/sessions" />
 				<NavItem text="Settings" link="/settings" />
 			</div>
 		</div>

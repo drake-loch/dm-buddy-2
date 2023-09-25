@@ -1,46 +1,68 @@
 <script lang="ts">
-	export let headers: string[] = [];
-	export let rows: { [key: string]: { value: string; link?: string } }[] = [];
-	export let _class = '';
-	export let hiddenHeaders: string[] = [];
+	import Input from '../wiki/components/formControl/Input.svelte';
 
-	$: _rows = rows.map((row) => {
-		const newRow: { [key: string]: { value: string; link?: string } } = {};
-		headers.forEach((header) => {
-			const h = header.toLowerCase();
-			newRow[h] = row[h];
-		});
-		return newRow;
+	type T = $$Generic;
+	type K = keyof T;
+
+	export let data: T[] = [];
+	export let columns: {
+		title: string;
+		labelAccesor: (v: T) => string | number;
+		linkAccessor?: (v: T) => string;
+	}[] = [];
+	export let searchAccessor: ((value: T) => string | number) | undefined = undefined;
+
+	let search: string = '';
+
+	$: _data = data.filter((d) => {
+		if (searchAccessor !== undefined && search !== '') {
+			return searchAccessor(d).toString().toLowerCase().includes(search.toLowerCase());
+		}
+		return data;
 	});
+
+	function formatColumnHeader(column: string) {
+		let formatted = column.charAt(0).toUpperCase() + column.slice(1);
+		formatted = formatted.replace(/([A-Z])/g, ' $1');
+		return formatted;
+	}
 </script>
 
-<table class={`border ${_class}`}>
-	<thead>
-		<tr>
-			{#each headers as header}
-				<th class="border">{header}</th>
-			{/each}
-			{#if $$slots.action}
-				<th class="border">Actions</th>
-			{/if}
-		</tr>
-	</thead>
-	<tbody>
-		{#each _rows as row, i}
-			<tr class={`${i % 2 ? 'bg-gray-600' : ''}`}>
-				{#each Object.values(row) as cell}
-					{#if cell?.link}
-						<td class={`text-center px-1 py-4 text-ellipsis`}>
-							<a class="text-blue-400 underline" href={cell.link}>{cell?.value}</a>
-						</td>
-					{:else}
-						<td class="text-center px-1 py-4">{cell?.value}</td>
-					{/if}
+<div class="w-full min-h-[20rem] border-2 p-2 bg-gray-800">
+	<div class="w-full p-2 flex justify-between items-center">
+		<slot name="tools" />
+		<span class="w-[14rem]">
+			<Input bind:value={search} placeholder="Search" />
+		</span>
+	</div>
+	{#if data.length > 0}
+		<table class={`w-full`}>
+			<thead>
+				<tr>
+					{#each columns as column}
+						<th class="border-y">
+							{formatColumnHeader(column.title)}
+						</th>
+					{/each}
+				</tr>
+			</thead>
+			<tbody>
+				{#each _data as row, i}
+					<tr class={`${i % 2 ? 'bg-gray-600' : ''}`}>
+						{#each columns as column}
+							<td class="py-1 px-4 text-center">
+								{#if column.linkAccessor}
+									<a href={column.linkAccessor(row)}>{column.labelAccesor(row)}</a>
+								{:else}
+									{column.labelAccesor(row)}
+								{/if}
+							</td>
+						{/each}
+					</tr>
 				{/each}
-				{#if $$slots.action}
-					<slot name="action" {row} />
-				{/if}
-			</tr>
-		{/each}
-	</tbody>
-</table>
+			</tbody>
+		</table>
+	{:else}
+		<slot name="emptyState" />
+	{/if}
+</div>

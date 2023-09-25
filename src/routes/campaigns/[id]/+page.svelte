@@ -15,15 +15,19 @@
 	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
 	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
 	import CharCreate from '../../../pages/CharCreate/index.svelte';
+	import NavMenu from '../../../components/nav/NavMenu.svelte';
+	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
+	import CampaignPage from '../../../components/common/wiki/pages/CampaignPage.svelte';
 
 	export let data;
 
+	const FORM_NAME = 'campaign-form';
+
 	let campaign = getCampaign(+data.id) ?? newCampaign();
 
-	let editMode = Number.isNaN(data.id) ?? false;
+	let editing = Number.isNaN(data.id) ?? false;
 	let isNew = Number.isNaN(data.id) ?? false;
 
-	let promptInput = '';
 	let wikiView = true;
 
 	let deleteWarning = false;
@@ -32,213 +36,39 @@
 
 	let charId: number | undefined = undefined;
 
-	const viewChar = (id: number) => {
-		charId = id;
-		toggleMod = true;
+	const submit = (form: any) => {
+		form.preventDefault();
+		const values = Object.fromEntries(new FormData(form.target));
+
+		campaign.name = values.name.toString();
+		campaign.description = values.description.toString();
+		campaign.imageUrl = values.imageUrl.toString();
+		campaign.notes = values.notes.toString();
+		campaign.additionalInfo = campaign.additionalInfo.filter(
+			(a) => a.title !== '' || a.data !== ''
+		);
+
+		const id = saveCampaign(campaign);
+		if (isNew) {
+			goto(`/campaigns/${id}`);
+		}
+		editing = false;
 	};
-	let charViewType: 'wiki' | 'sheet' = 'wiki';
 </script>
 
 <PageLayout>
-	{#if toggleMod}
-		<div class="absolute w-full h-full bg-black/80 flex justify-center">
-			{#if charId !== undefined}
-				{#if charViewType === 'wiki'}
-					<CharWikiPage char={getCharacter(charId)} />
-				{:else}
-					<CharCreate char={getCharacter(charId)} />
-				{/if}
-			{/if}
-			<div class="p-2 relative">
-				<div class={`absolute flex gap-2 ${charViewType === 'wiki' ? '-left-20' : ''}`}>
-					{#if charViewType === 'wiki'}
-						<button
-							type="button"
-							class="bg-orange-500 w-5 h-5 p-4 flex justify-center items-center rounded-full hover:bg-orange-600"
-							on:click={() => {
-								charViewType = 'sheet';
-							}}>📃</button
-						>
-					{:else}
-						<button
-							type="button"
-							class="bg-orange-500 w-5 h-5 p-4 flex text-sm justify-center items-center rounded-full hover:bg-orange-600"
-							on:click={() => {
-								charViewType = 'wiki';
-							}}>Wiki</button
-						>
-					{/if}
-
-					<button
-						type="button"
-						class="bg-red-500 w-5 h-5 p-4 flex justify-center items-center rounded-full hover:bg-red-600"
-						on:click={() => {
-							toggleMod = false;
-							charId = undefined;
-						}}>X</button
-					>
-				</div>
-			</div>
-		</div>
-	{/if}
-	<Toolbar>
-		<div class="mb-4 w-full flex flex-col gap-2">
-			{#if editMode}
-				<div class="flex w-full gap-4">
-					<button
-						type="button"
-						class="border border-green-500 rounded-sm px-4 w-full"
-						on:click={() => {
-							const id = saveCampaign(campaign);
-							goto(`/campaigns/${id}`);
-							editMode = !editMode;
-						}}
-					>
-						Save Campaign
-					</button>
-					<button
-						type="button"
-						class="border border-red-500 rounded-sm px-4 w-full"
-						on:click={() => {
-							deleteWarning = true;
-						}}
-					>
-						Delete Campaign
-					</button>
-				</div>
-				<DeleteBanner
-					{deleteWarning}
-					deleteModule={() => {
-						deleteCampaign(campaign.id);
-						deleteWarning = false;
-						goto(`/campaigns/`);
-					}}
-				/>
-				{#if !isNew}
-					<button
-						on:click={() => {
-							goto(`/campaigns/${data.id}/quests/new`);
-						}}
-						type="button"
-						class="border border-green-500 rounded-md w-full hover:bg-green-400"
-					>
-						New Quest
-					</button>
-					<!-- <button
-						type="button"
-						class="border border-red-500 rounded-sm px-4 w-full"
-						on:click={() => {
-							campaign = removeAllQuestsFromCampaign(campaign.id);
-						}}
-					>
-						Delete Quests
-					</button> -->
-					<!-- <button
-						type="button"
-						class="border border-red-500 rounded-sm px-4 w-full"
-						on:click={() => {
-							campaign = removeAllSessionsFromCampaign(campaign.id);
-						}}
-					>
-						Delete Sessions
-					</button> -->
-					<button
-						on:click={() => {
-							goto(`/campaigns/${data.id}/sessions/new`);
-						}}
-						type="button"
-						class="
-    border border-green-500 rounded-md w-full hover:bg-green-400">New Session</button
-					>
-				{/if}
-
-				<button
-					type="button"
-					class="border border-gray-200 rounded-sm px-4"
-					on:click={() => {
-						editMode = !editMode;
-					}}>Cancel</button
-				>
-			{:else}
-				<button
-					type="button"
-					class="border border-blue-500 rounded-sm px-4"
-					on:click={() => {
-						editMode = !editMode;
-					}}>Edit</button
-				>
-			{/if}
-		</div>
-
-		<!-- mobile -->
-		<div class="w-full h-full px-2" slot="mobile-tools">
-			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
-				{#if editMode}
-					<button
-						type="button"
-						class="border border-green-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							const id = saveCampaign(campaign);
-							goto(`/campaigns/${id}`);
-							editMode = !editMode;
-						}}>Save</button
-					>
-					<button
-						type="button"
-						class="border border-red-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							deleteWarning = true;
-						}}>Delete</button
-					>
-					<button
-						type="button"
-						class="border border-gray-200 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Cancel</button
-					>
-				{:else}
-					<button
-						type="button"
-						class="border border-blue-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Edit</button
-					>
-				{/if}
-			</div>
-			<div class="flex gap-2 justify-evenly mb-1">
-				{#if !isNew && editMode}
-					<button
-						on:click={() => {
-							goto(`/campaigns/${data.id}/quests/new`);
-						}}
-						type="button"
-						class="border border-green-500 rounded-sm px-4 text-sm">New Quest</button
-					>
-					<button
-						on:click={() => {
-							goto(`/campaigns/${data.id}/sessions/new`);
-						}}
-						type="button"
-						class="border border-green-500 rounded-sm px-4 text-sm">New Session</button
-					>
-				{/if}
-			</div>
-			<DeleteBanner
-				bind:deleteWarning
-				deleteModule={() => {
-					deleteCampaign(campaign.id);
-					deleteWarning = false;
-					goto(`/campaigns/`);
-				}}
-			/>
-		</div>
-	</Toolbar>
+	<div
+		slot="sidebar"
+		class="md:space-y-2 py-2 px-2 md:p-0 flex flex-row-reverse md:block justify-between items-center"
+	>
+		<NavMenu />
+		<ToolbarIi formName={FORM_NAME} bind:editing />
+	</div>
 	{#if campaign !== undefined}
+		<CampaignPage {editing} {campaign} {submit} name={FORM_NAME} />
 		{#if wikiView}
 			<!--  -->
-			<CampaignWiki campaignId={data.id} {editMode} {campaign} toggleMod={viewChar} />
+			<!-- <CampaignWiki campaignId={data.id} {editing} {campaign} toggleMod={viewChar} /> -->
 		{/if}
 	{/if}
 </PageLayout>

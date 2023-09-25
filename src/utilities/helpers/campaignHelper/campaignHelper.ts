@@ -177,8 +177,14 @@ export let getQuest = (questId: number, campaignId?: number): Quest | undefined 
 		return quests.find((q) => q.id === questId && campaign.quests.includes(q.id));
 	}
 };
-
-export let getQuests = (campaignId?: number): Quest[] => {
+export let getQuests = (): Quest[] => {
+	let quests = loadData('quests') as Quest[];
+	if (quests === undefined) {
+		return [];
+	}
+	return quests;
+};
+export let getQuestsForCampaign = (campaignId?: number): Quest[] => {
 	let campaign = getCampaign(campaignId ?? -99) as Campaign;
 
 	if (campaign === undefined) {
@@ -266,7 +272,14 @@ export let getSession = (id: number): Session | undefined => {
 
 	return sessions.find((s) => s.id === id);
 };
-export let getSessions = (campaignId?: number): Session[] => {
+export let getSessions = (): Session[] => {
+	let sessions = loadData('sessions') as Session[];
+	if (sessions === undefined) {
+		return [];
+	}
+	return sessions;
+};
+export let getSessionsForCampaign = (campaignId?: number): Session[] => {
 	let campaign = getCampaign(campaignId ?? -99) as Campaign;
 
 	if (campaign === undefined) {

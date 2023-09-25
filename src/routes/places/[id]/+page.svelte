@@ -46,12 +46,10 @@
 		);
 		place.places = place.places.filter((p) => p > 0);
 
-		console.log('place: ', place);
-
-		// const id = savePlace(place);
-		// if (isNew) {
-		// 	goto(`/places/${id}`);
-		// }
+		const id = savePlace(place);
+		if (isNew) {
+			goto(`/places/${id}`);
+		}
 		editing = false;
 	};
 </script>

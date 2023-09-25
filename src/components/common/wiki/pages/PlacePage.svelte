@@ -226,8 +226,6 @@
 					<Textarea name="notes" value={place.notes} inputClass="w-full" />
 				</SectionWrapper>
 			{:else}
-				<!--  -->
-
 				<SectionWrapper>
 					{#if place.imageUrl}
 						<span class="flex w-full justify-center">
@@ -240,7 +238,7 @@
 					</span>
 				</SectionWrapper>
 
-				<SectionWrapper>
+				<SectionWrapper hidden={place.description === ''}>
 					<Title text="Description" />
 					<Text text={place.description} />
 				</SectionWrapper>
