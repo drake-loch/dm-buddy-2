@@ -7,6 +7,7 @@
 		downloadData,
 		uploadAllData
 	} from '../../../utilities/helpers/dataManager';
+	import NavMenu from '../../../components/nav/NavMenu.svelte';
 
 	const storageValues = {
 		characters: 0,
@@ -48,7 +49,6 @@
 </script>
 
 <PageLayout>
-	<Toolbar viewNav={true} />
 	<div class="w-full px-4 md:p-0 md:w-3/4">
 		<h1 class="text-4xl mb-6">Storage</h1>
 		<div class="mb-6 flex">

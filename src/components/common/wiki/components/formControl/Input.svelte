@@ -19,14 +19,15 @@
 			{placeholder}
 			class={classes(`px-1 w-2/3 text-sm ${inputClass}`)}
 		/>
+	{:else}
+		<input
+			type="text"
+			{name}
+			bind:value
+			{placeholder}
+			class={classes(`px-1 w-full text-sm ${inputClass}`)}
+		/>
 	{/if}
-	<input
-		type="text"
-		{name}
-		bind:value
-		{placeholder}
-		class={classes(`px-1 w-full text-sm ${inputClass}`)}
-	/>
 </span>
 
 <style>

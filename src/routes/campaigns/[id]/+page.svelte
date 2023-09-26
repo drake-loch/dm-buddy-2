@@ -56,19 +56,9 @@
 	};
 </script>
 
-<PageLayout>
-	<div
-		slot="sidebar"
-		class="md:space-y-2 py-2 px-2 md:p-0 flex flex-row-reverse md:block justify-between items-center"
-	>
-		<NavMenu />
-		<ToolbarIi formName={FORM_NAME} bind:editing />
-	</div>
+<PageLayout windowTitle={`Campaign - ${isNew ? 'NEW' : campaign.name}`}>
+	<ToolbarIi slot="sidebar" formName={FORM_NAME} bind:editing />
 	{#if campaign !== undefined}
 		<CampaignPage {editing} {campaign} {submit} name={FORM_NAME} />
-		{#if wikiView}
-			<!--  -->
-			<!-- <CampaignWiki campaignId={data.id} {editing} {campaign} toggleMod={viewChar} /> -->
-		{/if}
 	{/if}
 </PageLayout>

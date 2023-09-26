@@ -300,7 +300,7 @@
 		</div>
 
 		<div slot="main" class="space-y-4">
-			<h1 class="text-4xl font-bold border-b-2 pb-2">{place.name}</h1>
+			<h1 class="text-4xl font-bold border-b-2 pb-2 px-4">{place.name}</h1>
 			{#if editing}
 				<span class="flex gap-2">
 					<button

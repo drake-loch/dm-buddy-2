@@ -23,10 +23,9 @@
 	}
 </script>
 
-<PageLayout>
-	<NavMenu />
+<PageLayout windowTitle="Sessions">
 	<div class="w-full p-2 md:p-0 md:flex md:flex-col md:items-center overflow-hidden">
-		<h1 class="text-3xl mb-12">Settlements, Esablishments and Points of Intrest</h1>
+		<h1 class="text-3xl mb-8">Sessions</h1>
 		<div class="w-full md:w-1/2 flex justify-center">
 			<Table
 				data={filteredSessions}

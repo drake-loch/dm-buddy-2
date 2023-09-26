@@ -50,6 +50,8 @@
 		styles += ' ';
 		styles += sizeStyles[size];
 		styles += ' ';
+		styles += 'rounded-md';
+		styles += ' ';
 		if (disabled) {
 			styles += disabledStyles;
 		}

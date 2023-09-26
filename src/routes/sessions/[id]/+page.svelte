@@ -2,43 +2,35 @@
 	import { goto } from '$app/navigation';
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import OrgPage from '../../../components/common/wiki/pages/OrgPage.svelte';
+	import SessionPage from '../../../components/common/wiki/pages/SessionPage.svelte';
 	import NavMenu from '../../../components/nav/NavMenu.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
+	import { getSession, newSession } from '../../../utilities/helpers/campaignHelper';
 	import { getOrg, newOrg, saveOrg } from '../../../utilities/helpers/orgHelper';
 
 	export let data;
 
-	const FORM_NAME = 'org-form';
+	const FORM_NAME = 'session-form';
 
 	const isNew = Number.isNaN(data.id);
 
 	let editing = isNew ?? false;
 
-	let org = getOrg(+data.id) ?? newOrg();
+	let session = getSession(+data.id) ?? newSession();
 
 	const submit = (form: any) => {
 		form.preventDefault();
 		const values = Object.fromEntries(new FormData(form.target));
-		org.goals = values?.goals.toString() ?? org.goals;
-		org.motto = values?.motto.toString() ?? org.motto;
-		org.name = values?.name.toString() ?? org.name;
-		org.imageUrl = values?.imageUrl.toString() ?? org.imageUrl;
-		org.type = values?.type.toString() ?? org.type;
-		org.description = values?.description.toString() ?? org.description;
-		org.notes = values?.notes.toString() ?? org.notes;
-
 		editing = false;
 
-		const id = saveOrg(org);
-		if (+data.id !== id) {
-			goto(`/organizations/${id}`);
-		}
-
-		console.log('Org', org);
+		// const id = saveOrg(org);
+		// if (+data.id !== id) {
+		// 	goto(`/organizations/${id}`);
+		// }
 	};
 </script>
 
-<PageLayout windowTitle={`Organization - ${isNew ? 'New Organization' : org.name}`}>
+<PageLayout windowTitle={`Session - ${isNew ? 'New Place' : session.name}`}>
 	<ToolbarIi slot="sidebar" formName={FORM_NAME} bind:editing />
-	<OrgPage bind:org {editing} {submit} name={FORM_NAME} />
+	<SessionPage bind:session {editing} {submit} name={FORM_NAME} />
 </PageLayout>

@@ -18,11 +18,9 @@
 	});
 </script>
 
-<PageLayout>
-	<NavMenu />
-
+<PageLayout windowTitle="Organizations">
 	<div class="w-full p-2 md:p-0 md:flex md:flex-col md:items-center overflow-hidden">
-		<h1 class="text-3xl mb-12">Organizations</h1>
+		<h1 class="text-3xl mb-8">Organizations</h1>
 		<div class="w-full md:w-1/2 flex justify-center">
 			<Table
 				data={orgs}

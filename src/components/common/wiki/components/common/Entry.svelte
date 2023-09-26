@@ -93,8 +93,10 @@
 	$: entities = getEntities();
 </script>
 
-<div class="w-full px-2 py-4 md:p-6 bg-gray-600 min-h-[5rem] rounded-sm">
-	<span class="flex flex-wrap md:flex-nowrap gap-2 items-center mb-2 border-b pb-2">
+<div
+	class="w-full px-2 py-4 md:px-6 md:pb-8 md:py-3 bg-gray-500 min-h-[5rem] rounded-md border border-gray-400"
+>
+	<span class="flex flex-wrap md:flex-nowrap gap-2 justify-between items-center mb-2 border-b pb-2">
 		{#if editing}
 			{#if titleEditable}
 				<span class="w-full">
@@ -109,33 +111,35 @@
 			{:else}
 				<h3 class="font-bold text-2xl">{title}</h3>
 			{/if}
-			<button
-				type="button"
-				class="text-center bg-green-500 rounded-md p-0.5"
-				aria-label="save module"
-				on:click={() => {
-					saveModule();
-				}}>💾</button
-			>
+			<span class="flex gap-1">
+				<button
+					type="button"
+					class="text-center bg-green-500 rounded-md p-0.5"
+					aria-label="save module"
+					on:click={() => {
+						saveModule();
+					}}>💾</button
+				>
 
-			<button
-				type="button"
-				class="text-center bg-red-500 rounded-md p-0.5"
-				aria-label="delete module"
-				on:click={() => {
-					warningBanner = true;
-				}}>🗑️</button
-			>
-			<button
-				type="button"
-				class="text-center bg-white rounded-md p-0.5"
-				aria-label="cancel editing module"
-				on:click={() => {
-					localTitle = title;
-					localData = data;
-					editing = false;
-				}}>🔙</button
-			>
+				<button
+					type="button"
+					class="text-center bg-red-500 rounded-md p-0.5"
+					aria-label="delete module"
+					on:click={() => {
+						warningBanner = true;
+					}}>🗑️</button
+				>
+				<button
+					type="button"
+					class="text-center bg-white rounded-md p-0.5"
+					aria-label="cancel editing module"
+					on:click={() => {
+						localTitle = title;
+						localData = data;
+						editing = false;
+					}}>🔙</button
+				>
+			</span>
 		{:else}
 			<h3 class="font-bold text-2xl">{title}</h3>
 			<button

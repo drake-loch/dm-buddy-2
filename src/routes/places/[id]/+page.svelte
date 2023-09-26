@@ -59,24 +59,19 @@
 </svelte:head>
 
 <PageLayout>
-	<div
+	<ToolbarIi
 		slot="sidebar"
-		class="md:space-y-2 py-2 px-2 md:p-0 flex flex-row-reverse md:block justify-between items-center"
-	>
-		<NavMenu />
-		<ToolbarIi
-			bind:promptInput
-			formName={FORM_NAME}
-			bind:editing
-			handleGenerate={() => {
-				promptInput = generateRandomSettlementPrompt(place);
-			}}
-			handleApply={() => {
-				place = handlePlacePrompt(place, promptInput);
-				place = place;
-			}}
-		/>
-	</div>
+		bind:promptInput
+		formName={FORM_NAME}
+		bind:editing
+		handleGenerate={() => {
+			promptInput = generateRandomSettlementPrompt(place);
+		}}
+		handleApply={() => {
+			place = handlePlacePrompt(place, promptInput);
+			place = place;
+		}}
+	/>
 	{#if place !== undefined}
 		<PlacePage {place} {editing} {submit} name={FORM_NAME} />
 	{/if}

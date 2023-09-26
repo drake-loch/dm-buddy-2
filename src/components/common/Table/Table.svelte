@@ -2,7 +2,6 @@
 	import Input from '../wiki/components/formControl/Input.svelte';
 
 	type T = $$Generic;
-	type K = keyof T;
 
 	export let data: T[] = [];
 	export let columns: {
@@ -28,8 +27,8 @@
 	}
 </script>
 
-<div class="w-full min-h-[20rem] border-2 p-2 bg-gray-800">
-	<div class="w-full p-2 flex justify-between items-center">
+<div class="w-full min-h-[20rem] border-2 rounded-md p-2 bg-gray-800 shadow-lg">
+	<div class="w-full p-2 pb-4 flex justify-between items-center">
 		<slot name="tools" />
 		<span class="w-[14rem]">
 			<Input bind:value={search} placeholder="Search" />
@@ -50,7 +49,7 @@
 				{#each _data as row, i}
 					<tr class={`${i % 2 ? 'bg-gray-600' : ''}`}>
 						{#each columns as column}
-							<td class="py-1 px-4 text-center">
+							<td class="py-2 px-4 text-center">
 								{#if column.linkAccessor}
 									<a href={column.linkAccessor(row)}>{column.labelAccesor(row)}</a>
 								{:else}
