@@ -1,7 +1,5 @@
 <script lang="ts">
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
-	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
-	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
 	import {
 		handleCharacterPromptInput,
 		newEmptyCharacter,
@@ -16,155 +14,68 @@
 		generateQuickCharPrompt,
 		generateRandomCharPrompt
 	} from '../../../utilities/helpers/promptHelper';
-	import CharCreate from '../../../pages/CharCreate/index.svelte';
-	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
 	import { goto } from '$app/navigation';
-	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
+	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
+	import CharPage from '../../../components/common/wiki/pages/CharPage.svelte';
 
 	export let data;
 
-	let char = getCharacter(+data.id) ?? newEmptyCharacter();
+	const FORM_NAME = 'char-form';
 
-	let editMode = Number.isNaN(data.id) ?? false;
+	let character = getCharacter(+data.id) ?? newEmptyCharacter();
+
+	let editing = Number.isNaN(data.id) ?? false;
 	let isNew = Number.isNaN(data.id) ?? false;
 
 	let promptInput = '';
-	let wikiView = false;
 
-	let deleteWarning = false;
+	const submit = (form: any) => {
+		form.preventDefault();
+		const values = Object.fromEntries(new FormData(form.target));
+
+		character.fullName = values.name.toString();
+		character.age = +values.age.toString();
+		character.race = values.race.toString();
+		character.gender = values.gender.toString();
+		character.size = values.size.toString();
+		character.alignment = values.alignment.toString();
+		character.class = values.class.toString();
+
+		character.characteristics.personalityTraits = values.personalityTraits.toString();
+		character.characteristics.ideals = values.ideals.toString();
+		character.characteristics.bonds = values.bonds.toString();
+		character.characteristics.flaws = values.flaws.toString();
+
+		character.description = values.description.toString();
+
+		character.notes = values.notes.toString();
+
+		const id = saveCharacter(character);
+		if (+data.id !== id) {
+			goto(`/character/${id}`);
+		}
+		editing = false;
+	};
 </script>
 
 <PageLayout>
-	<Toolbar>
-		<div class="mb-4 w-full flex flex-col gap-2">
-			<button
-				type="button"
-				class="border border-orange-500 rounded-sm px-4 mb-2"
-				on:click={() => {
-					wikiView = !wikiView;
-				}}>{wikiView ? 'Sheet' : 'Wiki'}</button
-			>
-			{#if editMode}
-				<button
-					type="button"
-					class="border border-green-500 rounded-sm px-4"
-					on:click={() => {
-						const id = saveCharacter(char);
-						if (isNew) {
-							goto(`/characters/${id}`);
-						}
-						editMode = !editMode;
-					}}>Save Character</button
-				>
-				<button type="button" class="border border-red-500 rounded-sm px-4">Delete Character</button
-				>
-				<button
-					type="button"
-					class="border border-gray-200 rounded-sm px-4"
-					on:click={() => {
-						editMode = !editMode;
-					}}>Cancel</button
-				>
-			{:else}
-				<button
-					type="button"
-					class="border border-blue-500 rounded-sm px-4"
-					on:click={() => {
-						editMode = !editMode;
-					}}>Edit</button
-				>
-			{/if}
-		</div>
-
-		{#if editMode}
-			<PromptTool
-				bind:promptInput
-				handleApply={() => {
-					char = handleCharacterPromptInput(char, promptInput);
-				}}
-				handleGenerate={() => {
-					promptInput = generateRandomCharPrompt(char);
-				}}
-				handleQuickGenerate={() => {
-					promptInput = generateQuickCharPrompt(char);
-				}}
-			/>
-		{/if}
-
-		<div class="w-full h-full px-2" slot="mobile-tools">
-			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
-				{#if editMode}
-					<button
-						type="button"
-						class="border border-green-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							const id = saveCharacter(char);
-							if (isNew) {
-								goto(`/characters/${id}`);
-							}
-							editMode = !editMode;
-						}}>Save</button
-					>
-					<button
-						type="button"
-						class="border border-red-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							deleteWarning = true;
-						}}>Delete</button
-					>
-					<button
-						type="button"
-						class="border border-gray-200 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Cancel</button
-					>
-				{:else}
-					<button
-						type="button"
-						class="border border-blue-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Edit</button
-					>
-					<button
-						type="button"
-						class="border border-orange-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							wikiView = !wikiView;
-						}}>{wikiView ? 'Sheet' : 'Wiki'}</button
-					>
-				{/if}
-			</div>
-			<DeleteBanner
-				bind:deleteWarning
-				deleteModule={() => {
-					deleteCharacter(char.id);
-					deleteWarning = false;
-					goto(`/characters`);
-				}}
-			/>
-			{#if editMode}
-				<PromptTool
-					bind:promptInput
-					handleApply={() => {
-						char = handleCharacterPromptInput(char, promptInput);
-					}}
-					handleGenerate={() => {
-						promptInput = generateRandomCharPrompt(char);
-					}}
-					handleQuickGenerate={() => {
-						promptInput = generateQuickCharPrompt(char);
-					}}
-				/>
-			{/if}
-		</div>
-	</Toolbar>
-	{#if char !== undefined}
-		{#if wikiView}
-			<CharWikiPage bind:char {editMode} save={saveCharacter} />
-		{:else}
-			<CharCreate {char} {editMode} />
-		{/if}
+	<ToolbarIi
+		slot="sidebar"
+		formName={FORM_NAME}
+		bind:editing
+		bind:promptInput
+		handleApply={() => {
+			character = handleCharacterPromptInput(character, promptInput);
+			character = character;
+		}}
+		handleGenerate={() => {
+			promptInput = generateRandomCharPrompt(character);
+		}}
+		handleQuickGenerate={() => {
+			promptInput = generateQuickCharPrompt(character);
+		}}
+	/>
+	{#if character !== undefined}
+		<CharPage bind:character {editing} {submit} name={FORM_NAME} />
 	{/if}
 </PageLayout>

@@ -3,8 +3,7 @@
 	import PageLayout from '../../components/common/PageLayout/PageLayout.svelte';
 	import Table from '../../components/common/Table/Table.svelte';
 	import Button from '../../components/common/button/Button.svelte';
-	import NavMenu from '../../components/nav/NavMenu.svelte';
-	import { getCampaign, getQuests, getSessions } from '../../utilities/helpers/campaignHelper';
+	import { getQuests } from '../../utilities/helpers/campaignHelper';
 
 	const quests = getQuests();
 	let filteredQuests = quests;

@@ -7,15 +7,8 @@
 		deleteCampaign,
 		getCampaign,
 		newCampaign,
-		removeAllQuestsFromCampaign,
-		removeAllSessionsFromCampaign,
 		saveCampaign
 	} from '../../../utilities/helpers/campaignHelper';
-	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
-	import CharWikiPage from '../../../components/common/WikiPage/CharWikiPage.svelte';
-	import { getCharacter, saveCharacter } from '../../../utilities/helpers/dataManager';
-	import CharCreate from '../../../pages/CharCreate/index.svelte';
-	import NavMenu from '../../../components/nav/NavMenu.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
 	import CampaignPage from '../../../components/common/wiki/pages/CampaignPage.svelte';
 
@@ -27,14 +20,6 @@
 
 	let editing = Number.isNaN(data.id) ?? false;
 	let isNew = Number.isNaN(data.id) ?? false;
-
-	let wikiView = true;
-
-	let deleteWarning = false;
-
-	let toggleMod = false;
-
-	let charId: number | undefined = undefined;
 
 	const submit = (form: any) => {
 		form.preventDefault();

@@ -2,10 +2,8 @@
 	import { goto } from '$app/navigation';
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import QuestPage from '../../../components/common/wiki/pages/QuestPage.svelte';
-	import SessionPage from '../../../components/common/wiki/pages/SessionPage.svelte';
-	import NavMenu from '../../../components/nav/NavMenu.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
-	import { getQuest, newQuest } from '../../../utilities/helpers/campaignHelper';
+	import { getQuest, newQuest, saveQuest } from '../../../utilities/helpers/campaignHelper';
 
 	export let data;
 
@@ -20,14 +18,17 @@
 	const submit = (form: any) => {
 		form.preventDefault();
 		const values = Object.fromEntries(new FormData(form.target));
-		console.log(quest);
+		quest.name = values?.name.toString() ?? quest.name;
+		quest.description = values?.desc.toString() ?? quest.description;
+		quest.notes = values?.notes.toString() ?? quest.notes;
+		quest.imageUrl = values?.imageUrl.toString() ?? quest.imageUrl;
+		quest.rewards = values?.rewards.toString() ?? quest.rewards;
 
-		// editing = false;
-
-		// const id = saveOrg(org);
-		// if (+data.id !== id) {
-		// 	goto(`/organizations/${id}`);
-		// }
+		const id = saveQuest(quest);
+		if (+data.id !== id) {
+			goto(`/quests/${id}`);
+		}
+		editing = false;
 	};
 </script>
 

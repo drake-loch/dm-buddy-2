@@ -55,6 +55,16 @@
 					<Textarea name="notes" value={session.notes} inputClass="w-full" />
 				</SectionWrapper>
 			{:else}
+				<SectionWrapper>
+					<span class="flex flex-col items-center">
+						<p class="text-2xl font-semibold">{session.name}</p>
+					</span>
+				</SectionWrapper>
+
+				<SectionWrapper hidden={session.notes === ''}>
+					<Title text="Rewards" />
+				</SectionWrapper>
+
 				<SectionWrapper hidden={session.notes === ''}>
 					<Title text="Notes" />
 					<Text text={session.notes} />

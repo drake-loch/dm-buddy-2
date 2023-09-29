@@ -1,3 +1,5 @@
+import { getCharacters, saveData } from '../dataManager';
+
 export type Stat = {
 	name: string;
 	value: number;
@@ -343,9 +345,28 @@ export const newAbilities = (): Ability[] => {
 	];
 };
 
-export const formatOldNPC = (npc: any): void => {
-	//old npc needs it's stats updated to the new Character object type
-	//description = ''
-	//stats and skills are now abilities
-	//savingThrows is now part of abilities
-};
+export function formatOldChars(): void {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const newChars = getCharacters().map((npc: any) => {
+		let newChar = newEmptyCharacter();
+		newChar.fullName = npc.fullName;
+		newChar.size = npc.size;
+		newChar.imageUrl = npc.imageUrl;
+		newChar.class = npc.class;
+		newChar.race = npc.race;
+		newChar.size = npc.size;
+		newChar.description = npc.description;
+		newChar.age = npc.age;
+		newChar.alignment = npc.alignment;
+		newChar.characteristics = npc.characteristics;
+		newChar.features = npc.features;
+		newChar.equipment = npc.equipment;
+		newChar.notes = npc.notes;
+		newChar.additionalInfo = npc.additionalInfo;
+		newChar.id = npc.id;
+		return newChar;
+	});
+	console.log(JSON.stringify(newChars));
+
+	saveData('characters', newChars);
+}

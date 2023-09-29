@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import OrgPage from '../../../components/common/wiki/pages/OrgPage.svelte';
-	import NavMenu from '../../../components/nav/NavMenu.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
 	import { getOrg, newOrg, saveOrg } from '../../../utilities/helpers/orgHelper';
 
@@ -33,8 +32,6 @@
 		if (+data.id !== id) {
 			goto(`/organizations/${id}`);
 		}
-
-		console.log('Org', org);
 	};
 </script>
 

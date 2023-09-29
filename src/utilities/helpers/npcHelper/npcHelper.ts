@@ -1,4 +1,4 @@
-import { newAbilities, type CharacterBase, formatOldNPC } from '../charHelper';
+import { newAbilities, type CharacterBase } from '../charHelper';
 import { getNPCs, saveData } from '../dataManager';
 
 export type Skill = {

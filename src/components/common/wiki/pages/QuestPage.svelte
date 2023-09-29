@@ -44,6 +44,18 @@
 		<div slot="panel" class="space-y-2">
 			{#if editing}
 				<SectionWrapper>
+					{#if quest.imageUrl}
+						<span class="flex w-full justify-center">
+							<Image value={quest.imageUrl} />
+						</span>
+					{/if}
+					<Input
+						name="imageUrl"
+						bind:value={quest.imageUrl}
+						placeholder="URL"
+						label="Image URL:"
+						labelClass="text-sm font-semibold"
+					/>
 					<Input
 						name="name"
 						bind:value={quest.name}
@@ -54,10 +66,38 @@
 				</SectionWrapper>
 
 				<SectionWrapper>
+					<Title text="Description" />
+					<Textarea name="desc" value={quest.description} inputClass="w-full" />
+				</SectionWrapper>
+
+				<SectionWrapper>
+					<Title text="Rewards" />
+					<Textarea name="rewards" value={quest.rewards} inputClass="w-full" />
+				</SectionWrapper>
+
+				<SectionWrapper>
 					<Title text="Notes" />
 					<Textarea name="notes" value={quest.notes} inputClass="w-full" />
 				</SectionWrapper>
 			{:else}
+				<SectionWrapper>
+					<span class="flex flex-col items-center">
+						{#if quest.imageUrl}
+							<Image bind:value={quest.imageUrl} />
+						{/if}
+						<p class="text-2xl font-semibold">{quest.name}</p>
+					</span>
+				</SectionWrapper>
+				<SectionWrapper hidden={quest.description === ''}>
+					<Title text="Description" />
+					<Text text={quest.description} />
+				</SectionWrapper>
+
+				<SectionWrapper hidden={quest.rewards === ''}>
+					<Title text="Rewards" />
+					<Text text={quest.rewards} />
+				</SectionWrapper>
+
 				<SectionWrapper hidden={quest.notes === ''}>
 					<Title text="Notes" />
 					<Text text={quest.notes} />

@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
-	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
-	import NpcWikiPage from '../../../components/common/WikiPage/NpcWikiPage.svelte';
-	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
 	import NpcPage from '../../../components/common/wiki/pages/NpcPage.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
 	import { deleteNPC, getNPC, saveNPC } from '../../../utilities/helpers/dataManager';
@@ -27,7 +24,6 @@
 	console.log(npc);
 
 	let promptInput = '';
-	let deleteWarning = false;
 
 	const submit = (form: any) => {
 		form.preventDefault();
@@ -76,7 +72,6 @@
 		}}
 	/>
 	{#if npc !== undefined}
-		<!-- <NpcWikiPage bind:npc editMode={editing} save={saveNPC} /> -->
 		<NpcPage bind:npc {editing} {submit} name={FORM_NAME} />
 	{/if}
 </PageLayout>

@@ -3,19 +3,9 @@
 	import PageLayout from '../../components/common/PageLayout/PageLayout.svelte';
 	import Table from '../../components/common/Table/Table.svelte';
 	import Button from '../../components/common/button/Button.svelte';
-	import NavMenu from '../../components/nav/NavMenu.svelte';
-	import Sidebar from '../../components/toolbar/Sidebar.svelte';
 	import { getOrgs } from '../../utilities/helpers/orgHelper';
 
 	const orgs = getOrgs();
-
-	let orgList = orgs.map((org) => {
-		return {
-			name: { value: org.name, link: `/organizations/${org.id}` },
-			id: { value: `${org.id}` },
-			leader: { value: org.leaders[0]?.name ?? '---' }
-		};
-	});
 </script>
 
 <PageLayout windowTitle="Organizations">
