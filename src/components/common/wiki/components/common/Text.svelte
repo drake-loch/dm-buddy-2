@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { classes } from '../../../../../utilities/utilities';
 
-	export let text: string;
+	export let text: string | number;
 	export let label: string | undefined = undefined;
 	export let className: string = '';
 </script>

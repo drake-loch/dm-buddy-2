@@ -155,6 +155,7 @@ export const generateRandomNPCPrompt = (npc: NPC) => {
         type: string; // large humanoid, small humanoid, etc.
         race: string;
         gender: string;
+        description: string;
         size: string;
         occupation: string;
         age: number;
@@ -164,42 +165,6 @@ export const generateRandomNPCPrompt = (npc: NPC) => {
             ideals: string;
             bonds: string;
             flaws: string;
-        };
-        stats: {
-            str: number;
-            dex: number;
-            con: number;
-            int: number;
-            wis: number;
-            cha: number;
-        };
-        savingThrows: {
-            str: boolean;
-            dex: boolean;
-            con: boolean;
-            int: boolean;
-            wis: boolean;
-            cha: boolean;
-        };
-        skills: {
-            acrobatics: Skill;
-            animalHandling: Skill;
-            arcana: Skill;
-            athletics: Skill;
-            deception: Skill;
-            history: Skill;
-            insight: Skill;
-            intimidation: Skill;
-            investigation: Skill;
-            medicine: Skill;
-            nature: Skill;
-            perception: Skill;
-            performance: Skill;
-            persuasion: Skill;
-            religion: Skill;
-            sleightOfHand: Skill;
-            stealth: Skill;
-            survival: Skill;
         };
         passivePerception: number;
         otherProficiencies: { type: string; bonus: number }[];
@@ -223,7 +188,7 @@ export const generateRandomNPCPrompt = (npc: NPC) => {
         \`
         Fill out any empty strings with this npc's details. Use any fields as context when generating a character. Try not to overwrite any
         field that is filled. Additional Info is used as a wiki entry. Add any additional info such as character description, backstory, etc.
-        Notes may contain other extra info for generating. Don't overwrite any notes that are already there.
+        Notes may contain other extra info for generating. Don't overwrite any notes that are already there. Try to give it a unique name too
         `;
 };
 

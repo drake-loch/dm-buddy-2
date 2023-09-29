@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let click: () => void;
 	export let type: 'primary' | 'secondary' | 'tertiary' = 'primary';
-	export let size: 'small' | 'medium' | 'large' = 'medium';
+	export let size: 'tiny' | 'small' | 'medium' | 'large' = 'medium';
 	export let colour: 'green' | 'red' | 'blue' | 'yellow' | 'gray' = 'green';
 	export let disabled: boolean = false;
 	export let loading: boolean = false;
@@ -35,11 +35,11 @@
 			}
 		};
 		const sizeStyles = {
+			tiny: 'text-xs px-2 py-0.5',
 			small: 'text-sm px-4 py-1',
 			medium: 'text-md px-6 py-2',
 			large: 'text-lg px-8 py-3'
 		};
-		const disabledStyles = 'opacity-50 cursor-not-allowed';
 		const loadingStyles = 'cursor-not-allowed';
 		const iconStyles = 'flex items-center justify-center gap-2';
 		const iconPositionStyles = {
@@ -50,11 +50,8 @@
 		styles += ' ';
 		styles += sizeStyles[size];
 		styles += ' ';
-		styles += 'rounded-md';
+		styles += 'rounded-md disabled:opacity-50 disabled:cursor-not-allowed';
 		styles += ' ';
-		if (disabled) {
-			styles += disabledStyles;
-		}
 		if (loading) {
 			styles += loadingStyles;
 		}
@@ -67,4 +64,4 @@
 	}
 </script>
 
-<button on:click={click} type="button" class={applyTailwindStyles()}>{text}</button>
+<button {disabled} on:click={click} type="button" class={applyTailwindStyles()}>{text}</button>

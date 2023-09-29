@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { updateNPC } from '../../../utilities/helpers/dataManager';
 	import { newEmptyNPC, type NPC } from '../../../utilities/helpers/npcHelper/npcHelper';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
@@ -12,7 +11,7 @@
 
 	export let editMode = false;
 	export let npc: NPC = newEmptyNPC();
-	export let save: (npc: NPC) => number = () => updateNPC(npc);
+	export let save: (npc: NPC) => number = () => 0;
 </script>
 
 <WikiPage

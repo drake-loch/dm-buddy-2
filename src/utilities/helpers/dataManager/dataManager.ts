@@ -78,7 +78,7 @@ export const uploadAllData = (file: File): void => {
 
 // ====================================================================================================
 
-export const updateNPC = (npc: NPC): number => {
+export const saveNPC = (npc: NPC): number => {
 	let npcs = loadData('npcs') as NPC[];
 
 	if (npcs === undefined) {

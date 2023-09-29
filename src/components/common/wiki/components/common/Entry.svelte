@@ -15,16 +15,9 @@
 	export let save: () => void = () => {};
 	export let deleteModule: () => void = () => {};
 
-	// export let canEdit = false;
-
-	$: localTitle = title;
-	$: localData = data;
-
 	let warningBanner = false;
 
 	const saveModule = () => {
-		title = localTitle;
-		data = localData;
 		save();
 		editing = false;
 	};
@@ -103,7 +96,7 @@
 					<input
 						type="text"
 						name={`${title}-title`}
-						bind:value={localTitle}
+						bind:value={title}
 						{placeholder}
 						class={`px-1 w-full text-2xl font-bold border rounded-sm`}
 					/>
@@ -114,42 +107,15 @@
 			<span class="flex gap-1">
 				<button
 					type="button"
-					class="text-center bg-green-500 rounded-md p-0.5"
-					aria-label="save module"
-					on:click={() => {
-						saveModule();
-					}}>💾</button
-				>
-
-				<button
-					type="button"
 					class="text-center bg-red-500 rounded-md p-0.5"
 					aria-label="delete module"
 					on:click={() => {
 						warningBanner = true;
 					}}>🗑️</button
 				>
-				<button
-					type="button"
-					class="text-center bg-white rounded-md p-0.5"
-					aria-label="cancel editing module"
-					on:click={() => {
-						localTitle = title;
-						localData = data;
-						editing = false;
-					}}>🔙</button
-				>
 			</span>
 		{:else}
 			<h3 class="font-bold text-2xl">{title}</h3>
-			<button
-				type="button"
-				class="text-center rounded-md p-0.5"
-				aria-label="edit module"
-				on:click={() => {
-					editing = true;
-				}}>✏️</button
-			>
 		{/if}
 	</span>
 
@@ -237,7 +203,7 @@
 							aria-label="save module"
 							on:click={() => {
 								const link = `<a class="link" href="${selectedEntity?.link}">${selectedEntity?.label}</a>`;
-								localData = localData + link;
+								data = data + link;
 								selectedEntity = undefined;
 								entityType = undefined;
 								showAddLinkOptions = false;
@@ -294,7 +260,7 @@
 							aria-label="save module"
 							on:click={() => {
 								const image = `<img src="${imageData.url}" width='${imageData.width}' height='${imageData.height}' />`;
-								localData = localData + image;
+								data = data + image;
 								imageData.url = '';
 								imageData.width = '500';
 								imageData.height = '500';
@@ -323,13 +289,13 @@
 			name={`${title}-textarea`}
 			{placeholder}
 			inputClass="border w-full rounded-sm"
-			bind:value={localData}
+			bind:value={data}
 			rows={5}
 			textSize="text-md"
 		/>
 	{:else}
 		<div class="output">
-			{@html sanitizeInput(localData)}
+			{@html sanitizeInput(data)}
 		</div>
 	{/if}
 </div>

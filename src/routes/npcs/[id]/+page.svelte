@@ -4,8 +4,9 @@
 	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
 	import NpcWikiPage from '../../../components/common/WikiPage/NpcWikiPage.svelte';
 	import DeleteBanner from '../../../components/common/deleteBanner/DeleteBanner.svelte';
-	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
-	import { deleteNPC, getNPC, updateNPC } from '../../../utilities/helpers/dataManager';
+	import NpcPage from '../../../components/common/wiki/pages/NpcPage.svelte';
+	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
+	import { deleteNPC, getNPC, saveNPC } from '../../../utilities/helpers/dataManager';
 	import {
 		newEmptyNPC,
 		handleNPCPromptInput
@@ -17,127 +18,65 @@
 
 	export let data;
 
-	let npc = getNPC(+data.id) ?? newEmptyNPC();
+	const FORM_NAME = 'npc-form';
 
-	let editMode = Number.isNaN(data.id) ?? false;
 	let isNew = Number.isNaN(data.id) ?? false;
+	let editing = isNew ?? false;
+
+	let npc = getNPC(+data.id) ?? newEmptyNPC();
+	console.log(npc);
 
 	let promptInput = '';
 	let deleteWarning = false;
+
+	const submit = (form: any) => {
+		form.preventDefault();
+		const values = Object.fromEntries(new FormData(form.target));
+
+		npc.fullName = values.name.toString();
+		npc.age = +values.age.toString();
+		npc.race = values.race.toString();
+		npc.gender = values.gender.toString();
+		npc.size = values.size.toString();
+		npc.alignment = values.alignment.toString();
+		npc.occupation = values.occupation.toString();
+
+		npc.characteristics.personalityTraits = values.personalityTraits.toString();
+		npc.characteristics.ideals = values.ideals.toString();
+		npc.characteristics.bonds = values.bonds.toString();
+		npc.characteristics.flaws = values.flaws.toString();
+
+		npc.description = values.description.toString();
+
+		npc.notes = values.notes.toString();
+
+		const id = saveNPC(npc);
+		if (+data.id !== id) {
+			goto(`/npcs/${id}`);
+		}
+		editing = false;
+	};
 </script>
 
-<PageLayout>
-	<Toolbar>
-		{#if editMode}
-			<button
-				on:click={() => {
-					editMode = !editMode;
-					const id = updateNPC(npc);
-					if (isNew) {
-						goto(`/npcs/${id}`);
-					}
-				}}
-				type="button"
-				class="
-                border border-green-500 rounded-md w-full hover:bg-green-400">Save</button
-			>
-			<button
-				on:click={() => {
-					editMode = !editMode;
-				}}
-				type="button"
-				class="
-                border rounded-md w-full hover:bg-gray-400">Cancel</button
-			>
-
-			<PromptTool
-				bind:promptInput
-				handleApply={() => {
-					npc = handleNPCPromptInput(npc, promptInput);
-					npc = npc;
-				}}
-				handleGenerate={() => {
-					promptInput = generateRandomNPCPrompt(npc);
-				}}
-				handleQuickGenerate={() => {
-					promptInput = generateQuickNPCPrompt(npc);
-				}}
-			/>
-		{:else}
-			<button
-				on:click={() => {
-					editMode = !editMode;
-				}}
-				type="button"
-				class="
-                border border-blue-500 rounded-md w-full hover:bg-blue-400">Edit</button
-			>
-		{/if}
-
-		<div class="w-full h-full px-2" slot="mobile-tools">
-			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
-				{#if editMode}
-					<button
-						type="button"
-						class="border border-green-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-							const id = updateNPC(npc);
-							if (isNew) {
-								goto(`/npcs/${id}`);
-							}
-						}}>Save</button
-					>
-					<button
-						type="button"
-						class="border border-red-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							deleteWarning = true;
-						}}>Delete</button
-					>
-					<button
-						type="button"
-						class="border border-gray-200 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Cancel</button
-					>
-				{:else}
-					<button
-						type="button"
-						class="border border-blue-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Edit</button
-					>
-				{/if}
-			</div>
-			<DeleteBanner
-				bind:deleteWarning
-				deleteModule={() => {
-					deleteNPC(npc.id);
-					deleteWarning = false;
-					goto(`/npcs`);
-				}}
-			/>
-			{#if editMode}
-				<PromptTool
-					bind:promptInput
-					handleApply={() => {
-						npc = handleNPCPromptInput(npc, promptInput);
-						npc = npc;
-					}}
-					handleGenerate={() => {
-						promptInput = generateRandomNPCPrompt(npc);
-					}}
-					handleQuickGenerate={() => {
-						promptInput = generateQuickNPCPrompt(npc);
-					}}
-				/>
-			{/if}
-		</div>
-	</Toolbar>
+<PageLayout windowTitle={`NPC - ${isNew ? 'NEW' : npc.fullName}`}>
+	<ToolbarIi
+		slot="sidebar"
+		formName={FORM_NAME}
+		bind:editing
+		bind:promptInput
+		handleApply={() => {
+			npc = handleNPCPromptInput(npc, promptInput);
+			npc = npc;
+		}}
+		handleGenerate={() => {
+			promptInput = generateRandomNPCPrompt(npc);
+		}}
+		handleQuickGenerate={() => {
+			promptInput = generateQuickNPCPrompt(npc);
+		}}
+	/>
 	{#if npc !== undefined}
-		<NpcWikiPage bind:npc {editMode} save={updateNPC} />
+		<!-- <NpcWikiPage bind:npc editMode={editing} save={saveNPC} /> -->
+		<NpcPage bind:npc {editing} {submit} name={FORM_NAME} />
 	{/if}
 </PageLayout>

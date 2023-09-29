@@ -1,13 +1,19 @@
-import type { CharacterBase } from '../charHelper';
-import { getNPCs } from '../dataManager';
+import { newAbilities, type CharacterBase, formatOldNPC } from '../charHelper';
+import { getNPCs, saveData } from '../dataManager';
 
 export type Skill = {
 	proficient: boolean;
 };
+
+export type Dice = {
+	amount: number;
+	sides: number;
+};
 export type NPC = CharacterBase & {
 	type: string;
+	challengeRating: string;
 	occupation: string;
-	actions: { title: string; desc: string }[];
+	actions: { title: string; desc: string; dice: Dice }[];
 	rpNotes: string;
 	quests: { title: string; data: string; rewards: string[] }[];
 };
@@ -16,6 +22,7 @@ export const newEmptyNPC = (): NPC => {
 	return {
 		id: 0,
 		fullName: '',
+		description: '',
 		type: '',
 		race: '',
 		gender: '',
@@ -29,78 +36,8 @@ export const newEmptyNPC = (): NPC => {
 			bonds: '',
 			flaws: ''
 		},
-		stats: {
-			str: 10,
-			dex: 10,
-			con: 10,
-			int: 10,
-			wis: 10,
-			cha: 10
-		},
-		savingThrows: {
-			str: false,
-			dex: false,
-			con: false,
-			int: false,
-			wis: false,
-			cha: false
-		},
-		skills: {
-			acrobatics: {
-				proficient: false
-			},
-			animalHandling: {
-				proficient: false
-			},
-			arcana: {
-				proficient: false
-			},
-			athletics: {
-				proficient: false
-			},
-			deception: {
-				proficient: false
-			},
-			history: {
-				proficient: false
-			},
-			insight: {
-				proficient: false
-			},
-			intimidation: {
-				proficient: false
-			},
-			investigation: {
-				proficient: false
-			},
-			medicine: {
-				proficient: false
-			},
-			nature: {
-				proficient: false
-			},
-			perception: {
-				proficient: false
-			},
-			performance: {
-				proficient: false
-			},
-			persuasion: {
-				proficient: false
-			},
-			religion: {
-				proficient: false
-			},
-			sleightOfHand: {
-				proficient: false
-			},
-			stealth: {
-				proficient: false
-			},
-			survival: {
-				proficient: false
-			}
-		},
+		abilities: newAbilities(),
+		proficiencyBonus: 0,
 		passivePerception: 0,
 		otherProficiencies: [],
 		armorClass: 0,
@@ -115,7 +52,9 @@ export const newEmptyNPC = (): NPC => {
 		notes: '',
 		rpNotes: '',
 		additionalInfo: [],
-		quests: []
+		quests: [],
+		imageUrl: '',
+		challengeRating: ''
 	};
 };
 
@@ -131,26 +70,19 @@ export const handleNPCPromptInput = (npc: NPC, promptInput: string): NPC => {
 
 	npc.characteristics.personalityTraits =
 		parsed?.personalityTraits ??
-		parsed?.characteristics.personalityTraits ??
+		parsed?.characteristics?.personalityTraits ??
 		npc.characteristics.personalityTraits;
 	npc.characteristics.ideals =
-		parsed?.ideals ?? parsed?.characteristics.ideals ?? npc.characteristics.ideals;
+		parsed?.ideals ?? parsed?.characteristics?.ideals ?? npc.characteristics.ideals;
 	npc.characteristics.bonds =
-		parsed?.bonds ?? parsed?.characteristics.bonds ?? npc.characteristics.bonds;
+		parsed?.bonds ?? parsed?.characteristics?.bonds ?? npc.characteristics.bonds;
 	npc.characteristics.flaws =
-		parsed?.flaws ?? parsed?.characteristics.flaws ?? npc.characteristics.flaws;
+		parsed?.flaws ?? parsed?.characteristics?.flaws ?? npc.characteristics.flaws;
 
-	npc.stats.str = parsed?.str ?? parsed?.strength ?? parsed?.stats.str ?? npc.stats.str;
-	npc.stats.dex = parsed?.dex ?? parsed?.dexterity ?? parsed?.stats.dex ?? npc.stats.dex;
-	npc.stats.con = parsed?.con ?? parsed?.constitution ?? parsed?.stats.con ?? npc.stats.con;
-	npc.stats.int = parsed?.int ?? parsed?.intelligence ?? parsed?.stats.int ?? npc.stats.int;
-	npc.stats.wis = parsed?.wis ?? parsed?.wisdom ?? parsed?.stats.wis ?? npc.stats.wis;
-	npc.stats.cha = parsed?.cha ?? parsed?.charisma ?? parsed?.stats.cha ?? npc.stats.cha;
+	npc.abilities = parsed?.abilities ?? npc.abilities;
+
 	npc.notes = parsed?.notes ?? npc.notes;
 	npc.actions = parsed?.actions ?? npc.actions;
-	npc.savingThrows = parsed?.savingThrows ?? npc.savingThrows;
-	npc.skills = parsed?.skills ?? npc.skills;
-
 	npc.quests = parsed?.quests ?? npc.quests;
 	npc.rpNotes = parsed?.rpNotes ?? npc.rpNotes;
 	npc.features = parsed?.features ?? npc.features;
