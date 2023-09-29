@@ -80,7 +80,7 @@
 		</WikiPanelSection>
 	</div>
 	<div class="" slot="wiki-top">
-		<div class="flex flex-col items-center md:flex-row w-full mb-24 justify-evenly">
+		<div class="flex flex-col md:flex-row w-full mb-24 justify-evenly">
 			<div class="w-full md:w-1/3">
 				<h3 class="text-2xl mb-2">Quests</h3>
 				<Table headers={['Order', 'Name']} rows={questList} _class="w-full" />

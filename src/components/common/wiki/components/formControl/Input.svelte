@@ -1,5 +1,7 @@
 <script lang="ts">
-	export let value: string = '';
+	import { classes } from '../../../../../utilities/utilities';
+
+	export let value: string | number = '';
 	export let name: string = '';
 	export let placeholder: string = '';
 	export let label: string | undefined = undefined;
@@ -7,10 +9,26 @@
 	export let inputClass: string = '';
 </script>
 
-{#if label}
-	<label for={name} class={labelClass}>{label}</label>
-{/if}
-<input type="text" {name} {value} {placeholder} class={`px-1 text-sm ${inputClass}`} />
+<span class="flex w-full justify-between gap-2">
+	{#if label}
+		<label for={name} class={`w-1/3 ${labelClass}`}>{label}</label>
+		<input
+			type="text"
+			{name}
+			bind:value
+			{placeholder}
+			class={classes(`px-1 w-2/3 text-sm ${inputClass}`)}
+		/>
+	{:else}
+		<input
+			type="text"
+			{name}
+			bind:value
+			{placeholder}
+			class={classes(`px-1 w-full text-sm ${inputClass}`)}
+		/>
+	{/if}
+</span>
 
 <style>
 	label,

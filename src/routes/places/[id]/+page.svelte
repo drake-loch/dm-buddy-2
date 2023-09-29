@@ -1,158 +1,78 @@
 <script lang="ts">
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
-	import Toolbar from '../../../components/toolbar/Toolbar.svelte';
 	import { goto } from '$app/navigation';
-	import {
-		getSettlement,
-		handleSettlementPrompt,
-		newSettlement,
-		saveSettlement
-	} from '../../../utilities/helpers/settlementHelper';
-	import SettlementWiki from '../../../components/common/WikiPage/SettlementWiki.svelte';
 	import { generateRandomSettlementPrompt } from '../../../utilities/helpers/promptHelper';
-	import WikiSettlement from '../../../components/common/wiki/WikiSettlement.svelte';
+	import PlacePage from '../../../components/common/wiki/pages/PlacePage.svelte';
+	import {
+		getPlace,
+		handlePlacePrompt,
+		newPlace,
+		savePlace
+	} from '../../../utilities/helpers/placeHelper';
+	import NavMenu from '../../../components/nav/NavMenu.svelte';
+	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
 
 	export let data;
 
-	let settlement = getSettlement(+data.id) ?? newSettlement();
+	const FORM_NAME = 'place-form';
 
-	let editMode = Number.isNaN(data.id) ?? false;
-	// let editMode = true;
+	const parentPlaceId = data?.ppid ?? undefined;
+
+	let place = getPlace(+data.id) ?? newPlace();
+
+	const isNew = Number.isNaN(data.id);
+
+	let editing = isNew ?? false;
+
 	let promptInput = '';
-	let wikiView = true;
-
-	const getControlGroup = (values: { [k: string]: FormDataEntryValue }, formGroupName: string) => {
-		// const group = Object.entries(values).filter(([key, value]) => {
-		// 	return key.includes(formGroupName);
-		// });
-		// group.forEach((g) => {
-		// 	g.forEach((v) => {
-		// 		groupKey
-		// 	});
-		// })
-		// console.log('Group: ', group);
-	};
+	console.log('place: ', place);
 
 	const submit = (form: any) => {
 		form.preventDefault();
-		console.log('auth figures', settlement.authorityFigures);
-
 		const values = Object.fromEntries(new FormData(form.target));
-		// console.log(new FormData(form.target));
-		console.log(values);
-		getControlGroup(values, 'authorityFigures');
-		//authority Figures have a key that begins with a double quote like this: "authorityFigures[0]", so extract those values
-		// const authorityFigures = Object.entries(values).filter(([key, value]) => {
-		// 	const authFig = key.includes('authorityFigures');
-		// 	console.log('_auth ', authFig);
-		// 	return authFig;
-		// });
-		// console.log('Figures: ', authorityFigures);
-		// authorityFigures.forEach(([key, value]) => {
-		// 	const index = key.match(/\d+/g)?.[0];
-		// 	const group = authorityFigures.filter(([k, v]) => k.includes(`authorityFigures[${index}]`));
-		// 	console.log('group: ', group);
 
-		// 	if (group.length > 1 && index !== undefined) {
-		// 		const figure = settlement.authorityFigures.find((f) => f.id === +index + 1);
-		// 		console.log('figure: ', figure);
-		// 	}
-		// });
+		place.name = values.name.toString();
+		place.type = values.type.toString();
+		place.imageUrl = values.imageUrl.toString();
+		place.size = values.size.toString();
+		place.population = +values.population.toString();
+		place.description = values.description.toString();
+		place.notes = values.notes.toString();
+		place.quests = place.quests.filter((q) => q > 0);
+		place.organizations = place.organizations.filter((o) => o > 0);
+		place.authorityFigures = place.authorityFigures.filter((a) =>
+			a.id ? a.id > 0 : a.name !== ''
+		);
+		place.places = place.places.filter((p) => p > 0);
+
+		const id = savePlace(place);
+		if (isNew) {
+			goto(`/places/${id}`);
+		}
+		editing = false;
 	};
 </script>
 
+<svelte:head>
+	<title>Place - {isNew ? 'New Place' : place.name}</title>
+</svelte:head>
+
 <PageLayout>
-	<Toolbar>
-		<div class="mb-4 w-full flex flex-col gap-2">
-			{#if editMode}
-				<button
-					type="submit"
-					class="border border-green-500 rounded-sm px-4"
-					form="formTest"
-					on:click={() => {
-						const id = saveSettlement(settlement);
-						goto(`/places/${id}`);
-						editMode = !editMode;
-					}}>Save</button
-				>
-				<button type="button" class="border border-red-500 rounded-sm px-4">Delete</button>
-				<button
-					type="button"
-					class="border border-gray-200 rounded-sm px-4"
-					on:click={() => {
-						editMode = !editMode;
-					}}>Cancel</button
-				>
-			{:else}
-				<button
-					type="button"
-					class="border border-blue-500 rounded-sm px-4"
-					on:click={() => {
-						editMode = !editMode;
-					}}>Edit</button
-				>
-			{/if}
-		</div>
-
-		{#if editMode}
-			<PromptTool
-				bind:promptInput
-				handleApply={() => {
-					settlement = handleSettlementPrompt(settlement, promptInput);
-				}}
-				handleGenerate={() => {
-					promptInput = generateRandomSettlementPrompt(settlement);
-				}}
-			/>
-		{/if}
-
-		<div class="w-full h-full px-2" slot="mobile-tools">
-			<div class={`w-full h-full flex items-center gap-2 ${editMode ? 'mb-4' : ''}`}>
-				{#if editMode}
-					<button
-						type="button"
-						class="border border-green-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							const id = saveSettlement(settlement);
-							goto(`/places/${id}`);
-							editMode = !editMode;
-						}}>Save</button
-					>
-					<button type="button" class="border border-red-500 rounded-sm px-4 text-sm">Delete</button
-					>
-					<button
-						type="button"
-						class="border border-gray-200 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Cancel</button
-					>
-				{:else}
-					<button
-						type="button"
-						class="border border-blue-500 rounded-sm px-4 text-sm"
-						on:click={() => {
-							editMode = !editMode;
-						}}>Edit</button
-					>
-				{/if}
-			</div>
-			{#if editMode}
-				<PromptTool
-					bind:promptInput
-					handleApply={() => {
-						settlement = handleSettlementPrompt(settlement, promptInput);
-					}}
-					handleGenerate={() => {
-						promptInput = generateRandomSettlementPrompt(settlement);
-					}}
-				/>
-			{/if}
-		</div>
-	</Toolbar>
-	{#if settlement !== undefined}
-		<SettlementWiki {settlement} {editMode} />
-		<!-- <WikiSettlement {settlement} {editMode} {submit} name="formTest" /> -->
+	<ToolbarIi
+		slot="sidebar"
+		bind:promptInput
+		formName={FORM_NAME}
+		bind:editing
+		handleGenerate={() => {
+			promptInput = generateRandomSettlementPrompt(place);
+		}}
+		handleApply={() => {
+			place = handlePlacePrompt(place, promptInput);
+			place = place;
+		}}
+	/>
+	{#if place !== undefined}
+		<PlacePage {place} {editing} {submit} name={FORM_NAME} />
 	{/if}
 </PageLayout>

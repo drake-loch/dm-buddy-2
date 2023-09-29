@@ -5,11 +5,7 @@
 		getNPCs,
 		getNPCsAndChars
 	} from '../../../utilities/helpers/dataManager';
-	import {
-		newSettlement,
-		saveSettlement,
-		type Settlement
-	} from '../../../utilities/helpers/settlementHelper';
+	import { newPlace, savePlace, type Place } from '../../../utilities/helpers/placeHelper';
 	import Select from '../../form/select/Select.svelte';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
@@ -20,8 +16,8 @@
 	import WikiPanelTitle from './components/WikiPanelTitle.svelte';
 
 	export let editMode = false;
-	export let settlement: Settlement = newSettlement();
-	export let save: (settlement: Settlement) => number = () => saveSettlement(settlement);
+	export let settlement: Place = newPlace();
+	export let save: (place: Place) => number = () => savePlace(settlement);
 
 	const people = getNPCs().map((c) => {
 		return {
@@ -40,6 +36,7 @@
 	bind:title={settlement.name}
 	bind:type={settlement.type}
 	bind:additionalInfo={settlement.additionalInfo}
+	typeOptionInput
 	typeOptions={[
 		'City',
 		'Town',

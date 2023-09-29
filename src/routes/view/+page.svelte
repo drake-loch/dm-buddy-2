@@ -3,7 +3,7 @@
 	import PromptTool from '../../components/common/PromptTool/PromptTool.svelte';
 	import NpcWikiPage from '../../components/common/WikiPage/NpcWikiPage.svelte';
 	import Toolbar from '../../components/toolbar/Toolbar.svelte';
-	import { saveData, updateNPC } from '../../utilities/helpers/dataManager';
+	import { saveData } from '../../utilities/helpers/dataManager';
 	import {
 		handleNPCPromptInput,
 		newEmptyNPC,
@@ -23,7 +23,7 @@
 			<button
 				on:click={() => {
 					editMode = !editMode;
-					updateNPC(npc);
+					// updateNPC(npc);
 				}}
 				type="button"
 				class="

@@ -4,7 +4,7 @@
 
 :root {
 	/* background-color: rgb(99, 99, 99); */
-	@apply bg-gray-700;
+	@apply bg-gray-800;
 }
 
 h1,

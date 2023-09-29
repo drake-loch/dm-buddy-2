@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getCharacters, getNPCs } from '../../../../utilities/helpers/dataManager';
-	import { getSettlements } from '../../../../utilities/helpers/settlementHelper';
+	import { getPlaces } from '../../../../utilities/helpers/placeHelper';
 	import Input from '../../../form/input/Input.svelte';
 	import Textarea from '../../../form/textarea/Textarea.svelte';
 
@@ -72,11 +72,11 @@
 				};
 			});
 		} else if (entityType === 'place') {
-			return getSettlements().map((c) => {
+			return getPlaces().map((p) => {
 				return {
-					label: c.name,
-					value: `${c.id}`,
-					link: `/places/${c.id}`
+					label: p.name,
+					value: `${p.id}`,
+					link: `/places/${p.id}`
 				};
 			});
 		}
