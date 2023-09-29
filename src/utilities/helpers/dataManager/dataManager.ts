@@ -52,29 +52,67 @@ export const downloadAllData = (): void => {
 	const data = {
 		npcs: loadData('npcs'),
 		characters: loadData('characters'),
-		settlements: loadData('settlements'),
-		campaign: loadData('campaign'),
+		settlements: loadData('places'),
+		campaign: loadData('campaigns'),
 		quests: loadData('quests'),
-		session: loadData('session')
+		session: loadData('sessions'),
+		orgs: loadData('orgs')
 	};
 	downloadData(data, 'dm-tool-data.json');
 };
-export const uploadAllData = (file: File): void => {
-	console.log('uploading file', file);
 
-	const reader = new FileReader();
-	reader.onload = (e) => {
-		const data = JSON.parse(e.target?.result as string);
-		console.log('data', data);
+export const uploadData = (data: any): void => {
+	if (data.npcs) {
 		saveData('npcs', data.npcs);
+	}
+	if (data.characters) {
 		saveData('characters', data.characters);
-		saveData('settlements', data.settlements);
-		saveData('campaign', data.campaign);
+	}
+	if (data.settlements) {
+		saveData('places', data.settlements);
+	}
+	if (data.campaign) {
+		saveData('campaigns', data.campaign);
+	}
+	if (data.quests) {
 		saveData('quests', data.quests);
-		saveData('session', data.session);
-	};
-	reader.readAsText(file);
+	}
+	if (data.session) {
+		saveData('sessions', data.session);
+	}
+	if (data.orgs) {
+		saveData('orgs', data.orgs);
+	}
 };
+
+export async function uploadJSONFile<T>(fileInput: HTMLInputElement): Promise<T> {
+	return new Promise((resolve, reject) => {
+		if (!fileInput || fileInput.files?.length === 0) {
+			reject('No file selected.');
+			return;
+		}
+
+		const file = fileInput?.files ? fileInput.files[0] : undefined;
+		if (file) {
+			const reader = new FileReader();
+
+			reader.onload = (event) => {
+				try {
+					const fileContents = event.target?.result as string;
+					const jsonData = JSON.parse(fileContents) as T;
+					resolve(jsonData);
+				} catch (error) {
+					reject('Error parsing JSON file: ' + error);
+				}
+			};
+
+			reader.readAsText(file);
+		} else {
+			reject('No file selected.');
+			return;
+		}
+	});
+}
 
 // ====================================================================================================
 

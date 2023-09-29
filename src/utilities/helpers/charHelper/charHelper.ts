@@ -40,6 +40,7 @@ export type CharacterBase = {
 	notes: string;
 	additionalInfo: { title: string; data: string }[];
 	imageUrl: string;
+	location?: number | undefined;
 };
 export type Character = CharacterBase & {
 	class: string;

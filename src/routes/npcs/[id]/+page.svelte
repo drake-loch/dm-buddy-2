@@ -34,7 +34,7 @@
 		npc.race = values.race.toString();
 		npc.gender = values.gender.toString();
 		npc.size = values.size.toString();
-		npc.alignment = values.alignment.toString();
+		npc.alignment = values?.alignment?.toString() ?? '';
 		npc.occupation = values.occupation.toString();
 
 		npc.characteristics.personalityTraits = values.personalityTraits.toString();
@@ -42,9 +42,10 @@
 		npc.characteristics.bonds = values.bonds.toString();
 		npc.characteristics.flaws = values.flaws.toString();
 
-		npc.description = values.description.toString();
-
 		npc.notes = values.notes.toString();
+
+		const location = values?.location?.toString().trim();
+		npc.location = location ? +location : undefined;
 
 		const id = saveNPC(npc);
 		if (+data.id !== id) {

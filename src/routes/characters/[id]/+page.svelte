@@ -38,7 +38,7 @@
 		character.race = values.race.toString();
 		character.gender = values.gender.toString();
 		character.size = values.size.toString();
-		character.alignment = values.alignment.toString();
+		character.alignment = values?.alignment?.toString() ?? '';
 		character.class = values.class.toString();
 
 		character.characteristics.personalityTraits = values.personalityTraits.toString();
@@ -46,13 +46,14 @@
 		character.characteristics.bonds = values.bonds.toString();
 		character.characteristics.flaws = values.flaws.toString();
 
-		character.description = values.description.toString();
-
 		character.notes = values.notes.toString();
+
+		const location = values?.location?.toString().trim();
+		character.location = location ? +location : undefined;
 
 		const id = saveCharacter(character);
 		if (+data.id !== id) {
-			goto(`/character/${id}`);
+			goto(`/characters/${id}`);
 		}
 		editing = false;
 	};

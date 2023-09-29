@@ -8,6 +8,7 @@
 
 	export let title = '';
 	export let titleEditable = true;
+	export let canDelete = true;
 	export let data = '';
 
 	export let placeholder = 'Enter data here';
@@ -104,22 +105,24 @@
 			{:else}
 				<h3 class="font-bold text-2xl">{title}</h3>
 			{/if}
-			<span class="flex gap-1">
-				<button
-					type="button"
-					class="text-center bg-red-500 rounded-md p-0.5"
-					aria-label="delete module"
-					on:click={() => {
-						warningBanner = true;
-					}}>🗑️</button
-				>
-			</span>
+			{#if canDelete}
+				<span class="flex gap-1">
+					<button
+						type="button"
+						class="text-center bg-red-500 rounded-md p-0.5"
+						aria-label="delete module"
+						on:click={() => {
+							warningBanner = true;
+						}}>🗑️</button
+					>
+				</span>
+			{/if}
 		{:else}
 			<h3 class="font-bold text-2xl">{title}</h3>
 		{/if}
 	</span>
 
-	{#if warningBanner}
+	{#if warningBanner && canDelete}
 		<div class="bg-red-500 text-white rounded-md p-2 mb-2">
 			<p class="text-sm mb-2">
 				<span class="inline font-bold text-md"> Warning: </span>

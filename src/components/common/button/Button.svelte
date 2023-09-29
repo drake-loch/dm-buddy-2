@@ -1,13 +1,14 @@
 <script lang="ts">
-	export let click: () => void;
+	export let click: () => void = () => {};
 	export let type: 'primary' | 'secondary' | 'tertiary' = 'primary';
 	export let size: 'tiny' | 'small' | 'medium' | 'large' = 'medium';
-	export let colour: 'green' | 'red' | 'blue' | 'yellow' | 'gray' = 'green';
+	export let colour: 'green' | 'red' | 'blue' | 'yellow' | 'gray' | 'purple' = 'green';
 	export let disabled: boolean = false;
 	export let loading: boolean = false;
 	export let icon: string = '';
 	export let iconPosition: 'left' | 'right' = 'left';
 	export let text: string = '';
+	export let href: string | undefined = undefined;
 
 	function applyTailwindStyles() {
 		let styles = '';
@@ -17,21 +18,24 @@
 				red: 'bg-red-500 hover:bg-red-400',
 				blue: 'bg-blue-500 hover:bg-blue-400',
 				yellow: 'bg-yellow-500 hover:bg-yellow-400',
-				gray: 'bg-gray-500 hover:bg-gray-400'
+				gray: 'bg-gray-500 hover:bg-gray-400',
+				purple: 'bg-purple-500 hover:bg-purple-400'
 			},
 			secondary: {
 				green: 'border border-green-500 hover:bg-green-500 hover:text-white',
 				red: 'border border-red-500 hover:bg-red-500 hover:text-white',
 				blue: 'border border-blue-500 hover:bg-blue-500 hover:text-white',
 				yellow: 'border border-yellow-500 hover:bg-yellow-500 hover:text-white',
-				gray: 'border border-gray-500 hover:bg-gray-500 hover:text-white'
+				gray: 'border border-gray-500 hover:bg-gray-500 hover:text-white',
+				purple: 'border border-purple-500 hover:bg-purple-500 hover:text-white'
 			},
 			tertiary: {
 				green: 'hover:bg-green-500 hover:text-white',
 				red: 'hover:bg-red-500 hover:text-white',
 				blue: 'hover:bg-blue-500 hover:text-white',
 				yellow: 'hover:bg-yellow-500 hover:text-white',
-				gray: 'hover:bg-gray-500 hover:text-white'
+				gray: 'hover:bg-gray-500 hover:text-white',
+				purple: 'hover:bg-purple-500 hover:text-white'
 			}
 		};
 		const sizeStyles = {
@@ -50,7 +54,8 @@
 		styles += ' ';
 		styles += sizeStyles[size];
 		styles += ' ';
-		styles += 'rounded-md disabled:opacity-50 disabled:cursor-not-allowed';
+		styles +=
+			'rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-400 ease-in-out';
 		styles += ' ';
 		if (loading) {
 			styles += loadingStyles;
@@ -64,4 +69,15 @@
 	}
 </script>
 
-<button {disabled} on:click={click} type="button" class={applyTailwindStyles()}>{text}</button>
+{#if !href}
+	<button {disabled} on:click={click} type="button" class={applyTailwindStyles()}>{text}</button>
+{:else}
+	<a {href} class={applyTailwindStyles()}>{text}</a>
+{/if}
+
+<style>
+	a {
+		text-decoration: none;
+		color: white;
+	}
+</style>

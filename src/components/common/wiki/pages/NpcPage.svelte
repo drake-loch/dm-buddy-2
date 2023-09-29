@@ -8,6 +8,7 @@
 	import Entry from '../components/common/Entry.svelte';
 	import Image from '../components/common/Image.svelte';
 	import LabelledText from '../components/common/LabelledText.svelte';
+	import Link from '../components/common/Link.svelte';
 	import SectionWrapper from '../components/common/SectionWrapper.svelte';
 	import Text from '../components/common/Text.svelte';
 	import Title from '../components/common/Title.svelte';
@@ -41,6 +42,8 @@
 	function checkIfAbilityScoresAreZero() {
 		return npc.abilities.every((ability) => ability.value === 0);
 	}
+
+	$: location = getPlace(npc.location ?? -1) ?? undefined;
 </script>
 
 <form action="submit" on:submit={submit} id={name} class="w-full">
@@ -180,6 +183,24 @@
 						label="Occupation:"
 						labelClass="text-sm font-semibold"
 					/>
+					<Input
+						name="challengeRating"
+						bind:value={npc.challengeRating}
+						placeholder="Challenge Rating"
+						label="CR:"
+						labelClass="text-sm font-semibold"
+					/>
+					<Select
+						name="location"
+						value={npc.location}
+						label="Location:"
+						labelClass="text-sm font-semibold"
+						selectClass="text-sm"
+					>
+						{#each getPlaces() as place}
+							<option value={place.id}>{place.name}</option>
+						{/each}
+					</Select>
 				</SectionWrapper>
 
 				<SectionWrapper>
@@ -219,16 +240,6 @@
 						labelClass="text-sm font-semibold w-full"
 						inputClass="w-full"
 						className="flex flex-col w-full"
-					/>
-				</SectionWrapper>
-
-				<SectionWrapper>
-					<Title text="Description" />
-					<Textarea
-						name="description"
-						bind:value={npc.description}
-						inputClass="w-full"
-						labelClass="text-sm font-semibold"
 					/>
 				</SectionWrapper>
 
@@ -285,26 +296,23 @@
 				<SectionWrapper>
 					<Title text="Actions" />
 					{#each npc.actions as action}
-						<Input
-							name="title"
-							bind:value={action.title}
-							placeholder="Title"
-							label="Title:"
-							labelClass="text-sm font-semibold"
-						/>
-						<Textarea
-							name="desc"
-							bind:value={action.desc}
-							placeholder="Description"
-							label="Description:"
-							labelClass="text-sm font-semibold"
-							inputClass="w-full"
-						/>
-						<span class="flex">
-							<Input name="diceAmount" bind:value={action.dice.amount} placeholder="Dice Amount" />
-							D
-							<Input name="diceSides" bind:value={action.dice.sides} placeholder="6" />
-						</span>
+						<div class="flex flex-col gap-2 pt-2">
+							<Input
+								name="title"
+								bind:value={action.title}
+								placeholder="Title"
+								label="Title:"
+								labelClass="text-sm font-semibold"
+							/>
+							<Textarea
+								name="desc"
+								bind:value={action.desc}
+								placeholder="Description"
+								label="Description:"
+								labelClass="text-sm font-semibold"
+								inputClass="w-full"
+							/>
+						</div>
 					{/each}
 					<span class="pt-2 w-full">
 						<button
@@ -331,7 +339,9 @@
 							<Image bind:value={npc.imageUrl} />
 						{/if}
 						<p class="text-2xl font-semibold">{npc.fullName}</p>
-						<p class="text-md italic">{`${npc.size} ${npc.race}, ${npc.alignment}`}</p>
+						{#if npc.size !== '' && npc.race !== '' && npc.alignment !== ''}
+							<p class="text-md italic">{`${npc.size} ${npc.race}, ${npc.alignment}`}</p>
+						{/if}
 					</span>
 				</SectionWrapper>
 
@@ -386,34 +396,27 @@
 					<LabelledText label="Occupation:" value={`${npc.occupation}`} />
 					<LabelledText label="Alignment:" value={`${npc.alignment}`} />
 					<LabelledText label="Size:" value={`${npc.size}`} />
-				</SectionWrapper>
-
-				<SectionWrapper hidden={npc.description === '' || npc.description === undefined}>
-					<Title text="Description" />
-					<Text className="text-sm" text={npc.description ?? ''} />
+					<LabelledText label="CR:" value={`${npc.challengeRating}`} />
+					{#if location}
+						<LabelledText label="Location:">
+							<Link href={`/places/${npc.location}`} text={location.name} />
+						</LabelledText>
+					{/if}
 				</SectionWrapper>
 
 				{#if npc.characteristics.personalityTraits !== '' || npc.characteristics.ideals !== '' || npc.characteristics.bonds !== '' || npc.characteristics.flaws !== ''}
 					<SectionWrapper>
 						<span class="space-y-2 py-2 w-full">
-							{#if npc.characteristics.personalityTraits !== ''}
-								<LabelledText
-									label="Personality Traits:"
-									value={`${npc.characteristics.personalityTraits}`}
-								/>
-							{/if}
-							{#if npc.characteristics.ideals !== ''}
-								<hr />
-								<LabelledText label="Ideals:" value={`${npc.characteristics.ideals}`} />
-							{/if}
-							{#if npc.characteristics.bonds !== ''}
-								<hr />
-								<LabelledText label="Bonds:" value={`${npc.characteristics.bonds}`} />
-							{/if}
-							{#if npc.characteristics.flaws !== ''}
-								<hr />
-								<LabelledText label="Flaws:" value={`${npc.characteristics.flaws}`} />
-							{/if}
+							<LabelledText
+								label="Personality Traits:"
+								value={`${npc.characteristics.personalityTraits}`}
+							/>
+							<hr />
+							<LabelledText label="Ideals:" value={`${npc.characteristics.ideals}`} />
+							<hr />
+							<LabelledText label="Bonds:" value={`${npc.characteristics.bonds}`} />
+							<hr />
+							<LabelledText label="Flaws:" value={`${npc.characteristics.flaws}`} />
 						</span>
 					</SectionWrapper>
 				{/if}
@@ -456,6 +459,18 @@
 
 		<div slot="main" class="space-y-4">
 			<h1 class="text-4xl font-bold border-b-2 pb-2 px-2">{npc.fullName}</h1>
+
+			{#if npc.description !== '' || editing}
+				<span class="mb-2 w-full">
+					<Entry
+						titleEditable={false}
+						canDelete={false}
+						{editing}
+						title="Description"
+						bind:data={npc.description}
+					/>
+				</span>
+			{/if}
 
 			{#if editing}
 				<span class="flex gap-2">

@@ -1,20 +1,15 @@
 <script lang="ts">
-	import { getCampaigns, getQuests } from '../../../../utilities/helpers/campaignHelper';
 	import { newEmptyCharacter, type Character } from '../../../../utilities/helpers/charHelper';
-	import { getAllBeings } from '../../../../utilities/helpers/dataManager';
-	import { newEmptyNPC, type NPC } from '../../../../utilities/helpers/npcHelper/npcHelper';
-	import { newOrg, type Org } from '../../../../utilities/helpers/orgHelper';
 	import { getPlace, getPlaces } from '../../../../utilities/helpers/placeHelper';
 	import Layout from '../components/Layout.svelte';
 	import Entry from '../components/common/Entry.svelte';
 	import Image from '../components/common/Image.svelte';
 	import LabelledText from '../components/common/LabelledText.svelte';
+	import Link from '../components/common/Link.svelte';
 	import SectionWrapper from '../components/common/SectionWrapper.svelte';
 	import Text from '../components/common/Text.svelte';
 	import Title from '../components/common/Title.svelte';
-	import TitledText from '../components/common/TitledText.svelte';
 	import Input from '../components/formControl/Input.svelte';
-	import Multiselect from '../components/formControl/Multiselect.svelte';
 	import Select from '../components/formControl/Select.svelte';
 	import Textarea from '../components/formControl/Textarea.svelte';
 	import StatDisplay from '../components/stats/StatDisplay.svelte';
@@ -24,8 +19,6 @@
 
 	export let submit: (form: any) => void;
 	export let name: string = '';
-
-	let showCombat = false;
 
 	const ALIGNMENTS = [
 		'Lawful Good',
@@ -42,6 +35,10 @@
 	function checkIfAbilityScoresAreZero() {
 		return character.abilities.every((ability) => ability.value === 0);
 	}
+
+	const places = getPlaces();
+
+	$: location = getPlace(character.location ?? -1) ?? undefined;
 </script>
 
 <form action="submit" on:submit={submit} id={name} class="w-full">
@@ -71,7 +68,6 @@
 				</SectionWrapper>
 
 				<SectionWrapper customSpacing>
-					<!-- AC and Speed -->
 					<span class="flex justify-evenly items-center w-full">
 						<span class="flex flex-col items-center w-[2rem] gap-1">
 							<label for="ac" class="text-sm font-semibold text-center">AC</label>
@@ -181,6 +177,17 @@
 						label="Class:"
 						labelClass="text-sm font-semibold"
 					/>
+					<Select
+						name="location"
+						value={character.location}
+						label="Location:"
+						labelClass="text-sm font-semibold"
+						selectClass="text-sm"
+					>
+						{#each places as place}
+							<option value={place.id}>{place.name}</option>
+						{/each}
+					</Select>
 				</SectionWrapper>
 
 				<SectionWrapper>
@@ -220,16 +227,6 @@
 						labelClass="text-sm font-semibold w-full"
 						inputClass="w-full"
 						className="flex flex-col w-full"
-					/>
-				</SectionWrapper>
-
-				<SectionWrapper>
-					<Title text="Description" />
-					<Textarea
-						name="description"
-						bind:value={character.description}
-						inputClass="w-full"
-						labelClass="text-sm font-semibold"
 					/>
 				</SectionWrapper>
 
@@ -294,9 +291,9 @@
 							<Image bind:value={character.imageUrl} />
 						{/if}
 						<p class="text-2xl font-semibold">{character.fullName}</p>
-						<p class="text-md italic">
-							{`${character.size} ${character.race}, ${character.alignment}`}
-						</p>
+						{#if character.class !== '' && character.class !== undefined}
+							<p class="text-md italic">{`${character.class} (${character.level})`}</p>
+						{/if}
 					</span>
 				</SectionWrapper>
 
@@ -351,13 +348,11 @@
 					<LabelledText label="Class:" value={`${character.class}`} />
 					<LabelledText label="Alignment:" value={`${character.alignment}`} />
 					<LabelledText label="Size:" value={`${character.size}`} />
-				</SectionWrapper>
-
-				<SectionWrapper
-					hidden={character.description === '' || character.description === undefined}
-				>
-					<Title text="Description" />
-					<Text className="text-sm" text={character.description ?? ''} />
+					{#if location}
+						<LabelledText label="Location:">
+							<Link href={`/places/${character.location}`} text={location.name} />
+						</LabelledText>
+					{/if}
 				</SectionWrapper>
 
 				{#if character.characteristics.personalityTraits !== '' || character.characteristics.ideals !== '' || character.characteristics.bonds !== '' || character.characteristics.flaws !== ''}
@@ -411,6 +406,18 @@
 
 		<div slot="main" class="space-y-4">
 			<h1 class="text-4xl font-bold border-b-2 pb-2 px-2">{character.fullName}</h1>
+
+			{#if character.description !== '' || editing}
+				<span class="mb-2 w-full">
+					<Entry
+						titleEditable={false}
+						canDelete={false}
+						{editing}
+						title="Description"
+						bind:data={character.description}
+					/>
+				</span>
+			{/if}
 
 			{#if editing}
 				<span class="flex gap-2">
