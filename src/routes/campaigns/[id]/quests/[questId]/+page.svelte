@@ -33,17 +33,30 @@
 						class="border border-green-500 rounded-sm px-4 w-full"
 						on:click={() => {
 							const id = saveQuest(quest);
-							addQuestToCampaign(+data.campaignId, id);
 							if (isNew) {
+								addQuestToCampaign(+data.campaignId, id);
 								goto(`/campaigns/${data.campaignId}`);
 							}
 							editMode = !editMode;
 						}}>Save Quest</button
 					>
-					<button type="button" class="border border-red-500 rounded-sm px-4 w-full"
-						>Delete Quest</button
+					<button
+						type="button"
+						class="border border-red-500 rounded-sm px-4 w-full"
+						on:click={() => {
+							deleteWarning = true;
+						}}>Delete Quest</button
 					>
 				</div>
+
+				<DeleteBanner
+					bind:deleteWarning
+					deleteModule={() => {
+						deleteQuest(quest.id, +data.campaignId);
+						deleteWarning = false;
+						goto(`/campaigns/`);
+					}}
+				/>
 
 				<button
 					type="button"
@@ -120,7 +133,7 @@
 			<DeleteBanner
 				bind:deleteWarning
 				deleteModule={() => {
-					deleteQuest(quest.id);
+					deleteQuest(quest.id, +data.campaignId);
 					deleteWarning = false;
 					goto(`/campaigns/`);
 				}}

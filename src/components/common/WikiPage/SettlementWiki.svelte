@@ -5,11 +5,7 @@
 		getNPCs,
 		getNPCsAndChars
 	} from '../../../utilities/helpers/dataManager';
-	import {
-		newSettlement,
-		saveSettlement,
-		type Settlement
-	} from '../../../utilities/helpers/settlementHelper';
+	import { newPlace, savePlace, type Place } from '../../../utilities/helpers/placeHelper';
 	import Select from '../../form/select/Select.svelte';
 	import WikiPage from './WikiPage.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
@@ -20,8 +16,8 @@
 	import WikiPanelTitle from './components/WikiPanelTitle.svelte';
 
 	export let editMode = false;
-	export let settlement: Settlement = newSettlement();
-	export let save: (settlement: Settlement) => number = () => saveSettlement(settlement);
+	export let settlement: Place = newPlace();
+	export let save: (place: Place) => number = () => savePlace(settlement);
 
 	const people = getNPCs().map((c) => {
 		return {
@@ -40,6 +36,7 @@
 	bind:title={settlement.name}
 	bind:type={settlement.type}
 	bind:additionalInfo={settlement.additionalInfo}
+	typeOptionInput
 	typeOptions={[
 		'City',
 		'Town',
@@ -50,7 +47,8 @@
 		'Outpost',
 		'Fort',
 		'Castle',
-		'Point of Interest'
+		'Point of Interest',
+		'Continent'
 	]}
 >
 	<div slot="wikiPanel" class="w-full">
@@ -73,97 +71,99 @@
 			/>
 		</WikiPanelSection>
 
-		<WikiPanelSection>
-			<WikiPanelTitle title="Authority Figures" />
-			<div class="flex flex-col gap-2 items-center">
-				{#each settlement.authorityFigures as authFigure, i}
-					<div class="flex w-full items-center gap-2">
-						{#if editMode}
-							{#if authFigure.isLinked}
-								<span class="w-1/3">
-									<WikiPanelSelect
-										label="Person:"
-										bind:value={authFigure}
-										options={people}
-										{editMode}
-									/>
-								</span>
-							{:else}
+		{#if settlement.authorityFigures.length > 0 || editMode}
+			<WikiPanelSection>
+				<WikiPanelTitle title="Authority Figures" />
+				<div class="flex flex-col gap-2 items-center">
+					{#each settlement.authorityFigures as authFigure, i}
+						<div class="flex w-full items-center gap-2">
+							{#if editMode}
+								{#if authFigure.isLinked}
+									<span class="w-1/3">
+										<WikiPanelSelect
+											label="Person:"
+											bind:value={authFigure}
+											options={people}
+											{editMode}
+										/>
+									</span>
+								{:else}
+									<span class="w-1/3">
+										<WikiPanelKeyValue
+											label="Person:"
+											{editMode}
+											bind:value={authFigure.name}
+											valueClass="text-black font-semibold"
+										/>
+									</span>
+								{/if}
 								<span class="w-1/3">
 									<WikiPanelKeyValue
-										label="Person:"
+										label="Role:"
 										{editMode}
-										bind:value={authFigure.name}
+										bind:value={authFigure.role}
 										valueClass="text-black font-semibold"
 									/>
 								</span>
-							{/if}
-							<span class="w-1/3">
-								<WikiPanelKeyValue
-									label="Role:"
-									{editMode}
-									bind:value={authFigure.role}
-									valueClass="text-black font-semibold"
-								/>
-							</span>
-						{:else}
-							{#if authFigure.role}
-								<label
-									for={`${authFigure.id}-${authFigure.type}-label`}
-									class="text-black font-semibold text-sm"
-									>{authFigure.role}:
-								</label>
-							{/if}
-							{#if authFigure.isLinked}
-								<a href={`/npcs/${authFigure.id}`} class="text-blue-400 text-sm underline"
-									>{people.find((p) => p.value.id === authFigure.id)?.label}</a
-								>
 							{:else}
-								<span class="text-white text-sm">{authFigure.name}</span>
+								{#if authFigure.role}
+									<label
+										for={`${authFigure.id}-${authFigure.type}-label`}
+										class="text-black font-semibold text-sm"
+										>{authFigure.role}:
+									</label>
+								{/if}
+								{#if authFigure.isLinked}
+									<a href={`/npcs/${authFigure.id}`} class="text-blue-400 text-sm underline"
+										>{people.find((p) => p.value.id === authFigure.id)?.label}</a
+									>
+								{:else}
+									<span class="text-white text-sm">{authFigure.name}</span>
+								{/if}
 							{/if}
-						{/if}
 
-						{#if editMode}
-							<input
-								type="checkbox"
-								name={`toggled-${i}`}
-								id=""
-								checked={authFigure.isLinked}
-								on:change={(e) => {
-									// @ts-ignore
-									authFigure.isLinked = e.target.checked;
-								}}
-							/>
-							<button
-								type="button"
-								class="bg-red-600 w-6 h-6"
-								on:click={() => {
-									settlement.authorityFigures = settlement.authorityFigures.filter(
-										(a) => a !== authFigure
-									);
-									settlement = settlement;
-								}}>🗑️</button
-							>
-						{/if}
-					</div>
-				{/each}
-			</div>
-			<div class="flex items-center w-full mt-2">
-				{#if editMode}
-					<button
-						type="button"
-						class="bg-green-600 w-4 h-4 rounded-full flex justify-center items-center pb-1"
-						on:click={() => {
-							settlement.authorityFigures = [
-								...settlement.authorityFigures,
-								{ id: -1, type: 'npc', role: '', isLinked: false }
-							];
-							settlement = settlement;
-						}}>+</button
-					>
-				{/if}
-			</div>
-		</WikiPanelSection>
+							{#if editMode}
+								<input
+									type="checkbox"
+									name={`toggled-${i}`}
+									id=""
+									checked={authFigure.isLinked}
+									on:change={(e) => {
+										// @ts-ignore
+										authFigure.isLinked = e.target.checked;
+									}}
+								/>
+								<button
+									type="button"
+									class="bg-red-600 w-6 h-6"
+									on:click={() => {
+										settlement.authorityFigures = settlement.authorityFigures.filter(
+											(a) => a !== authFigure
+										);
+										settlement = settlement;
+									}}>🗑️</button
+								>
+							{/if}
+						</div>
+					{/each}
+				</div>
+				<div class="flex items-center w-full mt-2">
+					{#if editMode}
+						<button
+							type="button"
+							class="bg-green-600 w-4 h-4 rounded-full flex justify-center items-center pb-1"
+							on:click={() => {
+								settlement.authorityFigures = [
+									...settlement.authorityFigures,
+									{ id: -1, type: 'npc', role: '', isLinked: false }
+								];
+								settlement = settlement;
+							}}>+</button
+						>
+					{/if}
+				</div>
+			</WikiPanelSection>
+		{/if}
 
 		<!-- Description -->
 		<WikiPanelSection removeBorder _class="space-y-4">

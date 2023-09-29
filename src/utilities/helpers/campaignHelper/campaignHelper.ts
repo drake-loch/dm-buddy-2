@@ -177,8 +177,14 @@ export let getQuest = (questId: number, campaignId?: number): Quest | undefined 
 		return quests.find((q) => q.id === questId && campaign.quests.includes(q.id));
 	}
 };
-
-export let getQuests = (campaignId?: number): Quest[] => {
+export let getQuests = (): Quest[] => {
+	let quests = loadData('quests') as Quest[];
+	if (quests === undefined) {
+		return [];
+	}
+	return quests;
+};
+export let getQuestsForCampaign = (campaignId?: number): Quest[] => {
 	let campaign = getCampaign(campaignId ?? -99) as Campaign;
 
 	if (campaign === undefined) {
@@ -221,9 +227,17 @@ export let addQuestToCampaign = (campaignId: number, questId: number): Campaign 
 	saveCampaign(campaign);
 	return campaign;
 };
+
 export let removeQuestFromCampaign = (campaignId: number, questId: number): Campaign => {
 	let campaign = getCampaign(campaignId) as Campaign;
 	campaign.quests = campaign.quests.filter((q) => q !== questId);
+	saveCampaign(campaign);
+	return campaign;
+};
+
+export let removeAllQuestsFromCampaign = (campaignId: number): Campaign => {
+	let campaign = getCampaign(campaignId) as Campaign;
+	campaign.quests = [];
 	saveCampaign(campaign);
 	return campaign;
 };
@@ -265,6 +279,19 @@ export let getSessions = (): Session[] => {
 	}
 	return sessions;
 };
+export let getSessionsForCampaign = (campaignId?: number): Session[] => {
+	let campaign = getCampaign(campaignId ?? -99) as Campaign;
+
+	if (campaign === undefined) {
+		return [];
+	}
+
+	let sessions = loadData('sessions') as Session[];
+	if (sessions === undefined) {
+		return [];
+	}
+	return sessions.filter((s) => campaign.sessions.includes(s.id));
+};
 
 export let deleteSession = (id: number, campaignId?: number): Session[] => {
 	let sessions = loadData('sessions') as Session[];
@@ -293,6 +320,13 @@ export let addSessionToCampaign = (campaignId: number, sessionId: number): Campa
 export let removeSessionFromCampaign = (campaignId: number, sessionId: number): Campaign => {
 	let campaign = getCampaign(campaignId) as Campaign;
 	campaign.sessions = campaign.sessions.filter((s) => s !== sessionId);
+	saveCampaign(campaign);
+	return campaign;
+};
+
+export let removeAllSessionsFromCampaign = (campaignId: number): Campaign => {
+	let campaign = getCampaign(campaignId) as Campaign;
+	campaign.sessions = [];
 	saveCampaign(campaign);
 	return campaign;
 };

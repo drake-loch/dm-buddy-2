@@ -5,8 +5,11 @@
 	import {
 		downloadAllData,
 		downloadData,
-		uploadAllData
+		uploadData,
+		uploadJSONFile
 	} from '../../../utilities/helpers/dataManager';
+	import NavMenu from '../../../components/nav/NavMenu.svelte';
+	import Button from '../../../components/common/button/Button.svelte';
 
 	const storageValues = {
 		characters: 0,
@@ -33,58 +36,83 @@
 			if (storageValues[key] !== undefined) {
 				storageValues[key] = +(_xLen / 1024).toFixed(2);
 			}
-
-			console.log(_x.substr(0, 50) + ' = ' + (_xLen / 1024).toFixed(2) + ' KB');
 		}
 		storageValues.total = +(_lsTotal / 1024).toFixed(2);
 	};
 
 	let browserMaxLocalStorage = 5000;
+
 	onMount(() => {
 		localStorageSpace();
 	});
 
-	let uploadedFile: File;
+	let showUploader = false;
+
+	let jsonData: any | undefined = undefined;
+	let errorMessage = undefined;
+
+	async function handleFileUpload(event: any) {
+		const fileInput = event.target;
+		try {
+			jsonData = await uploadJSONFile(fileInput);
+			errorMessage = undefined;
+		} catch (error) {
+			errorMessage = error;
+			jsonData = undefined;
+		}
+	}
 </script>
 
 <PageLayout>
-	<Toolbar viewNav={true} />
-	<div class="w-full px-4 md:p-0 md:w-3/4">
-		<h1 class="text-4xl mb-6">Storage</h1>
-		<div class="mb-6 flex">
-			<button
-				type="button"
-				class="bg-green-600 px-2 rounded-sm"
-				on:click={() => {
+	<h1 class="text-4xl ml-6">Storage</h1>
+	<div class="w-full px-4 md:p-0 flex flex-col justify-center items-center mt-24">
+		<div class="mb-6 flex gap-2">
+			<Button
+				text="Download Data"
+				colour="green"
+				size="small"
+				type="primary"
+				click={() => {
 					downloadAllData();
-				}}>Download Data</button
-			>
-			<input
-				type="file"
-				name="file-upload"
-				bind:value={uploadedFile}
-				on:change={(e) => {
-					//
 				}}
-				hidden
 			/>
-			<button
-				type="button"
-				hidden
-				class="bg-blue-600 px-2 rounded-sm disabled:bg-blue-950"
-				disabled={!uploadedFile}
-				on:click={() => {
-					// uploadAllData(uploadedFile);
-				}}>Upload Data</button
-			>
+			<Button
+				text="Upload Data"
+				colour="green"
+				size="small"
+				type="primary"
+				click={() => {
+					showUploader = !showUploader;
+				}}
+			/>
 		</div>
-		<div class="">
+		{#if showUploader}
+			<div class="flex gap-2 mb-4">
+				<input
+					type="file"
+					name="file-upload"
+					class="bg-white rounded-md"
+					on:change={handleFileUpload}
+				/>
+				<Button
+					text="Upload"
+					colour="green"
+					size="small"
+					type="primary"
+					disabled={!jsonData}
+					click={() => {
+						uploadData(jsonData);
+					}}
+				/>
+			</div>
+		{/if}
+		<div class="bg-gray-500 p-4 rounded-md border-2">
 			<span>Campaigns: {storageValues.campaigns} KB</span>
 			<span>Characters: {storageValues.characters} KB</span>
 			<span>NPCs: {storageValues.npcs} KB</span>
 			<span>Quests: {storageValues.quests} KB</span>
 			<span>Sessions: {storageValues.sessions} KB</span>
-			<span>Settlements: {storageValues.settlements} KB</span>
+			<span>Places: {storageValues.settlements} KB</span>
 			<div class="mt-4 tooltip text-white">
 				Total: {storageValues.total} KB / {browserMaxLocalStorage} KB
 				<span class="tooltiptext w-[20rem]"

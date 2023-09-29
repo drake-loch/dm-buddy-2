@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Input from '../../form/input/Input.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
 
 	export let additionalInfo: {
@@ -8,6 +9,7 @@
 	export let title = '';
 	export let type = '';
 	export let typeOptions: string[] = [];
+	export let typeOptionInput: boolean = false;
 	export let editMode = false;
 	export let hidePanel = false;
 	export let hideAdditionalInfo = false;
@@ -43,12 +45,25 @@
 						<span class="text-2xl font-bold">{title}</span>
 					{/if}
 					{#if editMode && !staticType}
-						{#if typeOptions.length > 0}
+						{#if typeOptions.length > 0 && !typeOptionInput}
 							<select name="type" class="w-3/4 px-2" bind:value={type}>
 								{#each typeOptions as typeOption}
 									<option value={typeOption}>{typeOption}</option>
 								{/each}
 							</select>
+						{:else if typeOptions.length > 0 && typeOptionInput}
+							<input
+								class={`w-full rounded-md px-2 bg-gray-600`}
+								bind:value={type}
+								type="text"
+								name="type"
+								list={typeOptions.length > 0 ? 'type-list' : undefined}
+							/>
+							<datalist id={'type-list'}>
+								{#each typeOptions as option}
+									<option value={option} />
+								{/each}
+							</datalist>
 						{:else}
 							<input type="text" class="w-3/4 px-2" bind:value={type} placeholder="Type" />
 						{/if}

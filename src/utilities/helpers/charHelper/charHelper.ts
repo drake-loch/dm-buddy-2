@@ -1,13 +1,24 @@
-export type Skill = {
+import { getCharacters, saveData } from '../dataManager';
+
+export type Stat = {
+	name: string;
+	value: number;
+	bonus: number;
 	proficient: boolean;
+};
+export type Ability = Stat & {
+	skills: Stat[];
+	savingThrow: boolean;
 };
 export type CharacterBase = {
 	id: number;
 	fullName: string;
+	description: string;
 	race: string;
 	gender: string;
 	age: number;
 	alignment: string;
+	proficiencyBonus: number;
 	size: string;
 	characteristics: {
 		personalityTraits: string;
@@ -15,42 +26,7 @@ export type CharacterBase = {
 		bonds: string;
 		flaws: string;
 	};
-	stats: {
-		str: number;
-		dex: number;
-		con: number;
-		int: number;
-		wis: number;
-		cha: number;
-	};
-	savingThrows: {
-		str: boolean;
-		dex: boolean;
-		con: boolean;
-		int: boolean;
-		wis: boolean;
-		cha: boolean;
-	};
-	skills: {
-		acrobatics: Skill;
-		animalHandling: Skill;
-		arcana: Skill;
-		athletics: Skill;
-		deception: Skill;
-		history: Skill;
-		insight: Skill;
-		intimidation: Skill;
-		investigation: Skill;
-		medicine: Skill;
-		nature: Skill;
-		perception: Skill;
-		performance: Skill;
-		persuasion: Skill;
-		religion: Skill;
-		sleightOfHand: Skill;
-		stealth: Skill;
-		survival: Skill;
-	};
+	abilities: Ability[];
 	passivePerception: number;
 	otherProficiencies: { type: string; bonus: number }[];
 	armorClass: number;
@@ -63,11 +39,13 @@ export type CharacterBase = {
 	features: { title: string; source: string; desc: string }[];
 	notes: string;
 	additionalInfo: { title: string; data: string }[];
-	imageUrl?: string;
+	imageUrl: string;
+	location?: number | undefined;
 };
 export type Character = CharacterBase & {
 	class: string;
 	background: string;
+	level: number;
 	deathSaves: {
 		successes: number;
 		failures: number;
@@ -101,6 +79,8 @@ export const newEmptyCharacter = (): Character => {
 	return {
 		id: 0,
 		fullName: '',
+		level: 0,
+		description: '',
 		race: '',
 		gender: '',
 		class: '',
@@ -114,79 +94,9 @@ export const newEmptyCharacter = (): Character => {
 			bonds: '',
 			flaws: ''
 		},
-		stats: {
-			str: 10,
-			dex: 10,
-			con: 10,
-			int: 10,
-			wis: 10,
-			cha: 10
-		},
-		savingThrows: {
-			str: false,
-			dex: false,
-			con: false,
-			int: false,
-			wis: false,
-			cha: false
-		},
-		skills: {
-			acrobatics: {
-				proficient: false
-			},
-			animalHandling: {
-				proficient: false
-			},
-			arcana: {
-				proficient: false
-			},
-			athletics: {
-				proficient: false
-			},
-			deception: {
-				proficient: false
-			},
-			history: {
-				proficient: false
-			},
-			insight: {
-				proficient: false
-			},
-			intimidation: {
-				proficient: false
-			},
-			investigation: {
-				proficient: false
-			},
-			medicine: {
-				proficient: false
-			},
-			nature: {
-				proficient: false
-			},
-			perception: {
-				proficient: false
-			},
-			performance: {
-				proficient: false
-			},
-			persuasion: {
-				proficient: false
-			},
-			religion: {
-				proficient: false
-			},
-			sleightOfHand: {
-				proficient: false
-			},
-			stealth: {
-				proficient: false
-			},
-			survival: {
-				proficient: false
-			}
-		},
+		abilities: newAbilities(),
 		passivePerception: 0,
+		proficiencyBonus: 0,
 		otherProficiencies: [],
 		armorClass: 0,
 		initiative: 0,
@@ -208,7 +118,8 @@ export const newEmptyCharacter = (): Character => {
 			spells: []
 		},
 		notes: '',
-		additionalInfo: []
+		additionalInfo: [],
+		imageUrl: ''
 	};
 };
 
@@ -238,18 +149,19 @@ export const handleCharacterPromptInput = (char: Character, promptInput: string)
 	char.characteristics.flaws =
 		parsed?.flaws ?? parsed?.characteristics.flaws ?? char.characteristics.flaws;
 
-	char.stats.str = parsed?.str ?? parsed?.strength ?? parsed?.stats.str ?? char.stats.str;
-	char.stats.dex = parsed?.dex ?? parsed?.dexterity ?? parsed?.stats.dex ?? char.stats.dex;
-	char.stats.con = parsed?.con ?? parsed?.constitution ?? parsed?.stats.con ?? char.stats.con;
-	char.stats.int = parsed?.int ?? parsed?.intelligence ?? parsed?.stats.int ?? char.stats.int;
-	char.stats.wis = parsed?.wis ?? parsed?.wisdom ?? parsed?.stats.wis ?? char.stats.wis;
-	char.stats.cha = parsed?.cha ?? parsed?.charisma ?? parsed?.stats.cha ?? char.stats.cha;
+	// char.stats.str = parsed?.str ?? parsed?.strength ?? parsed?.stats.str ?? char.stats.str;
+	// char.stats.dex = parsed?.dex ?? parsed?.dexterity ?? parsed?.stats.dex ?? char.stats.dex;
+	// char.stats.con = parsed?.con ?? parsed?.constitution ?? parsed?.stats.con ?? char.stats.con;
+	// char.stats.int = parsed?.int ?? parsed?.intelligence ?? parsed?.stats.int ?? char.stats.int;
+	// char.stats.wis = parsed?.wis ?? parsed?.wisdom ?? parsed?.stats.wis ?? char.stats.wis;
+	// char.stats.cha = parsed?.cha ?? parsed?.charisma ?? parsed?.stats.cha ?? char.stats.cha;
+	// char.savingThrows = parsed?.savingThrows ?? char.savingThrows;
+	// char.skills = parsed?.skills ?? char.skills;
+
 	char.notes = parsed?.notes ?? char.notes;
 	char.attacks = parsed?.attacks ?? char.attacks;
 	char.features = parsed?.features ?? char.features;
 	char.spellcasting = parsed?.spellcasting ?? char.spellcasting;
-	char.savingThrows = parsed?.savingThrows ?? char.savingThrows;
-	char.skills = parsed?.skills ?? char.skills;
 	char.additionalInfo = parsed?.additionalInfo ?? char.additionalInfo;
 
 	if (parsed?.equipment) {
@@ -267,3 +179,195 @@ export const handleCharacterPromptInput = (char: Character, promptInput: string)
 export const getBonus = (stat: number, proficient: boolean, bonus = 2): number => {
 	return Math.floor((stat - 10) / 2) + (proficient ? bonus : 0);
 };
+
+export const newAbilities = (): Ability[] => {
+	return [
+		{
+			name: 'Strength',
+			value: 0,
+			bonus: 0,
+			savingThrow: false,
+			proficient: false,
+			skills: [
+				{
+					name: 'Athletics',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				}
+			]
+		},
+		{
+			name: 'Dexterity',
+			value: 0,
+			bonus: 0,
+			savingThrow: false,
+			proficient: false,
+			skills: [
+				{
+					name: 'Acrobatics',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Sleight of Hand',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Stealth',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				}
+			]
+		},
+		{
+			name: 'Constitution',
+			value: 0,
+			bonus: 0,
+			savingThrow: false,
+			proficient: false,
+			skills: []
+		},
+		{
+			name: 'Intelligence',
+			value: 0,
+			bonus: 0,
+			savingThrow: false,
+			proficient: false,
+			skills: [
+				{
+					name: 'Arcana',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'History',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Investigation',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Nature',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Religion',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				}
+			]
+		},
+		{
+			name: 'Wisdom',
+			value: 0,
+			bonus: 0,
+			savingThrow: false,
+			proficient: false,
+			skills: [
+				{
+					name: 'Animal Handling',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Insight',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Medicine',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Perception',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Survival',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				}
+			]
+		},
+		{
+			name: 'Charisma',
+			value: 0,
+			bonus: 0,
+			savingThrow: false,
+			proficient: false,
+			skills: [
+				{
+					name: 'Deception',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Intimidation',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Performance',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				},
+				{
+					name: 'Persuasion',
+					value: 0,
+					bonus: 0,
+					proficient: false
+				}
+			]
+		}
+	];
+};
+
+export function formatOldChars(): void {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	const newChars = getCharacters().map((npc: any) => {
+		let newChar = newEmptyCharacter();
+		newChar.fullName = npc.fullName;
+		newChar.size = npc.size;
+		newChar.imageUrl = npc.imageUrl;
+		newChar.class = npc.class;
+		newChar.race = npc.race;
+		newChar.size = npc.size;
+		newChar.description = npc.description;
+		newChar.age = npc.age;
+		newChar.alignment = npc.alignment;
+		newChar.characteristics = npc.characteristics;
+		newChar.features = npc.features;
+		newChar.equipment = npc.equipment;
+		newChar.notes = npc.notes;
+		newChar.additionalInfo = npc.additionalInfo;
+		newChar.id = npc.id;
+		return newChar;
+	});
+	console.log(JSON.stringify(newChars));
+
+	saveData('characters', newChars);
+}

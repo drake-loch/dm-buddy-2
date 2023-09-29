@@ -34,17 +34,22 @@
 		};
 	});
 
-	$: questList = getQuests(campaignId ?? undefined).map((q) => {
-		return {
-			name: { value: q.name, link: `/campaigns/${campaignId}/quests/${q.id}` },
-			order: { value: `${q.id}` }
-		};
-	});
+	$: questList = getQuests(campaignId ?? undefined)
+		.map((q, i) => {
+			return {
+				name: { value: q.name, link: `/campaigns/${campaignId}/quests/${q.id}` },
+				order: { value: `${q.order}` },
+				id: { value: `${q.id}` }
+			};
+		})
+		.sort((a, b) => {
+			return +a.order.value - +b.order.value;
+		});
 
-	$: sessionList = getSessions().map((s) => {
+	$: sessionList = getSessions(campaignId ?? undefined).map((s, i) => {
 		return {
 			name: { value: s.name, link: `/campaigns/${campaignId}/sessions/${s.id}` },
-			order: { value: `${s.id}` }
+			id: { value: `${s.id}` }
 		};
 	});
 </script>
@@ -75,52 +80,14 @@
 		</WikiPanelSection>
 	</div>
 	<div class="" slot="wiki-top">
-		<div class="flex flex-col items-center md:flex-row w-full mb-24 justify-evenly">
+		<div class="flex flex-col md:flex-row w-full mb-24 justify-evenly">
 			<div class="w-full md:w-1/3">
 				<h3 class="text-2xl mb-2">Quests</h3>
-				<Table headers={['Order', 'Name']} rows={questList} _class="w-full">
-					<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>
-						<button
-							type="button"
-							on:click={() => {
-								questList = deleteQuest(+row.id.value)
-									.map((q) => {
-										return {
-											name: { value: q.name, link: `campaigns/${campaignId}/quests/${q.id}` },
-											order: { value: `${q.order}` }
-										};
-									})
-									.sort((a, b) => +a.order.value - +b.order.value);
-								questList = questList;
-							}}
-							class="bg-red-600 px-2 rounded-md hover:bg-red-400"
-						>
-							🗑️
-						</button>
-					</div>
-				</Table>
+				<Table headers={['Order', 'Name']} rows={questList} _class="w-full" />
 			</div>
 			<div class="w-full md:w-1/3">
 				<h3 class="text-2xl mb-2">Sessions</h3>
-				<Table headers={['Order', 'Name']} rows={sessionList} _class="w-full">
-					<div class="flex px-1 py-4 gap-1 justify-center items-center" slot="action" let:row>
-						<button
-							type="button"
-							on:click={() => {
-								sessionList = deleteSession(+row.id.value).map((s) => {
-									return {
-										name: { value: s.name, link: `/sessions/${s.id}` },
-										order: { value: `${s.id}` }
-									};
-								});
-								sessionList = sessionList;
-							}}
-							class="bg-red-600 px-2 rounded-md hover:bg-red-400"
-						>
-							🗑️
-						</button>
-					</div>
-				</Table>
+				<Table headers={['Name']} rows={sessionList} _class="w-full" />
 			</div>
 		</div>
 	</div>

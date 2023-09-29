@@ -1,21 +1,15 @@
 <script lang="ts">
 	import PageLayout from '../components/common/PageLayout/PageLayout.svelte';
+	import Button from '../components/common/button/Button.svelte';
 	import Toolbar from '../components/toolbar/Toolbar.svelte';
 </script>
 
 <PageLayout>
-	<Toolbar viewNav={true} />
-	<div class="w-full md:w-3/4 px-4">
-		<h1 class="text-4xl mb-12">Welcome to DM Buddy!</h1>
-		<div class="space-y-4">
-			<p>
-				This is a tool designed for Dungeon Masters to help create and manage table top roleplaying
-				games.
-			</p>
-			<p>
-				Data is stored in your browser's local storage, so it will persist between sessions. You can
-				also download your data and upload it to other devices.
-			</p>
-		</div>
+	<div class="w-full h-[45rem] flex flex-col justify-center items-center px-4 overflow-hidden">
+		<h1 class="text-5xl font-semibold mb-4">Welcome to DM Buddy!</h1>
+		<p class="text-center mb-8">
+			A tool for Dungeon Masters to help create and manage table top roleplaying games.
+		</p>
+		<Button href="/places" colour="purple" type="secondary" size="large" text="Get Started" />
 	</div>
 </PageLayout>

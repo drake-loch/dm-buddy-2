@@ -2,7 +2,7 @@
 
 import type { Character } from '../charHelper';
 import type { NPC } from '../npcHelper/npcHelper';
-import type { Settlement } from '../settlementHelper';
+import type { Being } from '../orgHelper';
 
 //save
 export const saveData = (key: string, data: any): void => {
@@ -52,33 +52,71 @@ export const downloadAllData = (): void => {
 	const data = {
 		npcs: loadData('npcs'),
 		characters: loadData('characters'),
-		settlements: loadData('settlements'),
-		campaign: loadData('campaign'),
+		settlements: loadData('places'),
+		campaign: loadData('campaigns'),
 		quests: loadData('quests'),
-		session: loadData('session')
+		session: loadData('sessions'),
+		orgs: loadData('orgs')
 	};
 	downloadData(data, 'dm-tool-data.json');
 };
-export const uploadAllData = (file: File): void => {
-	console.log('uploading file', file);
 
-	const reader = new FileReader();
-	reader.onload = (e) => {
-		const data = JSON.parse(e.target?.result as string);
-		console.log('data', data);
+export const uploadData = (data: any): void => {
+	if (data.npcs) {
 		saveData('npcs', data.npcs);
+	}
+	if (data.characters) {
 		saveData('characters', data.characters);
-		saveData('settlements', data.settlements);
-		saveData('campaign', data.campaign);
+	}
+	if (data.settlements) {
+		saveData('places', data.settlements);
+	}
+	if (data.campaign) {
+		saveData('campaigns', data.campaign);
+	}
+	if (data.quests) {
 		saveData('quests', data.quests);
-		saveData('session', data.session);
-	};
-	reader.readAsText(file);
+	}
+	if (data.session) {
+		saveData('sessions', data.session);
+	}
+	if (data.orgs) {
+		saveData('orgs', data.orgs);
+	}
 };
+
+export async function uploadJSONFile<T>(fileInput: HTMLInputElement): Promise<T> {
+	return new Promise((resolve, reject) => {
+		if (!fileInput || fileInput.files?.length === 0) {
+			reject('No file selected.');
+			return;
+		}
+
+		const file = fileInput?.files ? fileInput.files[0] : undefined;
+		if (file) {
+			const reader = new FileReader();
+
+			reader.onload = (event) => {
+				try {
+					const fileContents = event.target?.result as string;
+					const jsonData = JSON.parse(fileContents) as T;
+					resolve(jsonData);
+				} catch (error) {
+					reject('Error parsing JSON file: ' + error);
+				}
+			};
+
+			reader.readAsText(file);
+		} else {
+			reject('No file selected.');
+			return;
+		}
+	});
+}
 
 // ====================================================================================================
 
-export const updateNPC = (npc: NPC): number => {
+export const saveNPC = (npc: NPC): number => {
 	let npcs = loadData('npcs') as NPC[];
 
 	if (npcs === undefined) {
@@ -133,12 +171,20 @@ export const getNPCsAndChars = (): {
 	id: number;
 	fullName: string;
 	type: 'npc' | 'character';
+	imageUrl?: string;
 }[] => {
-	const npcs = getNPCs().map((n) => ({ id: n.id, fullName: n.fullName, type: 'npc' as 'npc' }));
+	const npcs = getNPCs().map((n) => ({
+		id: n.id,
+		fullName: n.fullName,
+		type: 'npc' as 'npc',
+		imageURL: n.imageUrl
+	}));
+
 	const characters = getCharacters().map((c) => ({
 		id: c.id,
 		fullName: c.fullName,
-		type: 'character' as 'character'
+		type: 'character' as 'character',
+		imageURL: c.imageUrl
 	}));
 	return [...npcs, ...characters];
 };
@@ -200,3 +246,17 @@ export const deleteCharacter = (id: number): Character[] => {
 };
 
 // ====================================================================================================
+
+export const getAllBeings = (): Being[] => {
+	const npcs = getNPCs().map((n) => ({
+		id: n.id,
+		name: n.fullName,
+		type: 'npc' as 'npc'
+	}));
+	const characters = getCharacters().map((c) => ({
+		id: c.id,
+		name: c.fullName,
+		type: 'character' as 'character'
+	}));
+	return [...npcs, ...characters];
+};

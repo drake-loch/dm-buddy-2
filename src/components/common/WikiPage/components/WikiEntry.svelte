@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getCharacters, getNPCs } from '../../../../utilities/helpers/dataManager';
-	import { getSettlements } from '../../../../utilities/helpers/settlementHelper';
+	import { getPlaces } from '../../../../utilities/helpers/placeHelper';
 	import Input from '../../../form/input/Input.svelte';
 	import Textarea from '../../../form/textarea/Textarea.svelte';
 
@@ -51,7 +51,7 @@
 
 	let showAddOptions = false;
 
-	let entityType: 'character' | 'npc' | 'settlement' | undefined = undefined;
+	let entityType: 'character' | 'npc' | 'place' | undefined = undefined;
 	let selectedEntity: { label: string; value: string; link: string } | undefined = undefined;
 
 	const getEntities = (): { label: string; value: string }[] => {
@@ -71,17 +71,19 @@
 					link: `/npcs/${c.id}`
 				};
 			});
-		} else if (entityType === 'settlement') {
-			return getSettlements().map((c) => {
+		} else if (entityType === 'place') {
+			return getPlaces().map((p) => {
 				return {
-					label: c.name,
-					value: `${c.id}`,
-					link: `/settlements/${c.id}`
+					label: p.name,
+					value: `${p.id}`,
+					link: `/places/${p.id}`
 				};
 			});
 		}
 		return [];
 	};
+
+	$: entities = getEntities();
 </script>
 
 <div class="w-full p-4 bg-gray-600 min-h-[5rem] rounded-sm">
@@ -169,25 +171,31 @@
 
 	<span class="flex gap-2 items-center mb-2">
 		{#if editMode}
-			<button
-				type="button"
-				class="text-center bg-green-500 rounded-md py-0.5 px-2"
-				aria-label="save module"
-				on:click={() => {
-					showAddOptions = true;
-				}}>Add Link</button
-			>
+			{#if !showAddOptions}
+				<button
+					type="button"
+					class="text-center bg-green-500 rounded-md py-0.5 px-2"
+					aria-label="save module"
+					on:click={() => {
+						showAddOptions = true;
+					}}>Add Link</button
+				>
+			{/if}
 			{#if showAddOptions}
 				<div class="flex gap-2 items-center">
 					<select
 						name={`${title}-link-type`}
 						class="border rounded-md bg-gray-600 px-2"
 						bind:value={entityType}
+						on:change={(e) => {
+							selectedEntity = undefined;
+							entities = getEntities();
+						}}
 					>
 						<option value={undefined} disabled>Select Type</option>
 						<option value="character">Character</option>
 						<option value="npc">NPC</option>
-						<option value="settlement">Settlement</option>
+						<option value="place">Place</option>
 					</select>
 
 					{#if entityType !== undefined}
@@ -197,7 +205,7 @@
 							bind:value={selectedEntity}
 						>
 							<option value={undefined} disabled>Select Entity</option>
-							{#each getEntities() as entity}
+							{#each entities as entity}
 								<option value={entity}>{entity.label}</option>
 							{/each}
 						</select>
@@ -211,6 +219,7 @@
 								const link = `<a class="link" href="${selectedEntity?.link}">${selectedEntity?.label}</a>`;
 								localData = localData + link;
 								selectedEntity = undefined;
+								entityType = undefined;
 								showAddOptions = false;
 							}}>Add</button
 						>
@@ -220,6 +229,8 @@
 						class="text-center bg-red-500 rounded-md py-0.5 px-2"
 						aria-label="save module"
 						on:click={() => {
+							selectedEntity = undefined;
+							entityType = undefined;
 							showAddOptions = false;
 						}}>Cancel</button
 					>
