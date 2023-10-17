@@ -3,7 +3,12 @@
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import QuestPage from '../../../components/common/wiki/pages/QuestPage.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
-	import { getQuest, newQuest, saveQuest } from '../../../utilities/helpers/campaignHelper';
+	import {
+		addQuestToCampaign,
+		getQuest,
+		newQuest,
+		saveQuest
+	} from '../../../utilities/helpers/campaignHelper';
 
 	export let data;
 
@@ -25,7 +30,11 @@
 		quest.rewards = values?.rewards.toString() ?? quest.rewards;
 
 		const id = saveQuest(quest);
-		if (+data.id !== id) {
+		if (isNew) {
+			const cid = data.cid;
+			if (cid && !Number.isNaN(data.cid)) {
+				addQuestToCampaign(+cid, id);
+			}
 			goto(`/quests/${id}`);
 		}
 		editing = false;

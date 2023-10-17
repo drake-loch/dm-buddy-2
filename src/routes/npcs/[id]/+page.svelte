@@ -53,6 +53,8 @@
 		}
 		editing = false;
 	};
+
+	//add delete button for npc
 </script>
 
 <PageLayout windowTitle={`NPC - ${isNew ? 'NEW' : npc.fullName}`}>
