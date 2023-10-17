@@ -95,6 +95,7 @@ export let saveCampaign = (campaign: Campaign): number => {
 		campaigns.push(campaign);
 	} else {
 		const index = campaigns.findIndex((c) => c.id === campaign.id);
+		campaign.quests = campaign.quests.filter((q, i, a) => a.indexOf(q) === i);
 		campaigns[index] = campaign;
 	}
 
@@ -221,8 +222,11 @@ export let deleteQuest = (id: number, campaignId?: number): Quest[] => {
 	return quests;
 };
 
-export let addQuestToCampaign = (campaignId: number, questId: number): Campaign => {
+export let addQuestToCampaign = (campaignId: number, questId: number): Campaign | undefined => {
 	let campaign = getCampaign(campaignId) as Campaign;
+	if (!campaign) {
+		return undefined;
+	}
 	campaign.quests.push(questId);
 	saveCampaign(campaign);
 	return campaign;
@@ -310,8 +314,11 @@ export let deleteSession = (id: number, campaignId?: number): Session[] => {
 	return sessions;
 };
 
-export let addSessionToCampaign = (campaignId: number, sessionId: number): Campaign => {
+export let addSessionToCampaign = (campaignId: number, sessionId: number): Campaign | undefined => {
 	let campaign = getCampaign(campaignId) as Campaign;
+	if (!campaign) {
+		return undefined;
+	}
 	campaign.sessions.push(sessionId);
 	saveCampaign(campaign);
 	return campaign;

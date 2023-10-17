@@ -3,7 +3,13 @@
 	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import SessionPage from '../../../components/common/wiki/pages/SessionPage.svelte';
 	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
-	import { getSession, newSession, saveSession } from '../../../utilities/helpers/campaignHelper';
+	import {
+		addSessionToCampaign,
+		getCampaign,
+		getSession,
+		newSession,
+		saveSession
+	} from '../../../utilities/helpers/campaignHelper';
 
 	export let data;
 
@@ -21,11 +27,14 @@
 		editing = false;
 
 		session.name = values?.name.toString() ?? session.name;
-		session.notes = values?.notes.toString() ?? session.notes;
 
 		const id = saveSession(session);
-		if (+data.id !== id) {
-			goto(`/session/${id}`);
+		if (isNew) {
+			const cid = data.cid;
+			if (cid && !Number.isNaN(data.cid)) {
+				addSessionToCampaign(+cid, id);
+			}
+			goto(`/sessions/${id}`);
 		}
 		editing = false;
 	};

@@ -28,7 +28,6 @@
 		campaign.name = values.name.toString();
 		campaign.description = values.description.toString();
 		campaign.imageUrl = values.imageUrl.toString();
-		campaign.notes = values.notes.toString();
 		campaign.additionalInfo = campaign.additionalInfo.filter(
 			(a) => a.title !== '' || a.data !== ''
 		);
@@ -44,6 +43,6 @@
 <PageLayout windowTitle={`Campaign - ${isNew ? 'NEW' : campaign.name}`}>
 	<ToolbarIi slot="sidebar" formName={FORM_NAME} bind:editing />
 	{#if campaign !== undefined}
-		<CampaignPage {editing} {campaign} {submit} name={FORM_NAME} />
+		<CampaignPage {editing} {campaign} {submit} name={FORM_NAME} {isNew} />
 	{/if}
 </PageLayout>

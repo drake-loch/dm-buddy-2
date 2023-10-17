@@ -4,7 +4,8 @@
 		getCampaigns,
 		getQuests,
 		getSessions,
-		newCampaign
+		newCampaign,
+		type Quest
 	} from '../../../../utilities/helpers/campaignHelper';
 	import { getAllBeings } from '../../../../utilities/helpers/dataManager';
 	import { getOrgs, newOrg, type Org } from '../../../../utilities/helpers/orgHelper';
@@ -23,11 +24,18 @@
 
 	export let editing = false;
 	export let campaign = newCampaign();
+	export let isNew = false;
 
 	export let submit: (form: any) => void;
 	export let name: string = '';
 
-	const beings = getAllBeings();
+	let quests: Quest[] = [];
+
+	$: {
+		const questIds = getCampaigns().find((c) => c.id === campaign.id)?.quests ?? [];
+		quests = getQuests().filter((q) => questIds.includes(q.id));
+		quests.sort((a, b) => a.order - b.order);
+	}
 </script>
 
 <form action="submit" on:submit={submit} id={name} class="w-full">
@@ -67,13 +75,24 @@
 				</SectionWrapper>
 
 				<SectionWrapper>
-					<Title text="Quests" />
+					<span class="flex items-center gap-4 w-full">
+						<Title text="Quests" />
+						{#if !isNew}
+							<button
+								type="button"
+								class="bg-green-500 hover:bg-green-600 px-2 rounded-md boreder flex justify-center"
+								on:click={() => {
+									goto(`/quests/new?cid=${campaign.id}`);
+								}}>+ New</button
+							>
+						{/if}
+					</span>
 					<span class="flex flex-col w-full gap-2 pb-2 pt-1">
 						<Multiselect
 							{editing}
 							label="Quests:"
 							bind:values={campaign.quests}
-							options={getCampaigns().map((q) => {
+							options={getQuests().map((q) => {
 								return {
 									label: q.name,
 									value: q.id
@@ -120,11 +139,11 @@
 				<SectionWrapper hidden={campaign.quests.length === 0}>
 					<Title text="Quests" />
 					<ul class="list-disc px-4">
-						{#each campaign.quests as quest, index}
+						{#each quests as quest, index}
 							<li class="list-item">
 								<Link
-									href={`/quests/${quest}?cid=${campaign.id}`}
-									text={getQuests().find((q) => q.id === quest)?.name ?? 'Unknown'}
+									href={`/quests/${quest.id}?cid=${campaign.id}`}
+									text={quest.name ?? 'Unknown'}
 								/>
 							</li>
 						{/each}
@@ -157,7 +176,6 @@
 		</div>
 
 		<div slot="main" class="space-y-4">
-			<!-- <h1 class="text-4xl font-bold border-b-2 pb-2 px-4">{campaign.name}</h1> -->
 			{#if editing}
 				<span class="flex gap-2">
 					<button

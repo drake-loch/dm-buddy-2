@@ -80,6 +80,7 @@ export const handleNPCPromptInput = (npc: NPC, promptInput: string): NPC => {
 		parsed?.flaws ?? parsed?.characteristics?.flaws ?? npc.characteristics.flaws;
 
 	npc.abilities = parsed?.abilities ?? npc.abilities;
+	npc.description = parsed?.description ?? npc.description;
 
 	npc.notes = parsed?.notes ?? npc.notes;
 	npc.actions = parsed?.actions ?? npc.actions;

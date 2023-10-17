@@ -49,11 +49,6 @@
 						labelClass="text-sm font-semibold"
 					/>
 				</SectionWrapper>
-
-				<SectionWrapper>
-					<Title text="Notes" />
-					<Textarea name="notes" value={session.notes} inputClass="w-full" />
-				</SectionWrapper>
 			{:else}
 				<SectionWrapper>
 					<span class="flex flex-col items-center">
@@ -63,11 +58,6 @@
 
 				<SectionWrapper hidden={session.notes === ''}>
 					<Title text="Rewards" />
-				</SectionWrapper>
-
-				<SectionWrapper hidden={session.notes === ''}>
-					<Title text="Notes" />
-					<Text text={session.notes} />
 				</SectionWrapper>
 			{/if}
 		</div>

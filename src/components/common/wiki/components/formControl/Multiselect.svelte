@@ -92,7 +92,7 @@
 					</button>
 					{#if !collapsed}
 						<div
-							class="bg-gray-100 text-black flex flex-col w-full absolute max-h-60 overflow-y-auto"
+							class="bg-gray-100 text-black flex flex-col w-full absolute max-h-60 overflow-y-auto z-10"
 						>
 							{#each options as o, i}
 								<button

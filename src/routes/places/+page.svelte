@@ -37,7 +37,8 @@
 				data={places}
 				columns={[
 					{ title: 'id', labelAccesor: (p) => p.id },
-					{ title: 'name', labelAccesor: (p) => p.name, linkAccessor: (p) => `/places/${p.id}` }
+					{ title: 'name', labelAccesor: (p) => p.name, linkAccessor: (p) => `/places/${p.id}` },
+					{ title: 'type', labelAccesor: (p) => p.type }
 				]}
 				searchAccessor={(v) => v.name}
 			>
