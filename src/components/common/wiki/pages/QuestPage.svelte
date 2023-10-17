@@ -63,6 +63,13 @@
 						label="Name:"
 						labelClass="text-sm font-semibold"
 					/>
+					<Input
+						name="order"
+						bind:value={quest.order}
+						placeholder="Order"
+						label="Order:"
+						labelClass="text-sm font-semibold"
+					/>
 				</SectionWrapper>
 
 				<SectionWrapper>
