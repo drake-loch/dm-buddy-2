@@ -19,10 +19,10 @@
 	</span>
 	{#if menuIsOpen}
 		<div
-			class="nav-border space-y-2 absolute w-64 h-80 bg-slate-800 top-8 -left-44 md:left-0 rounded-md rounded-tr-none md:rounded-tr-md md:rounded-tl-none shadow-lg box-border z-10 p-2 overflow-y-auto overflow-x-hidden"
+			class="nav-border space-y-2 absolute w-64 h-96 md:h-fit bg-slate-800 top-8 -left-44 md:left-0 rounded-md rounded-tr-none md:rounded-tr-md md:rounded-tl-none shadow-lg box-border z-10 p-2 overflow-y-auto overflow-x-hidden"
 		>
 			<div class="w-full flex border-b-2 pb-2 px-2">
-				<div class="w-20 h-20 bg-slate-400" />
+				<!-- <div class="w-20 h-20 bg-slate-400" /> -->
 				<div class="ml-auto w-2/3">
 					{#if $page.data.session?.user && Object.keys($page.data.session.user || {}).length}
 						<p class="text-right">
@@ -41,7 +41,7 @@
 					{/if}
 				</div>
 			</div>
-			<div class="flex flex-wrap items-center justify-evenly gap-2 w-full mb-4">
+			<div class="flex flex-wrap items-center justify-evenly gap-1.5 w-full mb-4">
 				<NavItem text="Home" link="/" />
 				<NavItem text="Campaigns" link="/campaigns" />
 				<NavItem text="Characters" link="/characters" />
