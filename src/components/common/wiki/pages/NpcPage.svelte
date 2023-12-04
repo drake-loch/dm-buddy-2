@@ -73,7 +73,6 @@
 				</SectionWrapper>
 
 				<SectionWrapper customSpacing>
-					<!-- AC and Speed -->
 					<span class="flex justify-evenly items-center w-full">
 						<span class="flex flex-col items-center w-[2rem] gap-1">
 							<label for="ac" class="text-sm font-semibold text-center">AC</label>

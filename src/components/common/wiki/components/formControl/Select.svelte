@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { classes } from '../../../../../utilities/utilities';
+
 	export let value: string | number = '';
 	export let name: string = '';
 	export let size: number | undefined = undefined;
@@ -12,7 +14,7 @@
 	{#if label}
 		<label for={name} class={`w-1/3 ${labelClass}`}>{label}</label>
 	{/if}
-	<select {name} bind:value class={`px-1 w-2/3 ${selectClass}`} {size}>
+	<select {name} bind:value class={classes(`px-1 w-2/3 ${selectClass}`)} {size}>
 		<option value="" disabled>Select Value</option>
 		<slot />
 	</select>

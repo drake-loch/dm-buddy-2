@@ -85,6 +85,11 @@
 	};
 
 	$: entities = getEntities();
+
+	const calculateRows = (str: string) => {
+		const rows = str.split('\n').length;
+		return rows > 5 ? rows : 5;
+	};
 </script>
 
 <div
@@ -293,7 +298,7 @@
 			{placeholder}
 			inputClass="border w-full rounded-sm"
 			bind:value={data}
-			rows={5}
+			rows={calculateRows(data)}
 			textSize="text-md"
 		/>
 	{:else}

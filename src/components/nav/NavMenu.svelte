@@ -22,7 +22,6 @@
 			class="nav-border space-y-2 absolute w-64 h-96 md:h-fit bg-slate-800 top-8 -left-44 md:left-0 rounded-md rounded-tr-none md:rounded-tr-md md:rounded-tl-none shadow-lg box-border z-10 p-2 overflow-y-auto overflow-x-hidden"
 		>
 			<div class="w-full flex border-b-2 pb-2 px-2">
-				<!-- <div class="w-20 h-20 bg-slate-400" /> -->
 				<div class="ml-auto w-2/3">
 					{#if $page.data.session?.user && Object.keys($page.data.session.user || {}).length}
 						<p class="text-right">
@@ -50,6 +49,9 @@
 				<NavItem text="Places" link="/places" />
 				<NavItem text="Groups" link="/organizations" />
 				<NavItem text="Quests" link="/quests" />
+				<NavItem text="Deities" link="/deities" />
+				<NavItem text="Monsters" link="/monsters" />
+				<!-- <NavItem text="Combat" link="/combat" /> -->
 				<NavItem text="Sessions" link="/sessions" />
 				<NavItem text="Settings" link="/settings" />
 			</div>
