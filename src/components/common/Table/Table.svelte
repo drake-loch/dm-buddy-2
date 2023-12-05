@@ -50,9 +50,11 @@
 <div class="w-full flex flex-col mix-h-[35rem] border-2 rounded-md p-2 bg-gray-800 shadow-lg">
 	<div class="w-full p-2 pb-4 flex justify-between items-center">
 		<slot name="tools" />
-		<span class="w-[14rem]">
-			<Input bind:value={search} placeholder="Search" />
-		</span>
+		{#if data.length > 0}
+			<span class="w-[14rem]">
+				<Input bind:value={search} placeholder="Search" />
+			</span>
+		{/if}
 	</div>
 	{#if data.length > 0}
 		<div class="h-[27rem] overflow-auto">

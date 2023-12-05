@@ -5,7 +5,7 @@
 
 <a
 	href={link}
-	class="w-24 h-16 bg-slate-600 flex justify-center items-center rounded-md border border-gray-500 hover:bg-gray-700"
+	class="w-28 h-16 bg-slate-600 flex justify-center items-center rounded-md border border-gray-500 hover:bg-gray-700"
 >
 	{text}
 </a>
