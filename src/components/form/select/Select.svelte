@@ -6,7 +6,6 @@
 	export let values: string[] | number[] | T[] = [];
 	export let options: Option[] = [];
 	export let change: (values: string[] | number[] | T[]) => void = () => {};
-	export let labelAccessor: (value: T) => string = (value) => value as unknown as string;
 
 	type Option = { label: string; value: string | number | T; action?: () => void };
 

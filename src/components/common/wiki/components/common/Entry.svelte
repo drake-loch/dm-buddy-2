@@ -313,8 +313,7 @@
 		@apply text-blue-500 underline;
 	}
 
-	input,
-	textarea {
+	input {
 		@apply text-black;
 	}
 </style>
