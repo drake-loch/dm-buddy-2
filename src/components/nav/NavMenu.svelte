@@ -54,6 +54,7 @@
 				<!-- <NavItem text="Combat" link="/combat" /> -->
 				<NavItem text="Sessions" link="/sessions" />
 				<NavItem text="Lore" link="/lore" />
+				<NavItem text="Items" link="/items" />
 				<NavItem text="Settings" link="/settings" />
 			</div>
 		</div>

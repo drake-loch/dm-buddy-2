@@ -222,6 +222,18 @@ export let deleteQuest = (id: number, campaignId?: number): Quest[] => {
 	return quests;
 };
 
+export const handleQuestPromptInput = (quest: Quest, promptInput: string): Quest => {
+	const parsed = JSON.parse(promptInput);
+	quest.name = parsed?.name ?? quest.name;
+	quest.description = parsed?.description ?? quest.description;
+	quest.imageUrl = parsed?.imageUrl ?? quest.imageUrl;
+	quest.steps = parsed?.steps ?? quest.steps;
+	quest.notes = parsed?.notes ?? quest.notes;
+	quest.rewards = parsed?.rewards ?? quest.rewards;
+	quest.order = parsed?.order ?? quest.order;
+	return quest;
+};
+
 export let addQuestToCampaign = (campaignId: number, questId: number): Campaign | undefined => {
 	let campaign = getCampaign(campaignId) as Campaign;
 	if (!campaign) {

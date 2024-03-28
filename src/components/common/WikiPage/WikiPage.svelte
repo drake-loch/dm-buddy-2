@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Input from '../../form/input/Input.svelte';
 	import WikiEntry from './components/WikiEntry.svelte';
 
 	export let additionalInfo: {

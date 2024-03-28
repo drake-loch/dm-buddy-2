@@ -1,17 +1,15 @@
 <script lang="ts">
-	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
-	import PromptTool from '../../../components/common/PromptTool/PromptTool.svelte';
 	import { goto } from '$app/navigation';
-	import { generateRandomSettlementPrompt } from '../../../utilities/helpers/promptHelper';
+	import PageLayout from '../../../components/common/PageLayout/PageLayout.svelte';
 	import PlacePage from '../../../components/common/wiki/pages/PlacePage.svelte';
+	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
 	import {
 		getPlace,
 		handlePlacePrompt,
 		newPlace,
 		savePlace
 	} from '../../../utilities/helpers/placeHelper';
-	import NavMenu from '../../../components/nav/NavMenu.svelte';
-	import ToolbarIi from '../../../components/toolbarV2/ToolbarII.svelte';
+	import { generateRandomSettlementPrompt } from '../../../utilities/helpers/promptHelper';
 
 	export let data;
 
@@ -26,7 +24,6 @@
 	let editing = isNew ?? false;
 
 	let promptInput = '';
-	console.log('place: ', place);
 
 	const submit = (form: any) => {
 		form.preventDefault();
@@ -54,11 +51,7 @@
 	};
 </script>
 
-<svelte:head>
-	<title>Place - {isNew ? 'New Place' : place.name}</title>
-</svelte:head>
-
-<PageLayout>
+<PageLayout backNav="/places" windowTitle={`Place - ${isNew ? 'New Place' : place.name}`}>
 	<ToolbarIi
 		slot="sidebar"
 		bind:promptInput

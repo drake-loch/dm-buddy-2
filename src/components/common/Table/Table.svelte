@@ -56,6 +56,9 @@
 			</span>
 		{/if}
 	</div>
+	<div class="w-full p-2 pb-4 flex justify-between items-center">
+		<slot name="additionalTools" />
+	</div>
 	{#if data.length > 0}
 		<div class="h-[27rem] overflow-auto">
 			<table class={`w-full`}>
@@ -92,6 +95,18 @@
 					<span class="w-full text-center">Page</span>
 					<span class="flex items-center gap-2">
 						<Button
+							text="<<"
+							size="tiny"
+							type="secondary"
+							colour="gray"
+							disabled={!hasPreviousPage}
+							click={() => {
+								if (currentPage > 0) {
+									currentPage = 0;
+								}
+							}}
+						/>
+						<Button
 							text="<"
 							size="tiny"
 							type="secondary"
@@ -115,6 +130,18 @@
 							click={() => {
 								if (currentPage < Math.floor(_data.length / maxItems)) {
 									currentPage++;
+								}
+							}}
+						/>
+						<Button
+							text=">>"
+							size="tiny"
+							type="secondary"
+							colour="gray"
+							disabled={!hasNextPage}
+							click={() => {
+								if (currentPage < Math.floor(_data.length / maxItems)) {
+									currentPage = Math.floor(_data.length / maxItems);
 								}
 							}}
 						/>

@@ -3,7 +3,7 @@
 	import PageLayout from '../../components/common/PageLayout/PageLayout.svelte';
 	import Table from '../../components/common/Table/Table.svelte';
 	import Button from '../../components/common/button/Button.svelte';
-	import { deletePlace, getPlace, getPlaces } from '../../utilities/helpers/placeHelper';
+	import { getPlace, getPlaces } from '../../utilities/helpers/placeHelper';
 
 	const places = getPlaces();
 
