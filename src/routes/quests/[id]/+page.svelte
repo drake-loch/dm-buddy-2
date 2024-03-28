@@ -6,6 +6,7 @@
 	import {
 		addQuestToCampaign,
 		getQuest,
+		handleQuestPromptInput,
 		newQuest,
 		saveQuest
 	} from '../../../utilities/helpers/campaignHelper';
@@ -19,6 +20,8 @@
 	let editing = isNew ?? false;
 
 	let quest = getQuest(+data.id) ?? newQuest();
+
+	let promptInput = '';
 
 	const submit = (form: any) => {
 		form.preventDefault();
@@ -42,6 +45,15 @@
 </script>
 
 <PageLayout windowTitle={`Quest - ${isNew ? 'New Quest' : quest.name}`}>
-	<ToolbarIi slot="sidebar" formName={FORM_NAME} bind:editing />
+	<ToolbarIi
+		slot="sidebar"
+		formName={FORM_NAME}
+		bind:editing
+		bind:promptInput
+		handleApply={() => {
+			quest = handleQuestPromptInput(quest, promptInput);
+			quest = quest;
+		}}
+	/>
 	<QuestPage bind:quest {editing} {submit} name={FORM_NAME} />
 </PageLayout>

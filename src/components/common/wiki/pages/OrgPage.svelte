@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getCampaigns, getQuests } from '../../../../utilities/helpers/campaignHelper';
+	import { getCampaigns } from '../../../../utilities/helpers/campaignHelper';
 	import { getAllBeings } from '../../../../utilities/helpers/dataManager';
 	import { newOrg, type Org } from '../../../../utilities/helpers/orgHelper';
 	import { getPlace, getPlaces } from '../../../../utilities/helpers/placeHelper';
@@ -279,7 +279,9 @@
 										{leader.name}
 									</span>
 								{/if}
-								<span class="italic">({leader.role})</span>
+								{#if leader.role !== ''}
+									<span class="italic">({leader.role})</span>
+								{/if}
 							</li>
 						{/each}
 					</ul>
@@ -300,7 +302,9 @@
 										{member.name}
 									</span>
 								{/if}
-								<span class="italic">({member.role})</span>
+								{#if member.role !== ''}
+									<span class="italic">({member.role})</span>
+								{/if}
 							</li>
 						{/each}
 					</ul>

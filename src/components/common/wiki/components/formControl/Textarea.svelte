@@ -16,7 +16,13 @@
 	{#if label}
 		<label for={name} class={`w-1/3 ${labelClass}`}>{label}</label>
 	{/if}
-	<textarea {name} bind:value {placeholder} class={`px-1 ${textSize} ${inputClass}`} {rows} />
+	<textarea
+		{name}
+		bind:value
+		{placeholder}
+		class={`px-1 ${textSize} ${inputClass} bg-gray-300`}
+		{rows}
+	/>
 </span>
 
 <style>

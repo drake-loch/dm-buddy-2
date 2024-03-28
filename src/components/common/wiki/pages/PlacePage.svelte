@@ -1,25 +1,19 @@
 <script lang="ts">
-	import { getCampaigns, getQuests } from '../../../../utilities/helpers/campaignHelper';
 	import { getAllBeings } from '../../../../utilities/helpers/dataManager';
-	import { getOrgs, newOrg, type Org } from '../../../../utilities/helpers/orgHelper';
-	import {
-		getPlaces,
-		newPlace,
-		savePlace,
-		type Place
-	} from '../../../../utilities/helpers/placeHelper';
+	import { getOrgs } from '../../../../utilities/helpers/orgHelper';
+	import { getPlaces, newPlace, type Place } from '../../../../utilities/helpers/placeHelper';
 
-	import Layout from '../components/Layout.svelte';
 	import Entry from '../components/common/Entry.svelte';
 	import Image from '../components/common/Image.svelte';
 	import Link from '../components/common/Link.svelte';
 	import SectionWrapper from '../components/common/SectionWrapper.svelte';
+	import Shop from '../components/common/Shop.svelte';
 	import Text from '../components/common/Text.svelte';
 	import Title from '../components/common/Title.svelte';
 	import Input from '../components/formControl/Input.svelte';
-	import Multiselect from '../components/formControl/Multiselect.svelte';
 	import Select from '../components/formControl/Select.svelte';
 	import Textarea from '../components/formControl/Textarea.svelte';
+	import Layout from '../components/Layout.svelte';
 
 	export let editing = false;
 	export let place: Place = newPlace();
@@ -310,6 +304,16 @@
 							place.additionalInfo = [...place.additionalInfo, { title: '', data: '' }];
 						}}>Add Article</button
 					>
+					<button
+						type="button"
+						class="bg-green-500 rounded px-4 mt-2"
+						on:click={() => {
+							place.shops = [
+								...place.shops,
+								{ name: '', description: '', owner: '', hasInventory: false, inventory: [] }
+							];
+						}}>Add Shop</button
+					>
 				</span>
 			{/if}
 			<div>
@@ -329,6 +333,27 @@
 					</span>
 				{/each}
 			</div>
+			{#if place.shops.length > 0}
+				<div>
+					<h3 class="font-bold text-2xl mb-2">Shops</h3>
+					{#each place.shops as shop, i}
+						<span class="mb-2 w-full">
+							<Shop
+								{editing}
+								bind:title={shop.name}
+								bind:data={shop.description}
+								deleteModule={() => {
+									place.shops = place.shops.filter((_, index) => index !== i);
+								}}
+								save={() => {
+									place.shops = [...place.shops];
+								}}
+								bind:shop
+							/>
+						</span>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</Layout>
 </form>
