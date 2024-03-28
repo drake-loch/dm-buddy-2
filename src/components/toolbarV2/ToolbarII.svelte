@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { formatOldChars } from '../../utilities/helpers/charHelper';
 	import PromptTool from '../common/PromptTool/PromptTool.svelte';
 	import Item from './components/item/Item.svelte';
 

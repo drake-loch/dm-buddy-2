@@ -56,7 +56,11 @@ export const downloadAllData = (): void => {
 		campaign: loadData('campaigns'),
 		quests: loadData('quests'),
 		session: loadData('sessions'),
-		orgs: loadData('orgs')
+		orgs: loadData('orgs'),
+		deities: loadData('deities'),
+		monsters: loadData('monsters'),
+		lore: loadData('lore'),
+		items: loadData('items')
 	};
 	downloadData(data, 'dm-tool-data.json');
 };

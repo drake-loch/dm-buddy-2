@@ -21,6 +21,30 @@ export type Place = {
 	quests: number[];
 	additionalInfo: { title: string; data: string }[];
 	notes: string;
+	shops: Shop[];
+};
+
+export type Shop = {
+	name: string;
+	description: string;
+	owner: string;
+	hasInventory: boolean;
+	inventory: ShopItem[];
+};
+
+export type Item = {
+	id: number; //if item id is -1, then its a custom item
+	name: string;
+	description: string;
+	weight: string;
+	type: string[]; //type is only used in the item list, not in the shop
+};
+
+//shops need to keep track of price and quantity, other keys aren't really important if getting from item list.
+
+export type ShopItem = Item & {
+	quantity: number;
+	price: string;
 };
 
 export type PlaceBeingRole = Being & {
@@ -47,7 +71,8 @@ export const newPlace = (): Place => {
 		imageUrl: '',
 		quests: [],
 		additionalInfo: [],
-		notes: ''
+		notes: '',
+		shops: []
 	};
 };
 
@@ -69,6 +94,7 @@ export const handlePlacePrompt = (place: Place, promptInput: string): Place => {
 	place.quests = parsed?.quests ?? place.quests;
 	place.additionalInfo = parsed?.additionalInfo ?? place.additionalInfo;
 	place.notes = parsed?.notes ?? place.notes;
+	place.shops = parsed?.shops ?? place.shops;
 	return place;
 };
 
@@ -120,4 +146,85 @@ export const deletePlace = (id: number): Place[] => {
 	places = places.filter((n) => n.id !== id);
 	saveData('places', places);
 	return places;
+};
+
+//Items
+
+export const saveItem = (item: Item): number => {
+	let items = loadData('items') as Item[];
+
+	if (items === undefined) {
+		items = [];
+	}
+
+	const index = items.findIndex((n) => n.name === item.name);
+
+	if (index === -1) {
+		item.id = items.length > 0 ? items[items.length - 1].id + 1 : 1;
+		items.push(item);
+	} else {
+		items[index] = item;
+	}
+
+	saveData('items', items);
+	return item.id;
+};
+
+export const getItems = (): Item[] => {
+	const items = loadData('items') as Item[];
+
+	if (items === undefined) {
+		return [];
+	}
+
+	return items;
+};
+
+export const getItem = (id: number): Item | undefined => {
+	const items = loadData('items') as Item[];
+	if (items === undefined) {
+		return undefined;
+	}
+	return items.find((n) => n.id === id);
+};
+
+export const deleteItem = (name: string): Item[] => {
+	let items = loadData('items') as Item[];
+	if (items === undefined) {
+		return [];
+	}
+	items = items.filter((n) => n.name !== name);
+	saveData('items', items);
+	return items;
+};
+
+export const newItem = (): Item => {
+	return {
+		id: 0,
+		name: '',
+		description: '',
+		weight: '',
+		type: []
+	};
+};
+
+export const getRawItemList = (): string => {
+	//return a json string of the item list
+	const items = loadData('items') as Item[];
+	if (items === undefined) {
+		return '';
+	}
+	return JSON.stringify(items);
+};
+
+export const parseRawItemList = (rawItemList: string): void => {
+	//parse a json string of the item list
+	const parsed = JSON.parse(rawItemList);
+
+	//go through each item and update ids
+	parsed.forEach((item: Item, index: number) => {
+		item.id = index + 1;
+	});
+
+	saveData('items', parsed);
 };

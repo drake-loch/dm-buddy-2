@@ -1,8 +1,14 @@
 <script lang="ts">
 	import { getCharacters, getNPCs } from '../../../../../utilities/helpers/dataManager';
-	import { getPlaces } from '../../../../../utilities/helpers/placeHelper';
+	import {
+		getItem,
+		getItems,
+		getPlaces,
+		type Shop
+	} from '../../../../../utilities/helpers/placeHelper';
 	import Input from '../formControl/Input.svelte';
 	import Textarea from '../formControl/Textarea.svelte';
+	import ToggleSwitch from '../formControl/ToggleSwitch.svelte';
 
 	export let editing = false;
 
@@ -12,6 +18,8 @@
 	export let data = '';
 
 	export let placeholder = 'Enter data here';
+
+	export let shop: Shop;
 
 	export let save: () => void = () => {};
 	export let deleteModule: () => void = () => {};
@@ -90,6 +98,11 @@
 		const rows = str.split('\n').length;
 		return rows > 5 ? rows : 5;
 	};
+
+	let showItemList = false;
+	let existingItemId = 0;
+
+	let showShopInventory = false;
 </script>
 
 <div
@@ -301,10 +314,243 @@
 			rows={calculateRows(data)}
 			textSize="text-md"
 		/>
+		<span class="my-2">
+			<ToggleSwitch
+				name="hasInventoryToggle"
+				label="Has Inventory"
+				bind:checked={shop.hasInventory}
+			/>
+		</span>
+		{#if shop.hasInventory}
+			<h3 class="font-bold text-2xl mt-4">Inventory</h3>
+			<div class="mb-4 mt-2">
+				<button
+					type="button"
+					class="text-center bg-green-500 rounded-md py-0.5 px-2"
+					aria-label="save module"
+					on:click={() => {
+						showItemList = !showItemList;
+					}}
+					>Add Existing Item
+				</button>
+				<button
+					type="button"
+					class="text-center bg-green-500 rounded-md py-0.5 px-2"
+					aria-label="save module"
+					on:click={() => {
+						shop.inventory.push({
+							name: '',
+							description: '',
+							quantity: 0,
+							price: '',
+							weight: '',
+							id: -1,
+							type: []
+						});
+						shop.inventory = [...shop.inventory];
+					}}
+					>Add Custom Item
+				</button>
+			</div>
+			{#if showItemList}
+				<div class="mb-4 mt-2">
+					<select
+						name={`${title}-shop-existing`}
+						class="border rounded-md bg-gray-600 px-2"
+						bind:value={existingItemId}
+					>
+						<option value={0} disabled>Select Item</option>
+						{#each getItems() as item}
+							<option value={item.id}>{item.name}</option>
+						{/each}
+					</select>
+					<!-- add item -->
+					<button
+						type="button"
+						disabled={existingItemId === 0}
+						on:click={() => {
+							const item = getItems().find((i) => i.id === existingItemId);
+							if (item) {
+								shop.inventory.push({
+									name: '',
+									description: '',
+									quantity: 0,
+									price: '0',
+									weight: item.weight,
+									id: item.id,
+									type: item.type
+								});
+								shop.inventory = [...shop.inventory];
+								showItemList = false;
+							}
+						}}
+						class="text-center bg-green-500 rounded-md py-0.5 px-2 disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Add Item
+					</button>
+				</div>
+			{/if}
+
+			<div class=" w-full">
+				<table class="table-auto w-full">
+					<thead>
+						<tr>
+							<th>Item Name</th>
+							<th>Description</th>
+							<th>Weight</th>
+							<th>Quantity</th>
+							<th>Price</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each shop.inventory as item, index}
+							<tr class="text-center">
+								<td>
+									{#if item.id == -1}
+										<Input
+											name={`${title}-item-name-${index}`}
+											placeholder="Item Name"
+											inputClass="border w-full rounded-sm"
+											bind:value={item.name}
+										/>
+									{:else}
+										{@const existingItem = getItem(item.id)}
+										{#if existingItem}
+											<p>{existingItem.name}</p>
+										{/if}
+									{/if}
+								</td>
+								<td>
+									{#if item.id == -1}
+										<Textarea
+											name={`${title}-item-description-${index}`}
+											placeholder="Description"
+											inputClass="border w-full rounded-sm"
+											rows={1}
+											bind:value={item.description}
+										/>
+									{:else}
+										{@const existingItem = getItem(item.id)}
+										{#if existingItem}
+											<p class="">{existingItem.description}</p>
+										{/if}
+									{/if}
+								</td>
+								<td>
+									{#if item.id == -1}
+										<Input
+											name={`${title}-item-weight-${index}`}
+											placeholder="Weight"
+											inputClass="border w-full rounded-sm"
+											bind:value={item.weight}
+										/>
+									{:else}
+										{@const existingItem = getItem(item.id)}
+										{#if existingItem}
+											<p>{existingItem.weight}</p>
+										{/if}
+									{/if}
+								</td>
+								<td>
+									<span class="w-20">
+										<Input
+											name={`${title}-item-quantity-${index}`}
+											placeholder="Quantity"
+											inputClass="border w-full rounded-sm"
+											bind:value={item.quantity}
+										/>
+									</span>
+								</td>
+								<td>
+									<span class="w-20">
+										<Input
+											name={`${title}-item-price-${index}`}
+											placeholder="Price"
+											inputClass="border w-full rounded-sm"
+											bind:value={item.price}
+										/>
+									</span>
+								</td>
+								<td>
+									<button
+										type="button"
+										class="text-center bg-red-500 rounded-md py-0.5 px-2"
+										aria-label="save module"
+										on:click={() => {
+											shop.inventory.splice(index, 1);
+											shop.inventory = [...shop.inventory];
+										}}
+									>
+										Remove
+									</button>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		{/if}
 	{:else}
 		<div class="output">
 			{@html sanitizeInput(data)}
 		</div>
+		{#if shop.hasInventory}
+			<button
+				type="button"
+				class="font-bold text-2xl my-4 hover:text-blue-500"
+				on:click={() => (showShopInventory = !showShopInventory)}
+			>
+				{`Inventory ${showShopInventory ? '▲' : '▼'}`}
+			</button>
+			{#if showShopInventory}
+				<table class="table-auto w-full">
+					<thead>
+						<tr>
+							<th>Item Name</th>
+							<th>Description</th>
+							<th>Weight</th>
+							<th>Quantity</th>
+							<th>Price</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each shop.inventory as item, index}
+							{@const existingItem = getItem(item.id)}
+							<tr class="text-center border-b">
+								<td>
+									{#if existingItem}
+										<p>{existingItem.name}</p>
+									{:else}
+										<p>{item.name}</p>
+									{/if}
+								</td>
+								<td>
+									{#if existingItem}
+										<p>{existingItem.description}</p>
+									{:else}
+										<p>{item.description}</p>
+									{/if}
+								</td>
+								<td>
+									{#if existingItem}
+										<p>{existingItem.weight}</p>
+									{:else}
+										<p>{item.weight}</p>
+									{/if}
+								</td>
+								<td>
+									<span>{item.quantity}</span>
+								</td>
+								<td>
+									<span>{item.price}</span>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
+		{/if}
 	{/if}
 </div>
 

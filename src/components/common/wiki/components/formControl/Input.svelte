@@ -21,7 +21,7 @@
 			{placeholder}
 			{autocomplete}
 			{list}
-			class={classes(`px-1 w-2/3 text-sm ${inputClass}`)}
+			class={classes(`px-1 w-2/3 text-sm bg-gray-300 ${inputClass}`)}
 		/>
 	{:else}
 		<input
@@ -31,7 +31,7 @@
 			{placeholder}
 			{autocomplete}
 			{list}
-			class={classes(`px-1 w-full text-sm ${inputClass}`)}
+			class={classes(`px-1 w-full text-sm bg-gray-300 ${inputClass}`)}
 		/>
 	{/if}
 </span>
